@@ -1,0 +1,84 @@
+{
+    "type": "ParallelNode",
+    "id": "64a3f270",
+    "left": {
+        "type": "SeriesNode",
+        "id": "df77d208",
+        "left": {
+            "type": "Inductor",
+            "id": "ddace1d2",
+            "value": 0.0031637498904161744,
+            "unit": "H"
+        },
+        "right": {
+            "type": "ParallelNode",
+            "id": "73e79d70",
+            "left": {
+                "type": "ShuntNode",
+                "id": "8ae5ed7f",
+                "component": {
+                    "type": "SeriesNode",
+                    "id": "7e88077c",
+                    "left": {
+                        "type": "Capacitor",
+                        "id": "d783a9be",
+                        "value": 2.4402621214715584e-05,
+                        "unit": "F"
+                    },
+                    "right": {
+                        "type": "Inductor",
+                        "id": "a9d757c8",
+                        "value": 4.9999999999999996e-05,
+                        "unit": "H"
+                    }
+                }
+            },
+            "right": {
+                "type": "SeriesNode",
+                "id": "3df3c279",
+                "left": {
+                    "type": "Inductor",
+                    "id": "36a3b94a",
+                    "value": 0.00034048609518996955,
+                    "unit": "H"
+                },
+                "right": {
+                    "type": "DriverNode",
+                    "id": "60a88051",
+                    "label": "Woofer",
+                    "polarity_inverted": false
+                }
+            }
+        }
+    },
+    "right": {
+        "type": "SeriesNode",
+        "id": "a853794a",
+        "left": {
+            "type": "Inductor",
+            "id": "ba7d3278",
+            "value": 4.9999999999999996e-05,
+            "unit": "H"
+        },
+        "right": {
+            "type": "ParallelNode",
+            "id": "3c1437fc",
+            "left": {
+                "type": "ShuntNode",
+                "id": "ce28432f",
+                "component": {
+                    "type": "Capacitor",
+                    "id": "4eba0b52",
+                    "value": 9.734522168083074e-07,
+                    "unit": "F"
+                }
+            },
+            "right": {
+                "type": "DriverNode",
+                "id": "4570fca0",
+                "label": "Tweeter",
+                "polarity_inverted": true
+            }
+        }
+    }
+}

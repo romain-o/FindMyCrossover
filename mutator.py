@@ -174,20 +174,19 @@ class TreeMutator:
         target_has_driver = len(self._get_driver_labels(target)) > 0
 
         choice = random.random()
-        if choice < 0.4: # Standard Series/Parallel
+        if choice < 0.35: # Standard Series/Parallel
             if target_has_driver:
-                # Si la cible a un HP, on insère le nouveau composant AVANT (à gauche)
                 new_node = SeriesNode(new_component, target) if random.random() < 0.7 else ParallelNode(target, new_component)
             else:
                 op = random.choice([SeriesNode, ParallelNode])
                 new_node = op(target, new_component)
-        elif choice < 0.7: # Shunt
+        elif choice < 0.50: # Shunt
             new_node = SeriesNode(target, ShuntNode(new_component))
-        elif choice < 0.85: # Notch/Tank (Probabilité augmentée à 35% au lieu de 20%)
+        elif choice < 0.90: # Notch/Tank (Probabilité augmentée à 40% pour trouver les résonances)
             comp2 = self._generate_random_component()
-            # Diversification des valeurs de départ pour balayer plus de fréquences
-            if isinstance(new_component, Inductor): new_component.value = random.uniform(0.1e-3, 2e-3)
-            if isinstance(comp2, Capacitor): comp2.value = random.uniform(0.5e-6, 10e-6)
+            # Diversification agressive des valeurs pour balayer le spectre
+            if isinstance(new_component, Inductor): new_component.value = random.uniform(0.05e-3, 3e-3)
+            if isinstance(comp2, Capacitor): comp2.value = random.uniform(0.1e-6, 40e-6)
             
             while type(comp2) == type(new_component): comp2 = self._generate_random_component()
             if random.random() < 0.5:

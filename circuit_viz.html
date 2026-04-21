@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Visualisation du Filtre</title>
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #f4f4f9; }
+        .container { display: flex; flex-wrap: wrap; gap: 20px; width: 100%; justify-content: center; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); min-width: 45%; }
+        h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Structure du Filtre Optimisé</h1>
+    <div class="container">
+        <div class="panel">
+            <h2>Arbre Logique</h2>
+            <div class="mermaid">graph TD
+  n_e8187a66["SeriesNode"]
+  n_754ebc6d["ParallelNode"]
+  n_e8187a66 --> n_754ebc6d
+  n_a011f573["SeriesNode"]
+  n_754ebc6d --> n_a011f573
+  n_a1e36143("Capacitor<br>3.46e-06 F")
+  n_a011f573 --> n_a1e36143
+  n_ee85dcb9["ParallelNode"]
+  n_a011f573 --> n_ee85dcb9
+  n_6b685edd("Inductor<br>5.00e-05 H")
+  n_ee85dcb9 --> n_6b685edd
+  n_f12027e2("Resistor<br>5.00e+01 Ohm")
+  n_ee85dcb9 --> n_f12027e2
+  n_55a0a317("Resistor<br>2.24e+00 Ohm")
+  n_754ebc6d --> n_55a0a317
+  n_d71a8ca7["SeriesNode"]
+  n_e8187a66 --> n_d71a8ca7
+  n_7b3acc3a["ParallelNode"]
+  n_d71a8ca7 --> n_7b3acc3a
+  n_cb00b3f5["ParallelNode"]
+  n_7b3acc3a --> n_cb00b3f5
+  n_ad73631a("Capacitor<br>9.97e-07 F")
+  n_cb00b3f5 --> n_ad73631a
+  n_9e96f2dc["ShuntNode"]
+  n_cb00b3f5 --> n_9e96f2dc
+  n_cf9a5610["SeriesNode"]
+  n_9e96f2dc --> n_cf9a5610
+  n_4aef32ed("Resistor<br>1.90e+00 Ohm")
+  n_cf9a5610 --> n_4aef32ed
+  n_abed1ee7("Inductor<br>5.00e-05 H")
+  n_cf9a5610 --> n_abed1ee7
+  n_147cfcfb["ParallelNode"]
+  n_7b3acc3a --> n_147cfcfb
+  n_c7793a44("Inductor<br>5.42e-05 H")
+  n_147cfcfb --> n_c7793a44
+  n_770fbd34["ShuntNode"]
+  n_147cfcfb --> n_770fbd34
+  n_8e085977["ParallelNode"]
+  n_770fbd34 --> n_8e085977
+  n_84a1213a("Resistor<br>9.01e+00 Ohm")
+  n_8e085977 --> n_84a1213a
+  n_70a59c60("Capacitor<br>4.45e-06 F")
+  n_8e085977 --> n_70a59c60
+  n_f9c34d90["ParallelNode"]
+  n_d71a8ca7 --> n_f9c34d90
+  n_97329f1d["SeriesNode"]
+  n_f9c34d90 --> n_97329f1d
+  n_3e70b249["ParallelNode"]
+  n_97329f1d --> n_3e70b249
+  n_27881f06("Resistor<br>8.32e+00 Ohm")
+  n_3e70b249 --> n_27881f06
+  n_05206fcb("Inductor<br>5.04e-04 H")
+  n_3e70b249 --> n_05206fcb
+  n_0c98b851["ParallelNode"]
+  n_97329f1d --> n_0c98b851
+  n_a00759fa["SeriesNode"]
+  n_0c98b851 --> n_a00759fa
+  n_8b6d7e9b("Inductor<br>5.44e-03 H")
+  n_a00759fa --> n_8b6d7e9b
+  n_f24bbec1[/"Driver<br>Woofer"/]
+  n_a00759fa --> n_f24bbec1
+  n_a2df0491["ShuntNode"]
+  n_0c98b851 --> n_a2df0491
+  n_44e45b3a["SeriesNode"]
+  n_a2df0491 --> n_44e45b3a
+  n_43774075("Resistor<br>7.31e-01 Ohm")
+  n_44e45b3a --> n_43774075
+  n_a5fd9e66("Capacitor<br>3.00e-05 F")
+  n_44e45b3a --> n_a5fd9e66
+  n_247c0e23[/"Driver<br>Tweeter"/]
+  n_f9c34d90 --> n_247c0e23</div>
+        </div>
+        <div class="panel">
+            <h2>Schéma Électrique</h2>
+            <div class="mermaid">graph LR
+  IN((IN+))
+  GND((GND))
+  N1(( ))
+  N2(( ))
+  IN -- "Capacitor (3.46e-06 F)" --- N2
+  N2 -- "Inductor (5.00e-05 H)" --- N1
+  N2 -- "Resistor (5.00e+01 Ohm)" --- N1
+  IN -- "Resistor (2.24e+00 Ohm)" --- N1
+  N3(( ))
+  N1 -- "Capacitor (9.97e-07 F)" --- N3
+  N4(( ))
+  N1 -- "Resistor (1.90e+00 Ohm)" --- N4
+  N4 -- "Inductor (5.00e-05 H)" --- GND
+  N1 -- "Inductor (5.42e-05 H)" --- N3
+  N1 -- "Resistor (9.01e+00 Ohm)" --- GND
+  N1 -- "Capacitor (4.45e-06 F)" --- GND
+  N5(( ))
+  N3 -- "Resistor (8.32e+00 Ohm)" --- N5
+  N3 -- "Inductor (5.04e-04 H)" --- N5
+  N6(( ))
+  N5 -- "Inductor (5.44e-03 H)" --- N6
+  N6 -- "Driver Woofer" --- GND
+  N7(( ))
+  N5 -- "Resistor (7.31e-01 Ohm)" --- N7
+  N7 -- "Capacitor (3.00e-05 F)" --- GND
+  N3 -- "Driver Tweeter" --- GND
+  classDef gnd fill:#000,stroke:#000,color:#fff;
+  class GND gnd;</div>
+        </div>
+    </div>
+</body>
+</html>

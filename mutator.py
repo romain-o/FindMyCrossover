@@ -163,7 +163,7 @@ class TreeMutator:
             # En parallèle, l'ordre importe peu pour la topologie IN/GND
             return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), new_component)
         else: # shunt
-            return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), ShuntNode(new_component))
+            return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), new_component)
 
     def add_node(self, tree: Node) -> Node:
         """Insère un nouveau composant en respectant la règle du HP terminal."""
@@ -181,7 +181,7 @@ class TreeMutator:
                 op = random.choice([SeriesNode, ParallelNode])
                 new_node = op(target, new_component)
         elif choice < 0.50: # Shunt
-            new_node = SeriesNode(target, ShuntNode(new_component))
+            new_node = ParallelNode(target, new_component)
         elif choice < 0.90: # Notch/Tank (Probabilité augmentée à 40% pour trouver les résonances)
             comp2 = self._generate_random_component()
             # Diversification agressive des valeurs pour balayer le spectre
@@ -194,10 +194,10 @@ class TreeMutator:
                 new_node = SeriesNode(tank, target) if target_has_driver else SeriesNode(target, tank)
             else:
                 tank = SeriesNode(new_component, comp2)
-                new_node = ParallelNode(target, ShuntNode(tank))
+                new_node = ParallelNode(target, tank)
         else: # L-Pad
             r2 = Resistor(random.uniform(1, 20))
-            new_node = SeriesNode(new_component, ParallelNode(ShuntNode(r2), target))
+            new_node = SeriesNode(new_component, ParallelNode(r2, target))
             
         tree = self._replace_node(tree, target, new_node)
         return self.simplify(tree)
@@ -235,25 +235,49 @@ class TreeMutator:
 
     def simplify(self, node: Node) -> Node:
         """
-        Simplifie l'arbre pour éliminer les structures redondantes (ex: doubles ShuntNode).
+        Simplifie l'arbre : Supprime les ShuntNodes devenus inutiles (Numpy) 
+        et fusionne les composants identiques adjacents.
         """
+        # 1. Élimination du ShuntNode (on garde juste ce qu'il contient)
+        if isinstance(node, ShuntNode):
+            return self.simplify(node.component)
+
         if isinstance(node, SeriesNode):
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
+
+            # 2. Fusion de composants identiques en SÉRIE
+            if type(node.left) == type(node.right) and isinstance(node.left, ComponentNode):
+                if isinstance(node.left, Resistor):
+                    return Resistor(node.left.value + node.right.value)
+                elif isinstance(node.left, Inductor):
+                    return Inductor(node.left.value + node.right.value)
+                elif isinstance(node.left, Capacitor):
+                    v1, v2 = node.left.value, node.right.value
+                    return Capacitor((v1 * v2) / (v1 + v2 + 1e-12)) # Formule série C
+
+            # Sécurité anti-noeud vide
+            if node.left is None: return node.right
+            if node.right is None: return node.left
+
         elif isinstance(node, ParallelNode):
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
-        elif isinstance(node, ShuntNode):
-            # Règle 1 : ShuntNode(ShuntNode(X)) -> ShuntNode(X)
-            if isinstance(node.component, ShuntNode):
-                return self.simplify(node.component)
-            
-            # Règle 2 : ShuntNode(Driver) -> Driver
-            if isinstance(node.component, DriverNode):
-                return self.simplify(node.component)
-                
-            node.component = self.simplify(node.component)
-        
+
+            # 3. Fusion de composants identiques en PARALLÈLE
+            if type(node.left) == type(node.right) and isinstance(node.left, ComponentNode):
+                if isinstance(node.left, Resistor):
+                    v1, v2 = node.left.value, node.right.value
+                    return Resistor((v1 * v2) / (v1 + v2 + 1e-12)) # Formule parallèle R
+                elif isinstance(node.left, Inductor):
+                    v1, v2 = node.left.value, node.right.value
+                    return Inductor((v1 * v2) / (v1 + v2 + 1e-12)) # Formule parallèle L
+                elif isinstance(node.left, Capacitor):
+                    return Capacitor(node.left.value + node.right.value)
+
+            if node.left is None: return node.right
+            if node.right is None: return node.left
+
         return node
 
     def crossover(self, parent1: Node, parent2: Node) -> Node:

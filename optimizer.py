@@ -24,7 +24,8 @@ WEIGHTS = {
                 'mse_sum': 1.0,      # Poids de base (référence)
                 'ripple': 2.0,       # Le ripple est 2x plus puni que la pente globale
                 'phase': 0.5,        # La phase départage, mais ne doit pas détruire le SPL
-                'components': 2.0    # 2 points de pénalité par composant superflu
+                'components': 2.0,   # 2 points de pénalité par composant superflu
+                'mean_spl': 0.1     # Poids pour la moyenne du SPL
             }
 
 def snap_to_e24(val):
@@ -187,15 +188,15 @@ class CrossoverOptimizer:
                     overlap_weight = np.abs(p1) * np.abs(p2) / (np.max(np.abs(p1) * np.abs(p2)) + 1e-12)
                     raw_phase_penalty += np.mean(np.maximum(0, phase_diff_rad - 0.52) * overlap_weight)
                 
-                
+                mean_spl = np.mean(spl_sum_test[self.mask_flat])
                 
                 # 2. APPLICATION DES POIDS RELATIFS
                 score_sum = (raw_mse * WEIGHTS['mse_sum']) + \
                             (raw_ripple * WEIGHTS['ripple']) + \
-                            (raw_phase_penalty * 100.0 * WEIGHTS['phase']) # *100 car les radians sont très petits (< 1.0)
-                mean_spl = np.mean(spl_sum_test[self.mask_flat])
-                if mean_spl < dynamic_spl - 1.5: # Tolérance de 1.5 dB de perte max
-                    score_sum += (dynamic_spl - 1.5 - mean_spl) * 50.0 # Pénalité très lourde
+                            (raw_phase_penalty * 100.0 * WEIGHTS['phase']) + \
+                            (-mean_spl * WEIGHTS['mean_spl']) 
+                            
+
                 
                 if score_sum < best_score_sum:
                     best_score_sum = score_sum
@@ -521,5 +522,5 @@ if __name__ == "__main__":
     
     # Plage de recherche Fx entre 1500Hz et 3000Hz
     opt = CrossoverOptimizer(config, fx_bounds=[(1500, 2200), (1500, 2500)])
-    best = opt.run(generations=100, pop_size=120)
+    best = opt.run(generations=50, pop_size=120)
     best['tree'].display()

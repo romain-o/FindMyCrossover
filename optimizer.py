@@ -25,8 +25,10 @@ WEIGHTS = {
                 'ripple': 2.0,       # Le ripple est 2x plus puni que la pente globale
                 'phase': 0.5,        # La phase départage, mais ne doit pas détruire le SPL
                 'components': 2.0,   # 2 points de pénalité par composant superflu
-                'mean_spl': 0.1     # Poids pour la moyenne du SPL
+                'mean_spl': 0.2     # Poids pour la moyenne du SPL
             }
+
+N_COMPS = 14
 
 def snap_to_e24(val):
     """Arrondit une valeur mathématique à la valeur E24 la plus proche."""
@@ -65,8 +67,6 @@ class CrossoverOptimizer:
         self.mask_flat = (self.freqs >= 200) & (self.freqs <= 16000)
         self.ripple_mask = (self.freqs >= 400) & (self.freqs <= 12000)
         self.mask_ref = (self.freqs > 300) & (self.freqs < 1000)
-        
-        self.global_sum_weight = np.zeros_like(self.freqs)
         
         # Préparation des drivers (Interpolation + Z-Offset)
         for way in self.ways:
@@ -135,30 +135,12 @@ class CrossoverOptimizer:
             targets = self._generate_targets(fx_list, dynamic_spl)
             total_mse = 0.0
 
-            # --- 1. MSE INDIVIDUELLE DES VOIES (Indépendant de la polarité) ---
-            for way in self.ways:
-                p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
-                spl_real = 20 * np.log10(np.abs(p_real) + 1e-12)
-                spl_target = 20 * np.log10(np.abs(targets[way.label]) + 1e-12)
-                
-                # Pondération (Focus sur la zone de transition)
-                weight = np.ones_like(self.freqs)
-                for fx in fx_list:
-                    weight[(self.freqs > fx/4) & (self.freqs < fx*4)] = 10.0
-                
-                total_mse += np.mean(((spl_real - spl_target)**2) * weight) * 0.0
-
             # --- 2. ÉVALUATION DYNAMIQUE DES POLARITÉS ET DE LA PHASE ---
             best_score_sum = float('inf')
             best_polarities = [1.0] * len(self.ways)
             
             # On génère toutes les combinaisons possibles (+1 ou -1)
             pol_combinations = list(itertools.product([1.0, -1.0], repeat=len(self.ways)-1))
-            
-            self.global_sum_weight = np.zeros_like(self.freqs)
-            self.global_sum_weight[self.mask_flat] = 1.5
-            for fx in fx_list:
-                self.global_sum_weight[(self.freqs > fx/2) & (self.freqs < fx*2)] = 3.0
 
             for pols in pol_combinations:
                 current_pols = [1.0] + list(pols) # Le woofer est toujours à +1.0
@@ -174,8 +156,31 @@ class CrossoverOptimizer:
                 spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
                 diff = spl_sum_test - dynamic_spl
                 
+                # =========================================================
+                # --- NOUVEAU : Détection dynamique du point de croisement ---
+                # =========================================================
+                dynamic_weight = np.zeros_like(self.freqs)
+                dynamic_weight[self.mask_flat] = 1.0 # Poids de base
+                
+                for j in range(len(self.ways) - 1):
+                    mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
+                    mag2 = 20 * np.log10(np.abs(p_ways[j+1]) + 1e-12)
+                    
+                    # On restreint la recherche pour éviter de trouver des faux croisements 
+                    # dans les extrêmes graves ou aigus (ex: entre 500Hz et 8000Hz)
+                    search_mask = (self.freqs > 500) & (self.freqs < 4000)
+                    
+                    if np.any(search_mask):
+                        # Le point de croisement est là où la différence de volume entre les 2 HP est la plus petite
+                        idx_cross = np.argmin(np.abs(mag1[search_mask] - mag2[search_mask]))
+                        f_cross = self.freqs[search_mask][idx_cross]
+                        
+                        # On booste le poids de l'erreur autour de cette fréquence (ex: +/- 1 octave)
+                        dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = 10
+                # =========================================================
+                
                 # 1. NORMALISATION : On calcule les erreurs brutes d'abord
-                raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * self.global_sum_weight)
+                raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
                 
                 raw_ripple = 0.0
                 if np.any(self.ripple_mask):
@@ -219,11 +224,36 @@ class CrossoverOptimizer:
             
             # --- 4. COMPOSANTS ---
             n_comps = len([n for n in root.get_all_nodes() if isinstance(n, ComponentNode)])
-            comp_penalty = 0.0 if n_comps <= 10 else (n_comps - 10) * WEIGHTS['components']
+            comp_penalty = 0.0 if n_comps <= N_COMPS else (n_comps - N_COMPS) * WEIGHTS['components']
 
             return total_mse + penalty + comp_penalty
             
         except Exception: return 1e10
+
+    def _elite_worker(self, args):
+        ind, max_opt, snap = args
+        
+        # Si on est en phase continue et que l'individu est déjà optimisé, on passe
+        if not snap and ind.get('is_optimized', False):
+            return (self.fitness(ind), ind)
+            
+        if not snap:
+            self.optimize_values(ind, max_iter=max_opt)
+            ind['is_optimized'] = True # On le marque comme "propre"
+        else:
+            for comp in ind['tree'].get_all_nodes():
+                if isinstance(comp, ComponentNode):
+                    comp.value = snap_to_e24(comp.value)
+            self.optimize_e24_values(ind)
+            ind['is_optimized'] = False # En phase E24, on réévalue toujours
+            
+        return (self.fitness(ind), ind)
+
+    def _lamarckian_worker(self, child_ind):
+        if random.random() < 0.25:
+            self.optimize_values(child_ind, max_iter=3)
+            child_ind['is_optimized'] = True # Marqué comme pré-entraîné
+        return child_ind
 
     def optimize_e24_values(self, individual):
         """
@@ -352,96 +382,104 @@ class CrossoverOptimizer:
         best_score = float('inf')
         best_ind = population[0]
 
-        for gen in range(generations):
-            
-            scores = []
-            for ind in population:
-                scores.append((self.fitness(ind), ind))
-            
-            scores.sort(key=lambda x: x[0])
-            
-            # --- GESTION DES 3 PHASES D'ÉVOLUTION ---
-            if gen < int(generations * 0.4):      # Phase 1: Exploration
-                max_opt_iter = 2
-                snap_to_standard = False
-            elif gen < int(generations * 0.8):    # Phase 2: Consolidation
-                max_opt_iter = 12
-                snap_to_standard = False
-            else:                                 # Phase 3: Polissage Réaliste
-                max_opt_iter = 20
-                snap_to_standard = True
-                
-            if gen == int(generations * 0.8):
-                print("Passage en PHASE 3")
-                best_score = float('inf') # Reset du record pour la phase 3
+        best_score = float('inf')
+        best_ind = population[0]
 
-            # Optimisation locale du Top 10%
-            elite_count = max(2, pop_size // 10)
-            for i in range(elite_count):
-                if not snap_to_standard:
-                    # Phase 1 & 2 : Optimisation mathématique continue (L-BFGS-B)
-                    self.optimize_values(scores[i][1], max_iter=max_opt_iter)
-                else:
-                    # Phase 3 : On force sur E24, puis on fait une recherche locale intelligente
-                    for comp in scores[i][1]['tree'].get_all_nodes():
+        # --- MODIFICATION : Ouverture du Pool de Processus ---
+        # Le Pool gère automatiquement le nombre de cœurs de votre processeur (ex: 8, 12, ou 16)
+        with ProcessPoolExecutor() as executor:
+            
+            for gen in range(generations):
+                
+                # ==========================================
+                # 1. PARALLÉLISATION DE LA FITNESS (Avec Chunksize)
+                # ==========================================
+                # Le chunksize=10 envoie les individus par paquets de 10, divisant le temps de transfert par 10
+                fitness_results = list(executor.map(self.fitness, population, chunksize=10))
+                scores = [(fit, ind) for fit, ind in zip(fitness_results, population)]
+                
+                scores.sort(key=lambda x: x[0])
+                
+                if gen < int(generations * 0.4):      
+                    max_opt_iter = 2
+                    snap_to_standard = False
+                elif gen < int(generations * 0.8):    
+                    max_opt_iter = 12
+                    snap_to_standard = False
+                else:                                 
+                    max_opt_iter = 20
+                    snap_to_standard = True
+                    
+                if gen == int(generations * 0.8):
+                    print("Passage en PHASE 3")
+                    best_score = float('inf') 
+
+                # ==========================================
+                # NOUVEAU : PARALLÉLISATION DE L'ÉLITE
+                # ==========================================
+                elite_count = max(2, pop_size // 10)
+                
+                # On prépare les paquets de travail pour chaque élite
+                elite_args = [(scores[i][1], max_opt_iter, snap_to_standard) for i in range(elite_count)]
+                
+                # On envoie tout aux cœurs !
+                optimized_elites = list(executor.map(self._elite_worker, elite_args))
+                
+                # On met à jour les scores avec les résultats revenus des workers
+                for i in range(elite_count):
+                    scores[i] = optimized_elites[i]
+                
+                scores.sort(key=lambda x: x[0])
+                
+                if scores[0][0] < best_score:
+                    best_score = scores[0][0]
+                    best_ind = scores[0][1]
+                    
+                    save_tree = best_ind['tree'].copy()
+                    for comp in save_tree.get_all_nodes():
                         if isinstance(comp, ComponentNode):
                             comp.value = snap_to_e24(comp.value)
                     
-                    # Le Hill-Climber prend le relais pour affiner
-                    self.optimize_e24_values(scores[i][1])
-                            
-                # 3. Réévaluation du score final
-                scores[i] = (self.fitness(scores[i][1]), scores[i][1])
-            
-            scores.sort(key=lambda x: x[0])
-            
-            if scores[0][0] < best_score:
-                best_score = scores[0][0]
-                best_ind = scores[0][1]
-                
-                # --- NOUVEAU : Clip systématique avant sauvegarde ---
-                # On crée une copie pour ne pas perturber l'optimiseur continu en Phase 1/2
-                save_tree = best_ind['tree'].copy()
-                for comp in save_tree.get_all_nodes():
-                    if isinstance(comp, ComponentNode):
-                        comp.value = snap_to_e24(comp.value)
-                
-                n_comps = len([n for n in best_ind['tree'].get_all_nodes() if isinstance(n, ComponentNode)])
-                fx_str = " - ".join([f"{way.label}: {int(f)}Hz" for way, f in zip(self.ways, best_ind['fx'])])
-                
-                if gen % 5 == 0:
-                    print(f"Gen {gen}: Record {best_score:.2f} | {fx_str} | Composants: {n_comps}")
-                
-                # Sauvegarde du "Champion Réel" (E24)
-                with open("best_crossover.json", "w") as f:
-                    json.dump({
-                        "tree": save_tree.to_dict(), # On enregistre l'arbre clippé
-                        "fx": best_ind['fx'],
-                        "best_polarities": best_ind.get('best_polarities', [1.0] * len(self.ways))
-                    }, f, indent=4)
+                    n_comps = len([n for n in best_ind['tree'].get_all_nodes() if isinstance(n, ComponentNode)])
+                    fx_str = " - ".join([f"{way.label}: {int(f)}Hz" for way, f in zip(self.ways, best_ind['fx'])])
+                    
+                    if gen % 5 == 0:
+                        print(f"Gen {gen}: Record {best_score:.2f} | {fx_str} | Composants: {n_comps}")
+                    
+                    with open("best_crossover.json", "w") as f:
+                        json.dump({
+                            "tree": save_tree.to_dict(), 
+                            "fx": best_ind['fx'],
+                            "best_polarities": best_ind.get('best_polarities', [1.0] * len(self.ways))
+                        }, f, indent=4)
 
-            new_pop = [best_ind]
-            for i in range(1, elite_count):
-                new_pop.append(scores[i][1])
+                # ==========================================
+                # 2. PARALLÉLISATION DE L'ENTRAÎNEMENT DES ENFANTS
+                # ==========================================
+                new_pop = [best_ind]
+                for i in range(1, elite_count):
+                    new_pop.append(scores[i][1])
+                    
+                # A. Génération rapide (séquentielle) de tous les enfants "bruts"
+                raw_children = []
+                while len(new_pop) + len(raw_children) < pop_size:
+                    parent = random.choice(scores[:pop_size//3])[1]
+                    child_tree = self.mutator.mutate(parent['tree'].copy())
+                    child_fx = [np.clip(f * random.uniform(0.95, 1.05), b[0], b[1]) 
+                                for f, b in zip(parent['fx'], self.fx_bounds)] if gen % 5 == 0 else parent['fx'][:]
+                    
+                    raw_children.append({'tree': child_tree, 'fx': child_fx, 'is_optimized': False})
                 
-            while len(new_pop) < pop_size:
-                parent = random.choice(scores[:pop_size//3])[1]
-                child_tree = self.mutator.mutate(parent['tree'].copy())
-                child_fx = [np.clip(f * random.uniform(0.95, 1.05), b[0], b[1]) 
-                            for f, b in zip(parent['fx'], self.fx_bounds)] if gen % 5 == 0 else parent['fx'][:]
-                
-                child_ind = {'tree': child_tree, 'fx': child_fx}
-                
+                # B. Entraînement Lamarckien (lourd) distribué en parallèle sur tous les cœurs
                 if gen < int(generations * 0.8):
-                    if random.random() < 0.25:
-                        self.optimize_values(child_ind, max_iter=3)
+                    trained_children = list(executor.map(self._lamarckian_worker, raw_children))
+                    new_pop.extend(trained_children)
+                else:
+                    new_pop.extend(raw_children)
                 
-                new_pop.append(child_ind)
-            
-            population = new_pop
+                population = new_pop
 
         # Polissage final
-        # Polissage final (CORRECTION)
         # On ne fait de l'optimisation continue QUE si on n'est pas en mode E24
         if not snap_to_standard:
             self.optimize_values(best_ind, max_iter=150)
@@ -522,5 +560,5 @@ if __name__ == "__main__":
     
     # Plage de recherche Fx entre 1500Hz et 3000Hz
     opt = CrossoverOptimizer(config, fx_bounds=[(1500, 2200), (1500, 2500)])
-    best = opt.run(generations=50, pop_size=120)
+    best = opt.run(generations=100, pop_size=120)
     best['tree'].display()

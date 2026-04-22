@@ -254,9 +254,10 @@ class TreeMutator:
     def simplify(self, node: Node) -> Node:
         """
         Simplifie l'arbre : Supprime les ShuntNodes devenus inutiles (Numpy) 
-        et fusionne les composants identiques adjacents.
+        et fusionne TOUS les composants identiques d'une même branche (série ou parallèle),
+        même s'ils sont séparés par d'autres sous-nœuds.
         """
-        # 1. Élimination du ShuntNode (on garde juste ce qu'il contient)
+        # 1. Élimination du ShuntNode
         if isinstance(node, ShuntNode):
             return self.simplify(node.component)
 
@@ -264,37 +265,88 @@ class TreeMutator:
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
 
-            # 2. Fusion de composants identiques en SÉRIE
-            if type(node.left) == type(node.right) and isinstance(node.left, ComponentNode):
-                if isinstance(node.left, Resistor):
-                    return Resistor(node.left.value + node.right.value)
-                elif isinstance(node.left, Inductor):
-                    return Inductor(node.left.value + node.right.value)
-                elif isinstance(node.left, Capacitor):
-                    v1, v2 = node.left.value, node.right.value
-                    return Capacitor((v1 * v2) / (v1 + v2 + 1e-12)) # Formule série C
-
-            # Sécurité anti-noeud vide
-            if node.left is None: return node.right
-            if node.right is None: return node.left
+            # Fonction pour aplatir toute la branche série
+            def flatten_series(n):
+                if n is None: return []
+                if isinstance(n, SeriesNode):
+                    return flatten_series(n.left) + flatten_series(n.right)
+                return [n]
+            
+            elements = flatten_series(node)
+            
+            # Trier et grouper les composants
+            resistors = [e for e in elements if isinstance(e, Resistor)]
+            inductors = [e for e in elements if isinstance(e, Inductor)]
+            capacitors = [e for e in elements if isinstance(e, Capacitor)]
+            others = [e for e in elements if not isinstance(e, (Resistor, Inductor, Capacitor))]
+            
+            new_elements = []
+            
+            # Fusion mathématique en SÉRIE
+            if resistors:
+                new_elements.append(Resistor(sum(r.value for r in resistors)))
+            if inductors:
+                new_elements.append(Inductor(sum(l.value for l in inductors)))
+            if capacitors:
+                inv_c = sum(1.0 / (c.value + 1e-15) for c in capacitors)
+                new_elements.append(Capacitor(1.0 / inv_c))
+                
+            new_elements.extend(others)
+            
+            # Sécurité anti-nœud vide
+            if not new_elements:
+                return None
+            if len(new_elements) == 1:
+                return new_elements[0]
+                
+            # Reconstruire un bel arbre (penché vers la droite pour Schemdraw)
+            root = new_elements[-1]
+            for e in reversed(new_elements[:-1]):
+                root = SeriesNode(e, root)
+            return root
 
         elif isinstance(node, ParallelNode):
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
 
-            # 3. Fusion de composants identiques en PARALLÈLE
-            if type(node.left) == type(node.right) and isinstance(node.left, ComponentNode):
-                if isinstance(node.left, Resistor):
-                    v1, v2 = node.left.value, node.right.value
-                    return Resistor((v1 * v2) / (v1 + v2 + 1e-12)) # Formule parallèle R
-                elif isinstance(node.left, Inductor):
-                    v1, v2 = node.left.value, node.right.value
-                    return Inductor((v1 * v2) / (v1 + v2 + 1e-12)) # Formule parallèle L
-                elif isinstance(node.left, Capacitor):
-                    return Capacitor(node.left.value + node.right.value)
-
-            if node.left is None: return node.right
-            if node.right is None: return node.left
+            # Fonction pour aplatir toute la branche parallèle
+            def flatten_parallel(n):
+                if n is None: return []
+                if isinstance(n, ParallelNode):
+                    return flatten_parallel(n.left) + flatten_parallel(n.right)
+                return [n]
+                
+            elements = flatten_parallel(node)
+            
+            resistors = [e for e in elements if isinstance(e, Resistor)]
+            inductors = [e for e in elements if isinstance(e, Inductor)]
+            capacitors = [e for e in elements if isinstance(e, Capacitor)]
+            others = [e for e in elements if not isinstance(e, (Resistor, Inductor, Capacitor))]
+            
+            new_elements = []
+            
+            # Fusion mathématique en PARALLÈLE
+            if resistors:
+                inv_r = sum(1.0 / (r.value + 1e-15) for r in resistors)
+                new_elements.append(Resistor(1.0 / inv_r))
+            if inductors:
+                inv_l = sum(1.0 / (l.value + 1e-15) for l in inductors)
+                new_elements.append(Inductor(1.0 / inv_l))
+            if capacitors:
+                new_elements.append(Capacitor(sum(c.value for c in capacitors)))
+                
+            new_elements.extend(others)
+            
+            if not new_elements:
+                return None
+            if len(new_elements) == 1:
+                return new_elements[0]
+                
+            # Reconstruire l'arbre
+            root = new_elements[-1]
+            for e in reversed(new_elements[:-1]):
+                root = ParallelNode(e, root)
+            return root
 
         return node
 

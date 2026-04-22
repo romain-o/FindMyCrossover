@@ -1,58 +1,68 @@
 {
     "tree": {
         "type": "ParallelNode",
-        "id": "6eaa359e",
+        "id": "a3249052",
         "left": {
             "type": "SeriesNode",
-            "id": "a941f8e0",
+            "id": "e22e2fec",
             "left": {
                 "type": "Inductor",
-                "id": "3a3d6be1",
-                "value": 0.001156654066338473,
+                "id": "1d50a01a",
+                "value": 0.0015,
                 "unit": "H"
             },
             "right": {
                 "type": "ParallelNode",
-                "id": "c1d9b06f",
+                "id": "163b3550",
                 "left": {
-                    "type": "DriverNode",
-                    "id": "e36e71f9",
-                    "label": "Woofer",
-                    "polarity_inverted": false
+                    "type": "Capacitor",
+                    "id": "e6a90146",
+                    "value": 1.5000000000000002e-05,
+                    "unit": "F"
                 },
                 "right": {
-                    "type": "ParallelNode",
-                    "id": "374c19b9",
+                    "type": "SeriesNode",
+                    "id": "83cafb08",
                     "left": {
-                        "type": "Capacitor",
-                        "id": "bb4a7779",
-                        "value": 5.2608427868869534e-05,
-                        "unit": "F"
+                        "type": "Resistor",
+                        "id": "ff5f271a",
+                        "value": 6.2,
+                        "unit": "Ohm"
                     },
                     "right": {
-                        "type": "SeriesNode",
-                        "id": "6fc6e2d2",
+                        "type": "ParallelNode",
+                        "id": "2cae8bff",
                         "left": {
-                            "type": "ParallelNode",
-                            "id": "d0dfdc4e",
-                            "left": {
-                                "type": "Inductor",
-                                "id": "b3fbef6b",
-                                "value": 0.0007527566261604521,
-                                "unit": "H"
-                            },
-                            "right": {
-                                "type": "Capacitor",
-                                "id": "93f497c5",
-                                "value": 2.799589025394887e-06,
-                                "unit": "F"
-                            }
+                            "type": "Resistor",
+                            "id": "463f2850",
+                            "value": 2.4,
+                            "unit": "Ohm"
                         },
                         "right": {
-                            "type": "Resistor",
-                            "id": "127de285",
-                            "value": 5.859112010171828,
-                            "unit": "Ohm"
+                            "type": "ParallelNode",
+                            "id": "35fc6191",
+                            "left": {
+                                "type": "Resistor",
+                                "id": "e682ccb2",
+                                "value": 18.0,
+                                "unit": "Ohm"
+                            },
+                            "right": {
+                                "type": "SeriesNode",
+                                "id": "1d4b53bb",
+                                "left": {
+                                    "type": "Inductor",
+                                    "id": "14a70bb1",
+                                    "value": 0.00056,
+                                    "unit": "H"
+                                },
+                                "right": {
+                                    "type": "DriverNode",
+                                    "id": "4bd5198e",
+                                    "label": "Woofer",
+                                    "polarity_inverted": false
+                                }
+                            }
                         }
                     }
                 }
@@ -60,44 +70,54 @@
         },
         "right": {
             "type": "SeriesNode",
-            "id": "5f6db93e",
+            "id": "90801ae6",
             "left": {
                 "type": "Capacitor",
-                "id": "ef1c2df3",
-                "value": 9.73771689060704e-06,
+                "id": "8b95b847",
+                "value": 2e-06,
                 "unit": "F"
             },
             "right": {
                 "type": "ParallelNode",
-                "id": "edb8c956",
+                "id": "5e0ab0ca",
                 "left": {
-                    "type": "DriverNode",
-                    "id": "69332cf2",
-                    "label": "Tweeter",
-                    "polarity_inverted": false
-                },
-                "right": {
                     "type": "ParallelNode",
-                    "id": "ac863089",
+                    "id": "cabbf6fd",
                     "left": {
                         "type": "Inductor",
-                        "id": "f8b6b742",
-                        "value": 0.0003602992754140544,
+                        "id": "e0b05c08",
+                        "value": 0.00043,
                         "unit": "H"
                     },
                     "right": {
-                        "type": "Capacitor",
-                        "id": "4ad93520",
-                        "value": 3.913396987448152e-06,
-                        "unit": "F"
+                        "type": "ParallelNode",
+                        "id": "0739cc0f",
+                        "left": {
+                            "type": "Capacitor",
+                            "id": "59ac86c4",
+                            "value": 1.2e-05,
+                            "unit": "F"
+                        },
+                        "right": {
+                            "type": "DriverNode",
+                            "id": "f6fdac5e",
+                            "label": "Tweeter",
+                            "polarity_inverted": false
+                        }
                     }
+                },
+                "right": {
+                    "type": "Inductor",
+                    "id": "1d304be4",
+                    "value": 0.0016,
+                    "unit": "H"
                 }
             }
         }
     },
     "fx": [
-        1514.0138844191251,
-        1500.0
+        2200.0,
+        1938.4818794414555
     ],
     "best_polarities": [
         1.0,

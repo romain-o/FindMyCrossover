@@ -7,149 +7,309 @@ from nodes import DriverNode, SeriesNode, ParallelNode, ShuntNode, Capacitor, In
 from evaluator import CircuitEvaluator
 from mutator import TreeMutator
 from scipy.optimize import minimize
+import itertools
+from schematic import SchematicRenderer
+
+# Multiprocessing
+from concurrent.futures import ProcessPoolExecutor
 
 BOUNDS_R = (0.1, 50.0)
 BOUNDS_C = (0.1e-6, 150e-6)
 BOUNDS_L = (0.05e-3, 15e-3)
 
+E24_SERIES = np.array([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 
+                       3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1])
+
+WEIGHTS = {
+                'mse_sum': 1.0,      # Poids de base (référence)
+                'ripple': 2.0,       # Le ripple est 2x plus puni que la pente globale
+                'phase': 0.5,        # La phase départage, mais ne doit pas détruire le SPL
+                'components': 2.0,   # 2 points de pénalité par composant superflu
+                'mean_spl': 0.2     # Poids pour la moyenne du SPL
+            }
+
+N_COMPS = 14
+
+def snap_to_e24(val):
+    """Arrondit une valeur mathématique à la valeur E24 la plus proche."""
+    if val <= 0: return val
+    power = np.floor(np.log10(val))
+    norm = val / (10 ** power)
+    idx = np.abs(E24_SERIES - norm).argmin()
+    return E24_SERIES[idx] * (10 ** power)
+
+class WayConfig:
+    """Configuration d'une voie acoustique (Grave, Médium, Aigu, etc.)"""
+    def __init__(self, label, frd_path, zma_path, target_type='LP', order=4, z_offset_m=0.0):
+        self.label = label
+        self.frd_path = frd_path
+        self.zma_path = zma_path
+        self.target_type = target_type # 'LP', 'BP', 'HP'
+        self.order = order
+        self.z_offset_m = z_offset_m
+        self.driver = DriverNode(label, frd_path, zma_path)
+
 class CrossoverOptimizer:
-    def __init__(self, low_paths, high_paths, target_spl=87.0, fx=2000.0):
+    def __init__(self, ways_configs, target_spl=83.0, fx_bounds=[(2000, 2000)]):
         self.freqs = np.geomspace(20, 20000, 400)
         self.target_spl = target_spl
-        self.fx = fx # Fréquence de croisement cible
+        self.ways = ways_configs
+        self.fx_bounds = fx_bounds
         self.evaluator = CircuitEvaluator(self.freqs)
-        self.mutator = TreeMutator()
+        self.mutator = TreeMutator(
+            prob_value_mut=0.2, 
+            prob_type_mut=0.2, 
+            prob_topology_mut=0.2, 
+            prob_add_node=0.30,
+            prob_remove_node=0.10
+        )
+                            
+        self.mask_flat = (self.freqs >= 200) & (self.freqs <= 16000)
+        self.ripple_mask = (self.freqs >= 400) & (self.freqs <= 12000)
+        self.mask_ref = (self.freqs > 300) & (self.freqs < 1000)
         
-        self.woofer = DriverNode("Woofer", low_paths[0], low_paths[1])
-        self.tweeter = DriverNode("Tweeter", high_paths[0], high_paths[1])
-        self._interpolate_driver(self.woofer)
-        self._interpolate_driver(self.tweeter)
-        
-        # Génération des courbes cibles (Target Curves) Linkwitz-Riley 4ème ordre
-        self._generate_target_curves()
+        # Préparation des drivers (Interpolation + Z-Offset)
+        for way in self.ways:
+            self._prepare_driver(way)
 
-    def _generate_target_curves(self, current_spl=None):
-        """Génère les courbes cibles complexes idéales. SPL adaptatif si current_spl est fourni."""
-        spl = current_spl if current_spl is not None else self.target_spl
-        s = 1j * (self.freqs / self.fx)
-        # Fonction de transfert LR4
-        lr4_lp = 1 / ((s**2 + np.sqrt(2)*s + 1)**2)
-        lr4_hp = (s**4) / ((s**2 + np.sqrt(2)*s + 1)**2)
-        
-        target_pressure = 10 ** (spl / 20)
-        self.target_woofer = lr4_lp * target_pressure
-        self.target_tweeter = lr4_hp * target_pressure
-        return spl
-
-    def _interpolate_driver(self, d):
-        """Interpolation corrigée avec déroulement de la phase."""
-        # SPL (.frd)
+    def _prepare_driver(self, way):
+        d = way.driver
+        d.model_name = os.path.basename(way.frd_path).split('.')[0].split('@')[0] # Extraction du nom du fichier sans extension
+        # Interpolation Magnitude et Phase (avec unwrap pour éviter les sauts de 2pi)
         mag_db = 20 * np.log10(np.abs(d.H_acoustic) + 1e-10)
-        ph_unwrapped = np.unwrap(np.angle(d.H_acoustic)) # CORRECTION CRUCIALE
+        ph_unwrapped = np.unwrap(np.angle(d.H_acoustic))
         
         mag_interp = np.interp(self.freqs, d.frd_freqs, mag_db)
         ph_interp = np.interp(self.freqs, d.frd_freqs, ph_unwrapped)
         d.H_acoustic = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
         
-        # Impédance (.zma)
+        # Application du Z-Offset (Délai acoustique)
+        delay_s = way.z_offset_m / 343.0
+        phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
+        d.H_acoustic *= phase_delay
+
+        # Impédance
         z_mag = np.abs(d.Z_complex)
-        z_ph_unwrapped = np.unwrap(np.angle(d.Z_complex))
+        z_ph = np.unwrap(np.angle(d.Z_complex))
+        d.Z_complex = np.interp(self.freqs, d.zma_freqs, z_mag) * np.exp(1j * np.interp(self.freqs, d.zma_freqs, z_ph))
+
+    def _get_lr4_transfer(self, f_target, type='LP'):
+        s = 1j * (self.freqs / f_target)
+        poly = (s**2 + np.sqrt(2)*s + 1)**2
+        if type == 'LP': return 1 / poly
+        if type == 'HP': return (s**4) / poly
+        return np.ones_like(self.freqs)
+
+    def _generate_targets(self, fx_list, spl):
+        targets = {}
+        pressure = 10 ** (spl / 20)
         
-        z_mag_interp = np.interp(self.freqs, d.zma_freqs, z_mag)
-        z_ph_interp = np.interp(self.freqs, d.zma_freqs, z_ph_unwrapped)
-        d.Z_complex = z_mag_interp * np.exp(1j * z_ph_interp)
+        for i, way in enumerate(self.ways):
+            if way.target_type == 'LP':
+                # Utilise fx_list[i] au lieu de fx_list[0]
+                h = self._get_lr4_transfer(fx_list[i], 'LP') 
+            elif way.target_type == 'HP':
+                # Utilise fx_list[i]
+                h = self._get_lr4_transfer(fx_list[i], 'HP')
+            elif way.target_type == 'BP':
+                h_low = self._get_lr4_transfer(fx_list[i-1], 'HP')
+                h_high = self._get_lr4_transfer(fx_list[i], 'LP')
+                h = h_low * h_high
+            targets[way.label] = h * pressure
+        return targets
 
-    def fitness(self, root):
+    def fitness(self, individual):
+        root = individual['tree']
+        fx_list = individual['fx']
+        
         try:
-            if not isinstance(root, (ParallelNode, SeriesNode)): return 1e9
-            if not self.check_terminal_drivers(root): return 1e8
+            if not isinstance(root, ParallelNode): return 1e9
             
-            nodes = root.get_all_nodes()
-            drivers = [n for n in nodes if isinstance(n, DriverNode)]
-            if len(drivers) < 2: return 1e8
+            res = self.evaluator.evaluate(root)
             
-            tweeter = next((n for n in drivers if n.label == "Tweeter"), None)
-            woofer = next((n for n in drivers if n.label == "Woofer"), None)
+            # SPL Adaptatif sur le woofer (première voie)
+            p_ref = res.get(self.ways[0].label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+            avg_spl = 20 * np.log10(np.mean(np.abs(p_ref[self.mask_ref])) + 1e-12) if np.any(self.mask_ref) else self.target_spl
+            dynamic_spl = np.clip(avg_spl, 75.0, 95.0)
             
-            # --- CALCUL DU SPL ADAPTATIF ---
-            res_temp = self.evaluator.evaluate(root)
-            p_w_raw = res_temp.get("Woofer", {}).get("P_acoustic", np.zeros_like(self.freqs))
-            mask_ref = (self.freqs > 100) & (self.freqs < 800)
-            if np.any(mask_ref):
-                avg_spl = 20 * np.log10(np.mean(np.abs(p_w_raw[mask_ref])) + 1e-12)
-                dynamic_spl = np.clip(avg_spl, 75.0, 95.0)
-            else:
-                dynamic_spl = self.target_spl
+            targets = self._generate_targets(fx_list, dynamic_spl)
+            total_mse = 0.0
 
-            self._generate_target_curves(dynamic_spl)
-
-            def calc_mse(inv_polarity):
-                tweeter.polarity_inverted = inv_polarity
-                res = self.evaluator.evaluate(root)
-                
-                p_w = res.get("Woofer", {}).get("P_acoustic", np.zeros_like(self.freqs))
-                p_t = res.get("Tweeter", {}).get("P_acoustic", np.zeros_like(self.freqs))
-                p_sum = p_w + p_t
-                
-                spl_w = 20 * np.log10(np.abs(p_w) + 1e-12)
-                spl_t = 20 * np.log10(np.abs(p_t) + 1e-12)
-                spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
-                
-                target_spl_w = 20 * np.log10(np.abs(self.target_woofer) + 1e-12)
-                target_spl_t = 20 * np.log10(np.abs(self.target_tweeter) + 1e-12)
-                
-                floor_spl = dynamic_spl - 40.0
-                mse_w = np.mean((np.maximum(spl_w, floor_spl) - np.maximum(target_spl_w, floor_spl))**2)
-                mse_t = np.mean((np.maximum(spl_t, floor_spl) - np.maximum(target_spl_t, floor_spl))**2)
-                
-                mask_sum = (self.freqs > self.fx/2) & (self.freqs < self.fx*2)
-                mse_sum = np.mean((spl_sum[mask_sum] - dynamic_spl)**2)
-                
-                return mse_w + mse_t + (mse_sum * 1.5), res, dynamic_spl
-
-            mse_n, res_n, spl_n = calc_mse(False)
-            mse_i, res_i, spl_i = calc_mse(True)
+            # --- 2. ÉVALUATION DYNAMIQUE DES POLARITÉS ET DE LA PHASE ---
+            best_score_sum = float('inf')
+            best_polarities = [1.0] * len(self.ways)
             
-            best_mse = min(mse_n, mse_i)
-            tweeter.polarity_inverted = (mse_i < mse_n)
-            best_res = res_i if mse_i < mse_n else res_n
-            final_dynamic_spl = spl_i if mse_i < mse_n else spl_n
+            # On génère toutes les combinaisons possibles (+1 ou -1)
+            pol_combinations = list(itertools.product([1.0, -1.0], repeat=len(self.ways)-1))
 
+            for pols in pol_combinations:
+                current_pols = [1.0] + list(pols) # Le woofer est toujours à +1.0
+                p_sum_test = np.zeros_like(self.freqs, dtype=complex)
+                p_ways = [] # Pour stocker la pression de chaque voie individuellement
+                
+                for i, way in enumerate(self.ways):
+                    p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+                    p_adj = p_real * current_pols[i] # Pression avec la polarité testée
+                    p_ways.append(p_adj)
+                    p_sum_test += p_adj 
+                
+                spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
+                diff = spl_sum_test - dynamic_spl
+                
+                # =========================================================
+                # --- NOUVEAU : Détection dynamique du point de croisement ---
+                # =========================================================
+                dynamic_weight = np.zeros_like(self.freqs)
+                dynamic_weight[self.mask_flat] = 1.0 # Poids de base
+                
+                for j in range(len(self.ways) - 1):
+                    mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
+                    mag2 = 20 * np.log10(np.abs(p_ways[j+1]) + 1e-12)
+                    
+                    # On restreint la recherche pour éviter de trouver des faux croisements 
+                    # dans les extrêmes graves ou aigus (ex: entre 500Hz et 8000Hz)
+                    search_mask = (self.freqs > 500) & (self.freqs < 4000)
+                    
+                    if np.any(search_mask):
+                        # Le point de croisement est là où la différence de volume entre les 2 HP est la plus petite
+                        idx_cross = np.argmin(np.abs(mag1[search_mask] - mag2[search_mask]))
+                        f_cross = self.freqs[search_mask][idx_cross]
+                        
+                        # On booste le poids de l'erreur autour de cette fréquence (ex: +/- 1 octave)
+                        dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = 10
+                # =========================================================
+                
+                # 1. NORMALISATION : On calcule les erreurs brutes d'abord
+                raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
+                
+                raw_ripple = 0.0
+                if np.any(self.ripple_mask):
+                    raw_ripple = np.std(spl_sum_test[self.ripple_mask]) ** 2
+                
+                raw_phase_penalty = 0.0
+                for j in range(len(self.ways) - 1):
+                    p1, p2 = p_ways[j], p_ways[j+1]
+                    phase_diff_rad = np.abs(np.angle(p1 / (p2 + 1e-12)))
+                    overlap_weight = np.abs(p1) * np.abs(p2) / (np.max(np.abs(p1) * np.abs(p2)) + 1e-12)
+                    raw_phase_penalty += np.mean(np.maximum(0, phase_diff_rad - 0.52) * overlap_weight)
+                
+                mean_spl = np.mean(spl_sum_test[self.mask_flat])
+                
+                # 2. APPLICATION DES POIDS RELATIFS
+                score_sum = (raw_mse * WEIGHTS['mse_sum']) + \
+                            (raw_ripple * WEIGHTS['ripple']) + \
+                            (raw_phase_penalty * 100.0 * WEIGHTS['phase']) + \
+                            (-mean_spl * WEIGHTS['mean_spl']) 
+                            
+
+                
+                if score_sum < best_score_sum:
+                    best_score_sum = score_sum
+                    best_polarities = current_pols
+            
+            total_mse += best_score_sum
+            individual['best_polarities'] = best_polarities
+
+            # --- 3. CONTRAINTES LÉTALES (On ne négocie pas la physique) ---
             penalty = 0.0
             Z_in = self.evaluator.get_impedance(root)
             min_Z = np.min(np.abs(Z_in))
-            if min_Z < 3.0: penalty += 2000.0 * (3.0 - min_Z)**2
-                
-            tw_v = best_res.get("Tweeter", {}).get("V_complex", np.zeros_like(self.freqs))
-            v_low = np.abs(tw_v)[self.freqs < (self.fx * 0.5)]
-            penalty += np.sum(np.maximum(0, v_low - 0.15)**2) * 3000.0
-
-            n_comps = len([n for n in nodes if isinstance(n, (Resistor, Capacitor, Inductor))])
-            comp_penalty = max(0, n_comps - 6) * 3.0 
-
-            if final_dynamic_spl < 80.0:
-                penalty += (80.0 - final_dynamic_spl) * 50.0
-
-            return best_mse + penalty + comp_penalty
+            if min_Z < 3.2: 
+                penalty += 10000.0 + (3.2 - min_Z) * 5000.0 # Mur de brique
             
-        except Exception:
-            return 1e10
+            last_way_v = res.get(self.ways[-1].label, {}).get("V_complex", np.zeros_like(self.freqs))
+            v_low = np.abs(last_way_v)[self.freqs < (fx_list[-1] * 0.5)]
+            if np.any(v_low > 0.1):
+                penalty += 10000.0 + np.sum(v_low) * 1000.0 # Mur de brique
+            
+            # --- 4. COMPOSANTS ---
+            n_comps = len([n for n in root.get_all_nodes() if isinstance(n, ComponentNode)])
+            comp_penalty = 0.0 if n_comps <= N_COMPS else (n_comps - N_COMPS) * WEIGHTS['components']
 
-    def check_terminal_drivers(self, node):
-        """Vérifie que les drivers ne sont pas utilisés comme composants de passage."""
-        if isinstance(node, SeriesNode):
-            if len(self.mutator._get_driver_labels(node.left)) > 0: return False
-            return self.check_terminal_drivers(node.left) and self.check_terminal_drivers(node.right)
-        elif isinstance(node, ParallelNode): 
-            return self.check_terminal_drivers(node.left) and self.check_terminal_drivers(node.right)
-        elif isinstance(node, ShuntNode): 
-            return self.check_terminal_drivers(node.component)
-        return True
+            return total_mse + penalty + comp_penalty
+            
+        except Exception: return 1e10
 
-    def optimize_values(self, root, max_iter=5):
-        """Recherche locale. max_iter très réduit par défaut pour ne pas ralentir le GP."""
-        comps = [n for n in root.get_all_nodes() if isinstance(n, (Resistor, Capacitor, Inductor))]
-        if not comps: return root
+    def _elite_worker(self, args):
+        ind, max_opt, snap = args
+        
+        # Si on est en phase continue et que l'individu est déjà optimisé, on passe
+        if not snap and ind.get('is_optimized', False):
+            return (self.fitness(ind), ind)
+            
+        if not snap:
+            self.optimize_values(ind, max_iter=max_opt)
+            ind['is_optimized'] = True # On le marque comme "propre"
+        else:
+            for comp in ind['tree'].get_all_nodes():
+                if isinstance(comp, ComponentNode):
+                    comp.value = snap_to_e24(comp.value)
+            self.optimize_e24_values(ind)
+            ind['is_optimized'] = False # En phase E24, on réévalue toujours
+            
+        return (self.fitness(ind), ind)
+
+    def _lamarckian_worker(self, child_ind):
+        if random.random() < 0.25:
+            self.optimize_values(child_ind, max_iter=3)
+            child_ind['is_optimized'] = True # Marqué comme pré-entraîné
+        return child_ind
+
+    def optimize_e24_values(self, individual):
+        """
+        Recherche locale discrète : teste les valeurs E24 voisines pour chaque composant
+        afin d'affiner le score sans casser la topologie.
+        """
+        comps = [n for n in individual['tree'].get_all_nodes() if isinstance(n, ComponentNode)]
+        if not comps: return individual
+        
+        best_score = self.fitness(individual)
+        improved = True
+        
+        # Tant qu'on trouve des améliorations en bougeant d'un cran, on continue
+        while improved:
+            improved = False
+            for comp in comps:
+                original_val = snap_to_e24(comp.value)
+                
+                # Calcul de l'index actuel dans la série E24
+                power = np.floor(np.log10(original_val))
+                norm = original_val / (10 ** power)
+                idx = np.abs(E24_SERIES - norm).argmin()
+                
+                best_comp_val = original_val
+                
+                # On teste le cran en dessous (-1) et le cran au dessus (+1)
+                for step in [-1, 1]:
+                    new_idx = idx + step
+                    new_power = power
+                    
+                    # Gestion des passages de dizaines (ex: 9.1 -> 10.0)
+                    if new_idx < 0:
+                        new_idx = len(E24_SERIES) - 1
+                        new_power -= 1
+                    elif new_idx >= len(E24_SERIES):
+                        new_idx = 0
+                        new_power += 1
+                        
+                    test_val = E24_SERIES[new_idx] * (10 ** new_power)
+                    comp.value = test_val
+                    
+                    new_score = self.fitness(individual)
+                    if new_score < best_score:
+                        best_score = new_score
+                        best_comp_val = test_val
+                        improved = True
+                
+                # On applique la meilleure valeur (qui peut être l'originale si pas d'amélioration)
+                comp.value = best_comp_val
+                
+        return individual
+
+    def optimize_values(self, individual, max_iter=5):
+        root = individual['tree']
+        comps = [n for n in root.get_all_nodes() if isinstance(n, ComponentNode)]
+        if not comps: return individual
         
         init = [np.log10(np.clip(c.value, 1e-12, 1e2)) for c in comps]
         bounds = [(np.log10(BOUNDS_R[0]), np.log10(BOUNDS_R[1])) if isinstance(c, Resistor) else 
@@ -158,129 +318,247 @@ class CrossoverOptimizer:
                   
         def obj(x_log):
             for i, v in enumerate(x_log): comps[i].value = 10**v
-            return self.fitness(root)
+            return self.fitness(individual)
             
-        res = minimize(obj, init, method='L-BFGS-B', bounds=bounds, options={'maxiter': max_iter, 'ftol': 1e-4})
+        res = minimize(
+            obj, init, 
+            method='L-BFGS-B', 
+            bounds=bounds, 
+            options={
+                'maxiter': max_iter,
+                'ftol': 1e-4,   # Tolérance sur la fonction relâchée
+                'eps': 1e-3     # Pas de calcul du gradient plus large = beaucoup plus rapide
+            }
+        )
         for i, v in enumerate(res.x): comps[i].value = 10**v
-        return root
+        return individual
 
     def run(self, generations=50, pop_size=60):
         population = []
+        
+        # Tentative de chargement du champion
         if os.path.exists("best_crossover.json"):
             try:
-                with open("best_crossover.json", "r") as f: cp = Node.from_dict(json.load(f))
-                for n in cp.get_all_nodes():
+                with open("best_crossover.json", "r") as f: data = json.load(f)
+                tree = Node.from_dict(data["tree"])
+                # Réassignation des drivers
+                for n in tree.get_all_nodes():
                     if isinstance(n, DriverNode):
-                        d = self.woofer if n.label == "Woofer" else self.tweeter
-                        n.H_acoustic, n.Z_complex = d.H_acoustic, d.Z_complex
-                population.append(self.mutator.simplify(cp))
+                        way = next(w for w in self.ways if w.label == n.label)
+                        n.H_acoustic, n.Z_complex = way.driver.H_acoustic, way.driver.Z_complex
+                
+                # Chargement de la nouvelle structure
+                best_pols = data.get("best_polarities", [1.0] * len(self.ways))
+                fxs = data.get("fx", [b[0] for b in self.fx_bounds])
+                population.append({'tree': tree, 'fx': fxs, 'best_polarities': best_pols})
                 print("[+] Champion chargé.")
-            except: pass
+            except Exception as e: print(f"Erreur chargement: {e}")
         
+        else:
+            try:
+                # Graine 3ème ordre (18dB/octave) : beaucoup plus plat naturellement
+                w_branch = SeriesNode(Inductor(1.5e-3), ParallelNode(Capacitor(10e-6), SeriesNode(Inductor(0.5e-3), self.ways[0].driver.copy())))
+                t_branch = SeriesNode(Capacitor(4.7e-6), ParallelNode(Inductor(0.3e-3), SeriesNode(Capacitor(10e-6), self.ways[1].driver.copy())))
+                seed_tree = ParallelNode(w_branch, t_branch)
+                fx_mid = [(b[0] + b[1]) / 2.0 for b in self.fx_bounds]
+                population.append({'tree': seed_tree, 'fx': fx_mid})
+                print("[+] Graine (Template 3ème ordre) injectée.")
+            except Exception as e:
+                pass
+
+        # Remplissage
         while len(population) < pop_size:
-            bw = self.mutator.generate_random_tree(self.woofer.copy(), max_depth=2)
-            bt = self.mutator.generate_random_tree(self.tweeter.copy(), max_depth=2)
-            population.append(ParallelNode(bw, bt))
+            branches = []
+            for way in self.ways:
+                branches.append(self.mutator.generate_random_tree(way.driver.copy(), max_depth=2))
+            
+            root = branches[0]
+            for b in branches[1:]:
+                root = ParallelNode(root, b)
+            
+            fx_genes = [random.uniform(b[0], b[1]) for b in self.fx_bounds]
+            population.append({'tree': root, 'fx': fx_genes})
 
         best_score = float('inf')
-        best_tree = population[0]
-        
-        print(f"Optimisation Cible LR4 à {self.fx}Hz...")
+        best_ind = population[0]
 
-        for gen in range(generations):
-            # Évaluation initiale de la population
-            scores = [(self.fitness(ind), ind) for ind in population]
-            scores.sort(key=lambda x: x[0])
-            
-            # On n'applique la recherche locale (L-BFGS-B) que sur le Top 10% !
-            # Cela fait gagner un temps CPU massif.
-            elite_count = max(2, pop_size // 10)
-            for i in range(elite_count):
-                self.optimize_values(scores[i][1], max_iter=5)
-            
-            # Réévaluation du Top 10% après optimisation
-            for i in range(elite_count):
-                scores[i] = (self.fitness(scores[i][1]), scores[i][1])
-            scores.sort(key=lambda x: x[0])
-            
-            if scores[0][0] < best_score:
-                best_score = scores[0][0]
-                best_tree = scores[0][1].copy()
-                print(f"Gen {gen}: Record ! Score: {best_score:.4f} | Composants: {len([n for n in best_tree.get_all_nodes() if isinstance(n, ComponentNode)])}")
-                with open("best_crossover.json", "w") as f: json.dump(best_tree.to_dict(), f, indent=4)
+        best_score = float('inf')
+        best_ind = population[0]
 
-            new_pop = [best_tree.copy()]
+        # --- MODIFICATION : Ouverture du Pool de Processus ---
+        # Le Pool gère automatiquement le nombre de cœurs de votre processeur (ex: 8, 12, ou 16)
+        with ProcessPoolExecutor() as executor:
             
-            # Élite inchangée passe à la génération suivante (Élitisme)
-            for i in range(1, elite_count):
-                new_pop.append(scores[i][1].copy())
+            for gen in range(generations):
                 
-            # Remplissage par mutation
-            while len(new_pop) < pop_size:
-                # Sélection par tournoi ou biaisée vers l'élite
-                parent = random.choice(scores[:pop_size//2])[1]
-                child = self.mutator.mutate(parent)
-                if self.check_terminal_drivers(child):
-                    new_pop.append(child)
+                # ==========================================
+                # 1. PARALLÉLISATION DE LA FITNESS (Avec Chunksize)
+                # ==========================================
+                # Le chunksize=10 envoie les individus par paquets de 10, divisant le temps de transfert par 10
+                fitness_results = list(executor.map(self.fitness, population, chunksize=10))
+                scores = [(fit, ind) for fit, ind in zip(fitness_results, population)]
+                
+                scores.sort(key=lambda x: x[0])
+                
+                if gen < int(generations * 0.4):      
+                    max_opt_iter = 2
+                    snap_to_standard = False
+                elif gen < int(generations * 0.8):    
+                    max_opt_iter = 12
+                    snap_to_standard = False
+                else:                                 
+                    max_opt_iter = 20
+                    snap_to_standard = True
                     
-            population = new_pop
-            if gen % 5 == 0: 
-                print(f"--- Gen {gen}/{generations} - Best: {best_score:.4f} ---")
-                
-        # Polissage final intense sur le grand gagnant
-        print("Lancement de l'optimisation locale finale profonde...")
-        self.optimize_values(best_tree, max_iter=150)
-        final_score = self.fitness(best_tree)
-        print(f"Score final après polissage : {final_score:.4f}")
-        
-        return best_tree
+                if gen == int(generations * 0.8):
+                    print("Passage en PHASE 3")
+                    best_score = float('inf') 
 
-    def plot_result(self, root, filename="crossover_response.png"):
+                # ==========================================
+                # NOUVEAU : PARALLÉLISATION DE L'ÉLITE
+                # ==========================================
+                elite_count = max(2, pop_size // 10)
+                
+                # On prépare les paquets de travail pour chaque élite
+                elite_args = [(scores[i][1], max_opt_iter, snap_to_standard) for i in range(elite_count)]
+                
+                # On envoie tout aux cœurs !
+                optimized_elites = list(executor.map(self._elite_worker, elite_args))
+                
+                # On met à jour les scores avec les résultats revenus des workers
+                for i in range(elite_count):
+                    scores[i] = optimized_elites[i]
+                
+                scores.sort(key=lambda x: x[0])
+                
+                if scores[0][0] < best_score:
+                    best_score = scores[0][0]
+                    best_ind = scores[0][1]
+                    
+                    save_tree = best_ind['tree'].copy()
+                    for comp in save_tree.get_all_nodes():
+                        if isinstance(comp, ComponentNode):
+                            comp.value = snap_to_e24(comp.value)
+                    
+                    n_comps = len([n for n in best_ind['tree'].get_all_nodes() if isinstance(n, ComponentNode)])
+                    fx_str = " - ".join([f"{way.label}: {int(f)}Hz" for way, f in zip(self.ways, best_ind['fx'])])
+                    
+                    if gen % 5 == 0:
+                        print(f"Gen {gen}: Record {best_score:.2f} | {fx_str} | Composants: {n_comps}")
+                    
+                    with open("best_crossover.json", "w") as f:
+                        json.dump({
+                            "tree": save_tree.to_dict(), 
+                            "fx": best_ind['fx'],
+                            "best_polarities": best_ind.get('best_polarities', [1.0] * len(self.ways))
+                        }, f, indent=4)
+
+                # ==========================================
+                # 2. PARALLÉLISATION DE L'ENTRAÎNEMENT DES ENFANTS
+                # ==========================================
+                new_pop = [best_ind]
+                for i in range(1, elite_count):
+                    new_pop.append(scores[i][1])
+                    
+                # A. Génération rapide (séquentielle) de tous les enfants "bruts"
+                raw_children = []
+                while len(new_pop) + len(raw_children) < pop_size:
+                    parent = random.choice(scores[:pop_size//3])[1]
+                    child_tree = self.mutator.mutate(parent['tree'].copy())
+                    child_fx = [np.clip(f * random.uniform(0.95, 1.05), b[0], b[1]) 
+                                for f, b in zip(parent['fx'], self.fx_bounds)] if gen % 5 == 0 else parent['fx'][:]
+                    
+                    raw_children.append({'tree': child_tree, 'fx': child_fx, 'is_optimized': False})
+                
+                # B. Entraînement Lamarckien (lourd) distribué en parallèle sur tous les cœurs
+                if gen < int(generations * 0.8):
+                    trained_children = list(executor.map(self._lamarckian_worker, raw_children))
+                    new_pop.extend(trained_children)
+                else:
+                    new_pop.extend(raw_children)
+                
+                population = new_pop
+
+        # Polissage final
+        # On ne fait de l'optimisation continue QUE si on n'est pas en mode E24
+        if not snap_to_standard:
+            self.optimize_values(best_ind, max_iter=150)
+        else:
+            # Sinon on donne un dernier coup de Hill-Climber E24
+            self.optimize_e24_values(best_ind)
+            
+        # CLIP SÉCURITÉ OBLIGATOIRE AVANT AFFICHAGE
+        for comp in best_ind['tree'].get_all_nodes():
+            if isinstance(comp, ComponentNode):
+                comp.value = snap_to_e24(comp.value)
+            elif isinstance(comp, DriverNode):
+                # On retrouve la configuration de la voie correspondante
+                way = next(w for w in self.ways if w.label == comp.label)
+                # On réassigne le nom extrait
+                comp.model_name = way.driver.model_name
+                
+        self.plot_result(best_ind)
+    
+        renderer = SchematicRenderer(best_ind['tree'])
+        renderer.save("crossover_schematic.png")
+        
+        return best_ind
+
+    def plot_result(self, individual, filename="crossover_response.png"):
+        root = individual['tree']
+        fx_list = individual['fx']
         res = self.evaluator.evaluate(root)
         
-        # Recalcul du SPL dynamique pour le plot
-        p_w_raw = res.get("Woofer", {}).get("P_acoustic", np.zeros_like(self.freqs))
-        mask_ref = (self.freqs > 100) & (self.freqs < 800)
-        dynamic_spl = 20 * np.log10(np.mean(np.abs(p_w_raw[mask_ref])) + 1e-12) if np.any(mask_ref) else self.target_spl
-        dynamic_spl = np.clip(dynamic_spl, 75.0, 95.0)
+        # Recalcul SPL pour le plot
+        p_ref = res.get(self.ways[0].label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+        mask_ref = self.mask_ref
+        dynamic_spl = 20 * np.log10(np.mean(np.abs(p_ref[mask_ref])) + 1e-12) if np.any(mask_ref) else self.target_spl
         
-        # Régénération des cibles pour l'affichage
-        self._generate_target_curves(dynamic_spl)
+        targets = self._generate_targets(fx_list, dynamic_spl)
         
         plt.figure(figsize=(12, 8))
+        p_sum = np.zeros_like(self.freqs, dtype=complex)
+        best_pols = individual.get('best_polarities', [1.0] * len(self.ways))
         
-        # Courbes cibles
-        spl_target_w = 20 * np.log10(np.abs(self.target_woofer) + 1e-10)
-        spl_target_t = 20 * np.log10(np.abs(self.target_tweeter) + 1e-10)
-        plt.semilogx(self.freqs, spl_target_w, 'k:', alpha=0.3, label=f"Target LP (LR4 @ {dynamic_spl:.1f}dB)")
-        plt.semilogx(self.freqs, spl_target_t, 'k:', alpha=0.3, label="Target HP (LR4)")
-
-        p_tot = np.zeros(len(self.freqs), dtype=complex)
-        for label, data in res.items():
-            spl = 20 * np.log10(np.abs(data["P_acoustic"]) + 1e-10)
-            plt.semilogx(self.freqs, spl, label=f"Réel {label}", linewidth=2)
-            p_tot += data["P_acoustic"]
+        for i, way in enumerate(self.ways):
+            p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
             
-        spl_t = 20 * np.log10(np.abs(p_tot) + 1e-10)
-        plt.semilogx(self.freqs, spl_t, label="Somme Réelle", color='red', linewidth=3)
+            # Application de la polarité pour la somme totale
+            p_sum += p_real * best_pols[i] 
+            
+            spl_real = 20 * np.log10(np.abs(p_real) + 1e-10)
+            
+            # Si le haut-parleur est inversé, on ajoute un petit (inv) dans la légende
+            label_suffix = " (inv)" if best_pols[i] < 0 else ""
+            plt.semilogx(self.freqs, spl_real, label=f"Réel {way.label}{label_suffix}", linewidth=2)
+            
+            spl_target = 20 * np.log10(np.abs(targets[way.label]) + 1e-10)
+            plt.semilogx(self.freqs, spl_target, 'k:', alpha=0.3)
+
+        plt.semilogx(self.freqs, 20 * np.log10(np.abs(p_sum) + 1e-10), label="Somme", color='red', linewidth=3)
         
-        plt.axhline(dynamic_spl, color='green', linestyle='--', alpha=0.4, label="Niveau de référence")
-        plt.axvline(self.fx, color='grey', linestyle='-.', label=f"Fx = {self.fx} Hz")
-        
+        for fx in fx_list:
+            plt.axvline(fx, color='grey', linestyle='--', alpha=0.5)
+            
+        plt.axhline(dynamic_spl, color='green', linestyle='--', alpha=0.5)
         plt.ylim(dynamic_spl - 40, dynamic_spl + 10)
         plt.xlim(20, 20000)
-        plt.grid(True, which="both", ls="-", alpha=0.3)
-        plt.legend(loc='lower left')
-        plt.title(f"Réponse Crossover (Score: {self.fitness(root):.2f} | SPL: {dynamic_spl:.1f} dB)")
-        plt.xlabel("Fréquence (Hz)")
-        plt.ylabel("SPL (dB)")
+        plt.grid(True, which="both", alpha=0.2)
+        plt.legend()
+        plt.title(f"Réponse {len(self.ways)}-voies (Score: {self.fitness(individual):.2f})")
         plt.savefig(filename)
         plt.close()
+        
+        
 
 if __name__ == "__main__":
-    w_f = ("Driver_Data/RS225-8@0.frd", "Driver_Data/RS225-8.zma")
-    t_f = ("Driver_Data/SEAS_27TDFC_tweeter_SPL.frd", "Driver_Data/SEAS_27TDFC_tweeter_ZR.zma")
-    opt = CrossoverOptimizer(w_f, t_f, fx=2000.0)
-    best = opt.run(generations=60, pop_size=60)
-    best.display()
-    opt.plot_result(best)
+    # CONFIGURATION 2-VOIES PERSONNALISÉE
+    config = [
+        WayConfig("Woofer", "Driver_Data/RS225-8@0.frd", "Driver_Data/RS225-8.zma", target_type='LP', z_offset_m=0.03),
+        WayConfig("Tweeter", "Driver_Data/SEAS_27TDFC_tweeter_SPL.frd", "Driver_Data/SEAS_27TDFC_tweeter_ZR.zma", target_type='HP', z_offset_m=0.0)
+    ]
+    
+    # Plage de recherche Fx entre 1500Hz et 3000Hz
+    opt = CrossoverOptimizer(config, fx_bounds=[(1500, 2200), (1500, 2500)])
+    best = opt.run(generations=100, pop_size=120)
+    best['tree'].display()

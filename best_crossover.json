@@ -1,84 +1,156 @@
 {
-    "type": "SeriesNode",
-    "id": "0271f16a",
-    "left": {
-        "type": "Resistor",
-        "id": "74770f37",
-        "value": 11.584133063973663,
-        "unit": "Ohm"
-    },
-    "right": {
+    "tree": {
         "type": "ParallelNode",
-        "id": "728cbcba",
+        "id": "0cf17302",
         "left": {
             "type": "SeriesNode",
-            "id": "444a0571",
+            "id": "df52b72f",
             "left": {
                 "type": "Inductor",
-                "id": "c266351e",
-                "value": 0.0011305104426244685,
+                "id": "4f3a328e",
+                "value": 0.0022,
                 "unit": "H"
             },
             "right": {
                 "type": "ParallelNode",
-                "id": "4302bf7c",
+                "id": "2e6ba0c8",
                 "left": {
-                    "type": "DriverNode",
-                    "id": "4b5f030f",
-                    "label": "Woofer",
-                    "polarity_inverted": false
+                    "type": "Capacitor",
+                    "id": "908817de",
+                    "value": 1.8e-05,
+                    "unit": "F"
                 },
                 "right": {
-                    "type": "ShuntNode",
-                    "id": "11aee7d7",
-                    "component": {
-                        "type": "Capacitor",
-                        "id": "04079eac",
-                        "value": 4.283122220923851e-05,
-                        "unit": "F"
+                    "type": "SeriesNode",
+                    "id": "a8930390",
+                    "left": {
+                        "type": "ParallelNode",
+                        "id": "07beb40b",
+                        "left": {
+                            "type": "Resistor",
+                            "id": "c99d273a",
+                            "value": 2.7,
+                            "unit": "Ohm"
+                        },
+                        "right": {
+                            "type": "Capacitor",
+                            "id": "4975c263",
+                            "value": 0.00016,
+                            "unit": "F"
+                        }
+                    },
+                    "right": {
+                        "type": "DriverNode",
+                        "id": "a5c2e5be",
+                        "label": "Woofer",
+                        "polarity_inverted": false
                     }
                 }
             }
         },
         "right": {
             "type": "SeriesNode",
-            "id": "8c7b5b66",
+            "id": "1c244891",
             "left": {
                 "type": "Capacitor",
-                "id": "1d9d5e88",
-                "value": 4.037884341033867e-06,
+                "id": "123058a0",
+                "value": 1.2e-05,
                 "unit": "F"
             },
             "right": {
-                "type": "ParallelNode",
-                "id": "6b5274e3",
+                "type": "SeriesNode",
+                "id": "edaf7894",
                 "left": {
-                    "type": "DriverNode",
-                    "id": "4d72f5ec",
-                    "label": "Tweeter",
-                    "polarity_inverted": false
-                },
-                "right": {
-                    "type": "ShuntNode",
-                    "id": "5d6390d1",
-                    "component": {
+                    "type": "ParallelNode",
+                    "id": "29d94b11",
+                    "left": {
+                        "type": "Resistor",
+                        "id": "dd363537",
+                        "value": 1.5,
+                        "unit": "Ohm"
+                    },
+                    "right": {
                         "type": "ParallelNode",
-                        "id": "66d506d8",
+                        "id": "72c4f620",
                         "left": {
                             "type": "Inductor",
-                            "id": "bea621f5",
-                            "value": 0.001021841158050927,
+                            "id": "d1dcc419",
+                            "value": 0.00027000000000000006,
                             "unit": "H"
                         },
                         "right": {
-                            "type": "Inductor",
-                            "id": "edae7279",
-                            "value": 0.0009119554708706944,
-                            "unit": "H"
+                            "type": "Capacitor",
+                            "id": "d2d9e2f4",
+                            "value": 3.9e-06,
+                            "unit": "F"
+                        }
+                    }
+                },
+                "right": {
+                    "type": "ParallelNode",
+                    "id": "692c6309",
+                    "left": {
+                        "type": "Inductor",
+                        "id": "81118f06",
+                        "value": 0.00024,
+                        "unit": "H"
+                    },
+                    "right": {
+                        "type": "ParallelNode",
+                        "id": "c2d01577",
+                        "left": {
+                            "type": "Capacitor",
+                            "id": "a9a49ca8",
+                            "value": 3.2999999999999997e-06,
+                            "unit": "F"
+                        },
+                        "right": {
+                            "type": "ParallelNode",
+                            "id": "0365a2ba",
+                            "left": {
+                                "type": "SeriesNode",
+                                "id": "71d1a7a7",
+                                "left": {
+                                    "type": "Resistor",
+                                    "id": "399ab1b6",
+                                    "value": 22.0,
+                                    "unit": "Ohm"
+                                },
+                                "right": {
+                                    "type": "ParallelNode",
+                                    "id": "9f960c4f",
+                                    "left": {
+                                        "type": "Inductor",
+                                        "id": "a24af64a",
+                                        "value": 0.00039,
+                                        "unit": "H"
+                                    },
+                                    "right": {
+                                        "type": "Capacitor",
+                                        "id": "ca4a3f9b",
+                                        "value": 9.1e-07,
+                                        "unit": "F"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "type": "DriverNode",
+                                "id": "0486535e",
+                                "label": "Tweeter",
+                                "polarity_inverted": false
+                            }
                         }
                     }
                 }
             }
         }
-    }
+    },
+    "fx": [
+        2188.5942316910455,
+        1642.2299129754174
+    ],
+    "best_polarities": [
+        1.0,
+        1.0
+    ]
 }

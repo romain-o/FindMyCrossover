@@ -163,42 +163,60 @@ class TreeMutator:
             # En parallèle, l'ordre importe peu pour la topologie IN/GND
             return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), new_component)
         else: # shunt
-            return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), ShuntNode(new_component))
+            return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), new_component)
+
+    def _generate_notch(self):
+        """Génère un filtre bouchon (LCR parallèle)."""
+        r = Resistor(random.uniform(1, 47))
+        l = Inductor(random.uniform(0.05e-3, 0.5e-3))
+        c = Capacitor(random.uniform(1e-6, 10e-6))
+        # Topologie : R + (L // C)
+        return SeriesNode(r, ParallelNode(l, c))
+    
+    def _generate_zobel(self):
+        """Génère un réseau RC série (Zobel)."""
+        r = Resistor(random.uniform(5, 15))
+        c = Capacitor(random.uniform(5e-6, 47e-6))
+        return SeriesNode(r, c)
+    
+    def _generate_lpad(self, target):
+        """Génère un atténuateur L-Pad autour de la cible."""
+        r_series = Resistor(random.uniform(0.5, 10))
+        r_parallel = Resistor(random.uniform(1, 47))
+        return SeriesNode(r_series, ParallelNode(r_parallel, target))
 
     def add_node(self, tree: Node) -> Node:
-        """Insère un nouveau composant en respectant la règle du HP terminal."""
+        """Insère un composant ou une macro évoluée dans l'arbre."""
         nodes = self._get_all_nodes(tree)
         target = random.choice(nodes)
-        
-        new_component = self._generate_random_component()
         target_has_driver = len(self._get_driver_labels(target)) > 0
 
         choice = random.random()
-        if choice < 0.35: # Standard Series/Parallel
+
+        # --- STRATÉGIE 1 : Insertion de Macros sur une voie avec HP ---
+        if target_has_driver and choice < 0.45:
+            sub_choice = random.random()
+            
+            if sub_choice < 0.35: # Macro Zobel (en parallèle du HP)
+                new_node = ParallelNode(target, self._generate_zobel())
+                
+            elif sub_choice < 0.70: # Macro Notch (en série avec le flux)
+                new_node = SeriesNode(self._generate_notch(), target)
+                
+            else: # Macro L-Pad (atténuation propre)
+                new_node = self._generate_lpad(target)
+
+        # --- STRATÉGIE 2 : Mutation atomique classique (Composants seuls) ---
+        else:
+            new_component = self._generate_random_component()
+            # On conserve votre logique de placement pour ne pas casser le flux
             if target_has_driver:
+                # 70% de chance de mettre en série pour créer une pente
                 new_node = SeriesNode(new_component, target) if random.random() < 0.7 else ParallelNode(target, new_component)
             else:
                 op = random.choice([SeriesNode, ParallelNode])
                 new_node = op(target, new_component)
-        elif choice < 0.50: # Shunt
-            new_node = SeriesNode(target, ShuntNode(new_component))
-        elif choice < 0.90: # Notch/Tank (Probabilité augmentée à 40% pour trouver les résonances)
-            comp2 = self._generate_random_component()
-            # Diversification agressive des valeurs pour balayer le spectre
-            if isinstance(new_component, Inductor): new_component.value = random.uniform(0.05e-3, 3e-3)
-            if isinstance(comp2, Capacitor): comp2.value = random.uniform(0.1e-6, 40e-6)
-            
-            while type(comp2) == type(new_component): comp2 = self._generate_random_component()
-            if random.random() < 0.5:
-                tank = ParallelNode(new_component, comp2)
-                new_node = SeriesNode(tank, target) if target_has_driver else SeriesNode(target, tank)
-            else:
-                tank = SeriesNode(new_component, comp2)
-                new_node = ParallelNode(target, ShuntNode(tank))
-        else: # L-Pad
-            r2 = Resistor(random.uniform(1, 20))
-            new_node = SeriesNode(new_component, ParallelNode(ShuntNode(r2), target))
-            
+
         tree = self._replace_node(tree, target, new_node)
         return self.simplify(tree)
 
@@ -235,25 +253,101 @@ class TreeMutator:
 
     def simplify(self, node: Node) -> Node:
         """
-        Simplifie l'arbre pour éliminer les structures redondantes (ex: doubles ShuntNode).
+        Simplifie l'arbre : Supprime les ShuntNodes devenus inutiles (Numpy) 
+        et fusionne TOUS les composants identiques d'une même branche (série ou parallèle),
+        même s'ils sont séparés par d'autres sous-nœuds.
         """
+        # 1. Élimination du ShuntNode
+        if isinstance(node, ShuntNode):
+            return self.simplify(node.component)
+
         if isinstance(node, SeriesNode):
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
+
+            # Fonction pour aplatir toute la branche série
+            def flatten_series(n):
+                if n is None: return []
+                if isinstance(n, SeriesNode):
+                    return flatten_series(n.left) + flatten_series(n.right)
+                return [n]
+            
+            elements = flatten_series(node)
+            
+            # Trier et grouper les composants
+            resistors = [e for e in elements if isinstance(e, Resistor)]
+            inductors = [e for e in elements if isinstance(e, Inductor)]
+            capacitors = [e for e in elements if isinstance(e, Capacitor)]
+            others = [e for e in elements if not isinstance(e, (Resistor, Inductor, Capacitor))]
+            
+            new_elements = []
+            
+            # Fusion mathématique en SÉRIE
+            if resistors:
+                new_elements.append(Resistor(sum(r.value for r in resistors)))
+            if inductors:
+                new_elements.append(Inductor(sum(l.value for l in inductors)))
+            if capacitors:
+                inv_c = sum(1.0 / (c.value + 1e-15) for c in capacitors)
+                new_elements.append(Capacitor(1.0 / inv_c))
+                
+            new_elements.extend(others)
+            
+            # Sécurité anti-nœud vide
+            if not new_elements:
+                return None
+            if len(new_elements) == 1:
+                return new_elements[0]
+                
+            # Reconstruire un bel arbre (penché vers la droite pour Schemdraw)
+            root = new_elements[-1]
+            for e in reversed(new_elements[:-1]):
+                root = SeriesNode(e, root)
+            return root
+
         elif isinstance(node, ParallelNode):
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
-        elif isinstance(node, ShuntNode):
-            # Règle 1 : ShuntNode(ShuntNode(X)) -> ShuntNode(X)
-            if isinstance(node.component, ShuntNode):
-                return self.simplify(node.component)
-            
-            # Règle 2 : ShuntNode(Driver) -> Driver
-            if isinstance(node.component, DriverNode):
-                return self.simplify(node.component)
+
+            # Fonction pour aplatir toute la branche parallèle
+            def flatten_parallel(n):
+                if n is None: return []
+                if isinstance(n, ParallelNode):
+                    return flatten_parallel(n.left) + flatten_parallel(n.right)
+                return [n]
                 
-            node.component = self.simplify(node.component)
-        
+            elements = flatten_parallel(node)
+            
+            resistors = [e for e in elements if isinstance(e, Resistor)]
+            inductors = [e for e in elements if isinstance(e, Inductor)]
+            capacitors = [e for e in elements if isinstance(e, Capacitor)]
+            others = [e for e in elements if not isinstance(e, (Resistor, Inductor, Capacitor))]
+            
+            new_elements = []
+            
+            # Fusion mathématique en PARALLÈLE
+            if resistors:
+                inv_r = sum(1.0 / (r.value + 1e-15) for r in resistors)
+                new_elements.append(Resistor(1.0 / inv_r))
+            if inductors:
+                inv_l = sum(1.0 / (l.value + 1e-15) for l in inductors)
+                new_elements.append(Inductor(1.0 / inv_l))
+            if capacitors:
+                new_elements.append(Capacitor(sum(c.value for c in capacitors)))
+                
+            new_elements.extend(others)
+            
+            if not new_elements:
+                return None
+            if len(new_elements) == 1:
+                return new_elements[0]
+                
+            # Reconstruire l'arbre
+            root = new_elements[-1]
+            for e in reversed(new_elements[:-1]):
+                root = ParallelNode(e, root)
+            return root
+
         return node
 
     def crossover(self, parent1: Node, parent2: Node) -> Node:

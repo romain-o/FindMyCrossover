@@ -107,7 +107,7 @@ class TreeMutator:
     def mutate_component_type(self, tree: Node) -> Node:
         """Change un type de composant (R <-> C <-> L)."""
         nodes = self._get_all_nodes(tree)
-        components = [n for n in nodes if isinstance(n, ComponentNode)]
+        components = [n for n in nodes if isinstance(n, (Resistor, Capacitor, Inductor))]
         
         if components:
             target = random.choice(components)

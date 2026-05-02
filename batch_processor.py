@@ -6,10 +6,10 @@ import json
 from pathlib import Path
 
 # --- CONFIGURATION ---
-N_CROSSOVERS_A_TRAITER = 5  # Combien de crossovers voulez-vous générer en une fois ?
-DOSSIER_DATA = "Data_Clean" # Le dossier propre que nous avons créé
-DOSSIER_SORTIE = "Crossovers_Finis" # Là où iront les PDF/PNG/VXP
-FICHIER_CSV = "paires_W_T_priorisees.csv"
+N_CROSSOVERS_A_TRAITER = 2  # Combien de crossovers voulez-vous générer en une fois ?
+DOSSIER_DATA = r"data" # Le dossier propre que nous avons créé
+DOSSIER_SORTIE = r"crossovers" # Là où iront les PDF/PNG/VXP
+FICHIER_CSV = r"data\W_T_pairs.csv"
 
 def get_driver_files(driver_name, category):
     """Trouve les bons chemins FRD (0deg) et ZMA pour un driver."""
@@ -40,6 +40,8 @@ def process_batch():
         if crossovers_traites >= N_CROSSOVERS_A_TRAITER:
             break # Objectif atteint !
 
+        crossovers_traites += 1
+        
         woofer = row['Woofer (W)']
         tweeter = row['Tweeter (T)']
         nom_projet = f"{woofer}_X_{tweeter}"
@@ -73,7 +75,9 @@ def process_batch():
             "--tweeter_frd", t_frd,
             "--tweeter_zma", t_zma,
             "--out_dir", dossier_projet,
-            "--name", nom_projet
+            "--name", nom_projet,
+            "--gen", "10", 
+            "--pop", "100"
         ]
         
         print(f"[*] Lancement de l'algorithme génétique...")
@@ -97,7 +101,6 @@ def process_batch():
                 json.dump(metadata, f, indent=4, ensure_ascii=False)
                 
             print(f"[+] Projet {nom_projet} terminé avec succès !")
-            crossovers_traites += 1
             
         except subprocess.CalledProcessError as e:
             print(f"[-] L'optimisation a échoué (Crash) pour {nom_projet}. Code d'erreur : {e.returncode}")

@@ -1,0 +1,245 @@
+Woofer (W),Tweeter (T),Gamme,Catégorie,Prix Total ($),Score Popularité,Priorité Calcul
+RS150-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),82.0,10,170
+RS225-4,ND25FA-4,Milieu de gamme,Ultra Populaire (Classique DIY),83.0,10,170
+RS150-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),86.0,10,170
+RS150-4,RST28A-4,Milieu de gamme,Ultra Populaire (Classique DIY),88.0,10,170
+RS180-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),92.0,10,170
+RS180-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),92.0,10,170
+RS180-4,RST28A-4,Milieu de gamme,Ultra Populaire (Classique DIY),94.0,10,170
+RS225-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),106.0,10,170
+RS225-4,RST28A-4,Milieu de gamme,Ultra Populaire (Classique DIY),108.0,10,170
+RS225-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),110.0,10,170
+RS125-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),50.0,10,160
+RS150-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),63.0,10,160
+RS180-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),69.0,10,160
+RS125-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),73.0,10,160
+RS125-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),73.0,10,160
+RS125-4,RST28A-4,Entrée de gamme,Ultra Populaire (Classique DIY),75.0,10,160
+RS150-8,AMT-Mini-8,Milieu de gamme,Ultra Populaire (Classique DIY),80.0,9,160
+RS150P-4A,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),82.0,9,160
+RS180-8,DC28F-8,Milieu de gamme,Ultra Populaire (Classique DIY),83.0,9,160
+SIG180-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),89.0,9,160
+RS180-8,AMT-Mini-8,Milieu de gamme,Ultra Populaire (Classique DIY),90.0,9,160
+SIG180-4,RST28A-4,Milieu de gamme,Ultra Populaire (Classique DIY),91.0,9,160
+RS225-8,ND28F-6,Milieu de gamme,Ultra Populaire (Classique DIY),92.0,9,160
+RS180P-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),92.0,9,160
+RS180S-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),98.0,9,160
+RS225-8,DC28F-8,Milieu de gamme,Ultra Populaire (Classique DIY),101.0,9,160
+RS125-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),103.0,9,160
+RS225P-4A,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),106.0,9,160
+SIG225-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),109.0,9,160
+RS150-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),116.0,9,160
+RS180-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),122.0,9,160
+RS150-8,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),128.0,9,160
+RS150-4,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),132.0,9,160
+RS225-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),136.0,9,160
+RS180-8,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),138.0,9,160
+RS180-4,AMT3-4,Milieu de gamme,Ultra Populaire (Classique DIY),142.0,9,160
+RS270-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),146.0,9,160
+RS225-8,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),156.0,9,160
+RS225-4,AMT3-4,Milieu de gamme,Ultra Populaire (Classique DIY),156.0,9,160
+RS225-8,AMT3-4,Milieu de gamme,Ultra Populaire (Classique DIY),160.0,9,160
+RS180-4,AMTPRO-4,Milieu de gamme,Ultra Populaire (Classique DIY),168.0,9,160
+RS225-4,AMTPRO-4,Milieu de gamme,Ultra Populaire (Classique DIY),182.0,9,160
+RS225-8,AMTPRO-4,Milieu de gamme,Ultra Populaire (Classique DIY),186.0,9,160
+DC160-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),43.0,9,150
+GF180-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),43.0,9,150
+ND140-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),46.0,9,150
+ND140-8,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),46.0,9,150
+RS125-4,ND25FN-4,Entrée de gamme,Ultra Populaire (Classique DIY),50.0,9,150
+RS125P-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),50.0,9,150
+RS125-4,ND25FW-4,Entrée de gamme,Ultra Populaire (Classique DIY),53.0,9,150
+SIG150-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),54.0,9,150
+RS125-8,ND28F-6,Entrée de gamme,Ultra Populaire (Classique DIY),55.0,9,150
+RS150P-4A,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),59.0,9,150
+RS150-4,ND25FN-4,Entrée de gamme,Ultra Populaire (Classique DIY),63.0,9,150
+RS150-8,ND28F-6,Entrée de gamme,Ultra Populaire (Classique DIY),64.0,9,150
+RS125-8,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),64.0,9,150
+DC160-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,9,150
+SIG180-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,9,150
+GF180-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,9,150
+GF180-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,9,150
+DC160-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,9,150
+RS150-4,ND25FW-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,9,150
+RS180P-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),69.0,9,150
+ND140-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),69.0,9,150
+ND140-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),69.0,9,150
+RS125-8,AMT-Mini-8,Entrée de gamme,Ultra Populaire (Classique DIY),71.0,9,150
+RS125P-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),73.0,9,150
+RS150-8,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),73.0,9,150
+RS180-8,ND28F-6,Entrée de gamme,Ultra Populaire (Classique DIY),74.0,9,150
+SIG150-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),77.0,9,150
+SIG150-4,RST28A-4,Entrée de gamme,Ultra Populaire (Classique DIY),79.0,9,150
+DS175-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),81.0,8,150
+DC250-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),81.0,8,150
+RS180P-8,DC28F-8,Milieu de gamme,Ultra Populaire (Classique DIY),83.0,8,150
+DSA175-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),86.0,8,150
+DA215-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),86.0,8,150
+RS180-8,DC28FS,Milieu de gamme,Ultra Populaire (Classique DIY),87.0,8,150
+RS180S-8,DC28F-8,Milieu de gamme,Ultra Populaire (Classique DIY),89.0,8,150
+LW150-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),89.0,8,150
+RS150-4,AN25F-4,Milieu de gamme,Ultra Populaire (Classique DIY),89.0,8,150
+RS125-4,AMTPOD-4,Milieu de gamme,Ultra Populaire (Classique DIY),92.0,8,150
+DCS165-4,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),94.0,8,150
+GF180-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),96.0,8,150
+DC300-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),97.0,8,150
+DS215-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),97.0,8,150
+RS225P-8A,DC28F-8,Milieu de gamme,Ultra Populaire (Classique DIY),97.0,8,150
+MB1025-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),104.0,8,150
+DSA215-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),104.0,8,150
+RS150-4,AMTPOD-4,Milieu de gamme,Ultra Populaire (Classique DIY),105.0,8,150
+DC160-8,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),112.0,8,150
+SIG180-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),119.0,8,150
+E150HE-44,ND25FA-4,Milieu de gamme,Ultra Populaire (Classique DIY),131.0,8,150
+SIG180-4,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),135.0,8,150
+RS270-8,DC28F-8,Milieu de gamme,Ultra Populaire (Classique DIY),137.0,8,150
+SIG225-4,AMT2-4,Milieu de gamme,Ultra Populaire (Classique DIY),139.0,8,150
+DC380-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),139.0,8,150
+RS180S-8,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),144.0,8,150
+DS315-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),149.0,8,150
+E180HE-44,ND25FA-4,Milieu de gamme,Ultra Populaire (Classique DIY),151.0,8,150
+E150HE-44,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),154.0,8,150
+SIG225-4,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),155.0,8,150
+SIG225-4,AMT3-4,Milieu de gamme,Ultra Populaire (Classique DIY),159.0,8,150
+DSA315-8,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),164.0,8,150
+E180HE-44,RST28F-4,Milieu de gamme,Ultra Populaire (Classique DIY),174.0,8,150
+RS225-4,AMTHR-4,Milieu de gamme,Ultra Populaire (Classique DIY),181.0,8,150
+SIG225-4,AMTPRO-4,Milieu de gamme,Ultra Populaire (Classique DIY),185.0,8,150
+RS270-8,PT2C-8,Milieu de gamme,Ultra Populaire (Classique DIY),192.0,8,150
+RS270-8,AMT3-4,Milieu de gamme,Ultra Populaire (Classique DIY),196.0,8,150
+TCP115-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),27.0,8,140
+DC130B-4,ND16FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),38.0,8,140
+RS100-4,ND16FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),39.0,8,140
+DC130B-8,ND20FA-6,Entrée de gamme,Ultra Populaire (Classique DIY),40.0,8,140
+RS100-8,ND20FA-6,Entrée de gamme,Ultra Populaire (Classique DIY),41.0,8,140
+RS100P-8,ND20FA-6,Entrée de gamme,Ultra Populaire (Classique DIY),41.0,8,140
+ND105-4,ND16FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),42.0,8,140
+DC160-4,ND25FN-4,Entrée de gamme,Ultra Populaire (Classique DIY),43.0,8,140
+ND105-8,ND20FA-6,Entrée de gamme,Ultra Populaire (Classique DIY),44.0,8,140
+SIG120-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),44.0,8,140
+ND140-4,ND25FN-4,Entrée de gamme,Ultra Populaire (Classique DIY),46.0,8,140
+DC160-4,ND25FW-4,Entrée de gamme,Ultra Populaire (Classique DIY),46.0,8,140
+RS125-4,TD24F-4,Entrée de gamme,Ultra Populaire (Classique DIY),49.0,8,140
+ND140-4,ND25FW-4,Entrée de gamme,Ultra Populaire (Classique DIY),49.0,8,140
+TCP115-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),50.0,8,140
+TCP115-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),50.0,8,140
+RS125-4,ND25TA-4,Entrée de gamme,Ultra Populaire (Classique DIY),53.0,8,140
+RS125-8,DC25T-8,Entrée de gamme,Ultra Populaire (Classique DIY),57.0,8,140
+GF180-8,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),57.0,8,140
+SIG150-4,ND25FW-4,Entrée de gamme,Ultra Populaire (Classique DIY),57.0,8,140
+DC160-8,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),57.0,8,140
+RS125-4,TD25F-4,Entrée de gamme,Ultra Populaire (Classique DIY),59.0,8,140
+ND140-8,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),60.0,8,140
+RS150-4,TD24F-4,Entrée de gamme,Ultra Populaire (Classique DIY),62.0,8,140
+DC160-4,AMT-Mini-8,Entrée de gamme,Ultra Populaire (Classique DIY),64.0,8,140
+RS125P-8,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),64.0,8,140
+RS150P-8A,ND28F-6,Entrée de gamme,Ultra Populaire (Classique DIY),64.0,8,140
+DC160-8,AMT-Mini-8,Entrée de gamme,Ultra Populaire (Classique DIY),64.0,8,140
+LW150-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,8,140
+RS150-4,ND25TA-4,Entrée de gamme,Ultra Populaire (Classique DIY),66.0,8,140
+SIG120-4,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),67.0,8,140
+RS125-8,DC28FS,Entrée de gamme,Ultra Populaire (Classique DIY),68.0,8,140
+DA175-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),71.0,8,140
+DS135-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),71.0,8,140
+DSA135-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),71.0,8,140
+DCS165-4,ND25FA-4,Entrée de gamme,Ultra Populaire (Classique DIY),71.0,8,140
+DC200-8,RST28F-4,Entrée de gamme,Ultra Populaire (Classique DIY),71.0,8,140
+RS150-4,TD25F-4,Entrée de gamme,Ultra Populaire (Classique DIY),72.0,8,140
+RS150P-8A,DC28F-8,Entrée de gamme,Ultra Populaire (Classique DIY),73.0,8,140
+RS125-4,AN25F-4,Entrée de gamme,Ultra Populaire (Classique DIY),76.0,8,140
+RS150-8,DC28FS,Entrée de gamme,Ultra Populaire (Classique DIY),77.0,8,140
+RS180-4,TD25F-4,Entrée de gamme,Ultra Populaire (Classique DIY),78.0,8,140
+RS270-8,AMTPRO-4,High-End,Ultra Populaire (Classique DIY),222.0,8,130
+DS215-8,DC28F-8,Milieu de gamme,Valeur Sûre,88.0,7,90
+DC300-8,DC28F-8,Milieu de gamme,Valeur Sûre,88.0,7,90
+RC180-55,RST28F-4,Milieu de gamme,Valeur Sûre,94.0,7,90
+MB1025-8,DC28F-8,Milieu de gamme,Valeur Sûre,95.0,7,90
+DSA215-8,DC28F-8,Milieu de gamme,Valeur Sûre,95.0,7,90
+DCS205-4,RST28F-4,Milieu de gamme,Valeur Sûre,107.0,7,90
+DCS255-4,RST28F-4,Milieu de gamme,Valeur Sûre,124.0,7,90
+DC250-8,PT2C-8,Milieu de gamme,Valeur Sûre,127.0,7,90
+DC380-8,DC28F-8,Milieu de gamme,Valeur Sûre,130.0,7,90
+DA215-8,PT2C-8,Milieu de gamme,Valeur Sûre,132.0,7,90
+DCS305-4,RST28F-4,Milieu de gamme,Valeur Sûre,139.0,7,90
+DS315-8,DC28F-8,Milieu de gamme,Valeur Sûre,140.0,7,90
+DS215-8,PT2C-8,Milieu de gamme,Valeur Sûre,143.0,7,90
+DC300-8,PT2C-8,Milieu de gamme,Valeur Sûre,143.0,7,90
+DC300-8,AMT3-4,Milieu de gamme,Valeur Sûre,147.0,7,90
+DSA215-8,PT2C-8,Milieu de gamme,Valeur Sûre,150.0,7,90
+MB1025-8,PT2C-8,Milieu de gamme,Valeur Sûre,150.0,7,90
+DSA315-8,DC28F-8,Milieu de gamme,Valeur Sûre,155.0,7,90
+DCS385-4,RST28F-4,Milieu de gamme,Valeur Sûre,164.0,7,90
+LS10-44,ND25FA-4,Milieu de gamme,Valeur Sûre,166.0,7,90
+DC380-8,AMT3-4,Milieu de gamme,Valeur Sûre,189.0,7,90
+LS10-44,RST28F-4,Milieu de gamme,Valeur Sûre,189.0,7,90
+SIG270-4,AMT3-4,Milieu de gamme,Valeur Sûre,192.0,7,90
+DS315-8,PT2C-8,Milieu de gamme,Valeur Sûre,195.0,7,90
+DS315-8,AMT3-4,Milieu de gamme,Valeur Sûre,199.0,7,90
+TCP115-4,ND25FW-4,Entrée de gamme,Valeur Sûre,30.0,7,80
+ND91-4,ND16FA-4,Entrée de gamme,Valeur Sûre,37.0,7,80
+DS115-8,ND20FA-6,Entrée de gamme,Valeur Sûre,37.0,7,80
+DC130B-8,ND16FA-6,Entrée de gamme,Valeur Sûre,38.0,7,80
+RS100-4,ND13FA-4,Entrée de gamme,Valeur Sûre,38.0,7,80
+DC130B-4,TD24F-4,Entrée de gamme,Valeur Sûre,39.0,7,80
+DC130AS-8,ND20FA-6,Entrée de gamme,Valeur Sûre,39.0,7,80
+RS100-8,ND16FA-6,Entrée de gamme,Valeur Sûre,39.0,7,80
+ND91-8,ND20FA-6,Entrée de gamme,Valeur Sûre,39.0,7,80
+DC130BS-8,ND20FA-6,Entrée de gamme,Valeur Sûre,40.0,7,80
+DC130B-4,TD20F-4,Entrée de gamme,Valeur Sûre,40.0,7,80
+DC130BS-4,ND16FA-4,Entrée de gamme,Valeur Sûre,40.0,7,80
+TCP115-8,DC28F-8,Entrée de gamme,Valeur Sûre,41.0,7,80
+RS100-4,TD20F-4,Entrée de gamme,Valeur Sûre,41.0,7,80
+DSA115-8,ND20FA-6,Entrée de gamme,Valeur Sûre,42.0,7,80
+ND105-8,ND16FA-6,Entrée de gamme,Valeur Sûre,42.0,7,80
+DC130B-4,ND20FB-4,Entrée de gamme,Valeur Sûre,42.0,7,80
+RS100-4,ND20FB-4,Entrée de gamme,Valeur Sûre,43.0,7,80
+RS100P-4,ND20FB-4,Entrée de gamme,Valeur Sûre,43.0,7,80
+DC130B-4,ND25TA-4,Entrée de gamme,Valeur Sûre,43.0,7,80
+ND105-4,TD20F-4,Entrée de gamme,Valeur Sûre,44.0,7,80
+ND105-4,ND20FB-4,Entrée de gamme,Valeur Sûre,46.0,7,80
+SIG120-4,ND25FW-4,Entrée de gamme,Valeur Sûre,47.0,7,80
+DC130B-8,DC25T-8,Entrée de gamme,Valeur Sûre,47.0,7,80
+RS100-8,DC25T-8,Entrée de gamme,Valeur Sûre,48.0,7,80
+DC160-4,TD25F-4,Entrée de gamme,Valeur Sûre,52.0,7,80
+DC130B-4,CF18N-4,Entrée de gamme,Valeur Sûre,55.0,7,80
+RS100-4,CF18N-4,Entrée de gamme,Valeur Sûre,56.0,7,80
+DSA135-8,DC28F-8,Entrée de gamme,Valeur Sûre,62.0,7,80
+DC200-8,DC28F-8,Entrée de gamme,Valeur Sûre,62.0,7,80
+DA175-8,DC28F-8,Entrée de gamme,Valeur Sûre,62.0,7,80
+DS135-8,DC28F-8,Entrée de gamme,Valeur Sûre,62.0,7,80
+SIG150-4,TD25F-4,Entrée de gamme,Valeur Sûre,63.0,7,80
+RS100-4,AN25F-4,Entrée de gamme,Valeur Sûre,67.0,7,80
+DC160-4,AN25F-4,Entrée de gamme,Valeur Sûre,69.0,7,80
+DS175-8,DC28F-8,Entrée de gamme,Valeur Sûre,72.0,7,80
+DC250-8,DC28F-8,Entrée de gamme,Valeur Sûre,72.0,7,80
+DA215-8,DC28F-8,Entrée de gamme,Valeur Sûre,77.0,7,80
+DSA175-8,DC28F-8,Entrée de gamme,Valeur Sûre,77.0,7,80
+RC180-55,DC28F-8,Milieu de gamme,Valeur Sûre,85.0,6,80
+DCS205-4,DC28F-8,Milieu de gamme,Valeur Sûre,98.0,6,80
+DCS255-4,DC28F-8,Milieu de gamme,Valeur Sûre,115.0,6,80
+DC130B-8,PHT1-6,Milieu de gamme,Valeur Sûre,119.0,6,80
+RS100-8,PHT1-6,Milieu de gamme,Valeur Sûre,120.0,6,80
+DCS305-4,DC28F-8,Milieu de gamme,Valeur Sûre,130.0,6,80
+DCS255-4,PT2C-8,Milieu de gamme,Valeur Sûre,170.0,6,80
+DCS305-4,PT2C-8,Milieu de gamme,Valeur Sûre,185.0,6,80
+DCS305-4,AMT3-4,Milieu de gamme,Valeur Sûre,189.0,6,80
+DA115-8,ND20FA-6,Entrée de gamme,Valeur Sûre,34.0,6,70
+ND91-4,ND13FA-4,Entrée de gamme,Valeur Sûre,36.0,6,70
+ND91-8,ND16FA-6,Entrée de gamme,Valeur Sûre,37.0,6,70
+DA135-8,ND20FA-6,Entrée de gamme,Valeur Sûre,37.0,6,70
+DC130BS-4,TD24F-4,Entrée de gamme,Valeur Sûre,41.0,6,70
+DC130BS-4,ND20FB-4,Entrée de gamme,Valeur Sûre,44.0,6,70
+DS115-8,DC25T-8,Entrée de gamme,Valeur Sûre,44.0,6,70
+DC130AS-8,DC25T-8,Entrée de gamme,Valeur Sûre,46.0,6,70
+DC130BS-8,DC25T-8,Entrée de gamme,Valeur Sûre,47.0,6,70
+DSA115-8,DC25T-8,Entrée de gamme,Valeur Sûre,49.0,6,70
+DA135-8,DC28F-8,Entrée de gamme,Valeur Sûre,51.0,6,70
+E180HE-44,AMT2-4,High-End,Valeur Sûre,204.0,7,70
+DSA315-8,PT2C-8,High-End,Valeur Sûre,210.0,7,70
+DSA315-8,AMT3-4,High-End,Valeur Sûre,214.0,7,70
+DC380-8,AMTPRO-4,High-End,Valeur Sûre,215.0,7,70
+SIG270-4,AMTPRO-4,High-End,Valeur Sûre,218.0,7,70
+DA115-8,DC25T-8,Entrée de gamme,Niche / Original,41.0,5,60
+DCS385-4,AMT3-4,High-End,Valeur Sûre,214.0,6,60
+SIG270-4,AMTHR-4,High-End,Valeur Sûre,217.0,6,60
+DCS385-4,AMTPRO-4,High-End,Valeur Sûre,240.0,6,60

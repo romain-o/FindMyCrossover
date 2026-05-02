@@ -45,8 +45,41 @@ class VituixCloneGenerator:
             ET.SubElement(d_node, "MinimumPhase").text = "False"; ET.SubElement(d_node, "ResponseSmooth").text = "None"
             ET.SubElement(d_node, "ImpedanceFile").text = cfg['z']
             ET.SubElement(d_node, "ImpedanceScale").text = "1"
-            resp = ET.SubElement(d_node, "RESPONSE", ri="0")
-            ET.SubElement(resp, "FileName").text = cfg['f']; ET.SubElement(resp, "Hor").text = "0"; ET.SubElement(resp, "Ver").text = "0"
+            
+            ET.SubElement(d_node, "X").text = str(cfg.get('x_offset', 0.0) * 1000) # Convert m to mm
+            ET.SubElement(d_node, "Y").text = str(cfg.get('y_offset', 0.0) * 1000) # Convert m to mm
+            ET.SubElement(d_node, "Z").text = str(cfg.get('z_offset', 0.0) * 1000) # Convert m to mm
+            ET.SubElement(d_node, "R").text = "0"
+            ET.SubElement(d_node, "T").text = "0"
+            
+            # --- NOUVEAU : Boucle d'injection Multi-Angles ---
+            ri_index = 0
+            frd_dict = cfg.get('frd_dict', {})
+            
+            if not frd_dict:
+                # Sécurité si aucun fichier n'est trouvé
+                resp = ET.SubElement(d_node, "RESPONSE", ri="0")
+                ET.SubElement(resp, "FileName").text = ""
+                ET.SubElement(resp, "Hor").text = "0"
+                ET.SubElement(resp, "Ver").text = "0"
+            else:
+                for angle, filepath in frd_dict.items():
+                    resp = ET.SubElement(d_node, "RESPONSE", ri=str(ri_index))
+                    ET.SubElement(resp, "FileName").text = filepath
+                    ET.SubElement(resp, "Hor").text = str(angle)
+                    ET.SubElement(resp, "Ver").text = "0"
+                    
+                    # Astuce VituixCAD : On copie les angles positifs en négatifs pour 
+                    # simuler une symétrie horizontale parfaite si on ne mesure qu'un côté !
+                    if angle > 0:
+                        ri_index += 1
+                        resp_sym = ET.SubElement(d_node, "RESPONSE", ri=str(ri_index))
+                        ET.SubElement(resp_sym, "FileName").text = filepath
+                        ET.SubElement(resp_sym, "Hor").text = str(-angle) # Angle négatif
+                        ET.SubElement(resp_sym, "Ver").text = "0"
+                        
+                    ri_index += 1
+            # --------------------------------------------------
 
     def generate_schematic(self, netlist):
         ET.SubElement(self.root, "Variant").text = "0"
@@ -101,7 +134,10 @@ class VituixCloneGenerator:
             ET.SubElement(p, "Unit").text = unit
             ET.SubElement(p, "Optimize").text = "False"
             ET.SubElement(p, "Expression")
-            ET.SubElement(p, "Min").text = "0.001"
+            if k in ['X', 'Y', 'Z']:
+                ET.SubElement(p, "Min").text = "-10000" # Autorise jusqu'à -10 mètres
+            else:
+                ET.SubElement(p, "Min").text = "0.001"  # Reste à 1 µm pour l'électrique
             ET.SubElement(p, "Max").text = "100000"
             ET.SubElement(p, "OptiBlock").text = "False"
 
@@ -115,8 +151,8 @@ class VituixCloneGenerator:
         if ctype == 'Generator': return [('Eg', val, 'V'), ('Tg', 0, 'us'), ('Rg', 0.001, 'Ω')]
         if ctype == 'Resistor': return [('R', val, 'Ω'), ('Pow', 5, 'W')]
         if ctype == 'Capacitor': return [('C', val*1e6, 'uF'), ('ESR', 0.01, 'Ω')]
-        if ctype == 'Inductor': return [('L', val*1000, 'mH'), ('DCR', 0.28, 'Ω'), ('Wire', 1.4, 'mm'), ('Rpar', 1000000, 'Ω'), ('Cpar', 0.0001, 'uF')]
-        if ctype == 'Driver': return [('X', 0, 'mm'), ('Y', 0, 'mm'), ('Z', 0, 'mm'), ('R', 0, 'deg'), ('T', 0, 'deg')]
+        if ctype == 'Inductor': return [('L', val*1000, 'mH'), ('DCR', val*400, 'Ω'), ('Wire', 1.4, 'mm'), ('Rpar', 1000000, 'Ω'), ('Cpar', 0.0001, 'uF')]
+        if ctype == 'Driver': return [('X', item.get('x_offset', 0), 'mm'), ('Y', item.get('y_offset', 0), 'mm'), ('Z', item.get('z_offset', 0), 'mm'), ('R', 0, 'deg'), ('T', 0, 'deg')]
         return []
 
     def save(self):
@@ -295,20 +331,26 @@ class VituixAdapter:
         elif isinstance(node, DriverNode):
             # Le Haut-Parleur VituixCAD
             model_name = node.label
-            is_inv = False
+            x_off, y_off, z_off = 0.0, 0.0, 0.0
             for idx, w in enumerate(ways_configs):
                 if w.label == node.label:
                     model_name = getattr(w.driver, 'model_name', model_name)
-                    if polarities and idx < len(polarities) and polarities[idx] < 0:
-                        is_inv = True
+                    # 2. Récupération des offsets réels configurés dans Python
+                    x_off = getattr(w, 'x_offset', 0.0)
+                    y_off = getattr(w, 'y_offset', 0.0)
+                    z_off = getattr(w, 'z_offset', 0.0)
                     break
+            
 
             cx, cy = x_in + 1, y_in + 3
             y_bot = y_in + 6
             self.netlist.append({
                 'Type': 'Driver', 'Component': self._get_id('D'),
                 'Layout': {'CenX': str(cx), 'CenY': str(cy), 'Rotated': 'False', 'Wires': [(x_in, y_in), (x_in, y_bot)]},
-                'Value_Main': 0, 'Model': model_name, 'Inverted': is_inv
+                'Value_Main': 0, 'Model': model_name,
+                'x_offset': x_off * 1000,
+                'y_offset': y_off * 1000,
+                'z_offset': z_off * 1000
             })
 
             # Masse obligatoire fermant la boucle du Driver
@@ -320,10 +362,25 @@ class VituixAdapter:
         # 1. Montage des modèles
         drivers_config = []
         for way in ways_configs:
+            frd_dict = {}
+            if way.frd_path and os.path.exists(way.frd_path):
+                # On force le 0° comme base
+                frd_dict[0] = os.path.abspath(way.frd_path)
+                
+                # On cherche s'il y a des fichiers hors-axe associés
+                for angle in [15, 30, 45, 60, 75, 90]:
+                    angle_str = f"{angle}deg"
+                    off_axis_path = way.frd_path.replace('0deg', angle_str)
+                    if os.path.exists(off_axis_path):
+                        frd_dict[angle] = os.path.abspath(off_axis_path)
+            # ------------------------------------------------------------------
             drivers_config.append({
                 'name': way.driver.model_name if hasattr(way.driver, 'model_name') else way.label,
-                'f': os.path.abspath(way.frd_path) if way.frd_path else "",
-                'z': os.path.abspath(way.zma_path) if way.zma_path else ""
+                'frd_dict': frd_dict,
+                'z': os.path.abspath(way.zma_path) if way.zma_path else "",
+                'x_offset': way.x_offset * 1000,
+                'y_offset': way.y_offset * 1000,
+                'z_offset': way.z_offset * 1000
             })
         self.generator.add_drivers(drivers_config)
         

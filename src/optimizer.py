@@ -7,7 +7,6 @@ from src.nodes import DriverNode, SeriesNode, ParallelNode, ShuntNode, Capacitor
 from src.evaluator import CircuitEvaluator
 from src.mutator import TreeMutator
 from scipy.optimize import minimize
-import itertools
 from src.schematic import SchematicRenderer
 import time
 
@@ -61,13 +60,14 @@ def snap_to_e24(val):
 
 class WayConfig:
     """Configuration d'une voie acoustique (Grave, Médium, Aigu, etc.)"""
-    def __init__(self, label, frd_path, zma_path, target_type='LP', order=4, z_offset_m=0.0):
+    def __init__(self, label, frd_path, zma_path, order=4, z_offset=0.0, y_offset=0.0, x_offset=0.0):
         self.label = label
         self.frd_path = frd_path
         self.zma_path = zma_path
-        self.target_type = target_type
         self.order = order
-        self.z_offset_m = z_offset_m
+        self.z_offset = z_offset
+        self.y_offset = y_offset 
+        self.x_offset = x_offset
         self.driver = DriverNode(label, frd_path, zma_path)
 
 class CrossoverOptimizer:
@@ -134,7 +134,7 @@ class CrossoverOptimizer:
         ph_interp = np.interp(self.freqs, d.frd_freqs, ph_unwrapped)
         d.H_acoustic = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
         
-        delay_s = way.z_offset_m / 343.0
+        delay_s = np.linalg.norm([way.x_offset, way.y_offset, way.z_offset + 2]) / 343.0
         phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
         d.H_acoustic *= phase_delay
 
@@ -149,7 +149,7 @@ class CrossoverOptimizer:
         if type == 'HP': return (s**4) / poly
         return np.ones_like(self.freqs)
 
-    def fitness(self, individual, fixed_pols=None):
+    def fitness(self, individual):
         # ============================================================
         # OPTIMISATION #3 : Cache du score de fitness
         # → Un individu non modifié n'est JAMAIS réévalué.
@@ -158,8 +158,6 @@ class CrossoverOptimizer:
         #   Les nouveaux enfants (mutés/croisés) n'ont pas la clé
         #   '_cached_score', donc sont toujours évalués.
         # ============================================================
-        if fixed_pols is None and '_cached_score' in individual:
-            return individual['_cached_score']
 
         root = individual['tree']
 
@@ -171,68 +169,57 @@ class CrossoverOptimizer:
         total_mse = 0.0
 
         best_score_sum = float('inf')
-        best_polarities = [1.0] * len(self.ways)
         
-        if fixed_pols is not None:
-            pol_combinations = [tuple(fixed_pols[1:])]
-        else:
-            pol_combinations = list(itertools.product([1.0, -1.0], repeat=len(self.ways)-1))
+        p_sum_test = np.zeros_like(self.freqs, dtype=complex)
+        p_ways = []
         
-        for pols in pol_combinations:
-            current_pols = [1.0] + list(pols)
-            p_sum_test = np.zeros_like(self.freqs, dtype=complex)
-            p_ways = []
+        for i, way in enumerate(self.ways):
+            p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+            p_ways.append(p_real)
+            p_sum_test += p_real
             
-            for i, way in enumerate(self.ways):
-                p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
-                p_adj = p_real * current_pols[i]
-                p_ways.append(p_adj)
-                p_sum_test += p_adj 
+        spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
+        diff = spl_sum_test - dynamic_spl
+        
+        # ============================================================
+        # OPTIMISATION #4 : Partir du poids pré-calculé (copie rapide)
+        # au lieu de recrér un array de zéros + le remplir
+        # ============================================================
+        dynamic_weight = self._base_weight.copy()
+        
+        for j in range(len(self.ways) - 1):
+            mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
+            mag2 = 20 * np.log10(np.abs(p_ways[j+1]) + 1e-12)
             
-            spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
-            diff = spl_sum_test - dynamic_spl
-            
-            # ============================================================
-            # OPTIMISATION #4 : Partir du poids pré-calculé (copie rapide)
-            # au lieu de recrér un array de zéros + le remplir
-            # ============================================================
-            dynamic_weight = self._base_weight.copy()
-            
-            for j in range(len(self.ways) - 1):
-                mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
-                mag2 = 20 * np.log10(np.abs(p_ways[j+1]) + 1e-12)
-                
-                if len(self.ways) == 2:
-                    search_mask = (self.freqs > 800) & (self.freqs < 5000)
+            if len(self.ways) == 2:
+                search_mask = (self.freqs > 800) & (self.freqs < 5000)
+            else:
+                if j == 0:
+                    search_mask = (self.freqs > 150) & (self.freqs < 1000)
+                elif j == 1:
+                    search_mask = (self.freqs > 1000) & (self.freqs < 8000)
                 else:
-                    if j == 0:
-                        search_mask = (self.freqs > 150) & (self.freqs < 1000)
-                    elif j == 1:
-                        search_mask = (self.freqs > 1000) & (self.freqs < 8000)
-                    else:
-                        search_mask = (self.freqs > 2000) & (self.freqs < 12000)
-                
-                if np.any(search_mask):
-                    idx_cross = np.argmin(np.abs(mag1[search_mask] - mag2[search_mask]))
-                    f_cross = self.freqs[search_mask][idx_cross]
-                    dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = WEIGHTS['crossover']
+                    search_mask = (self.freqs > 2000) & (self.freqs < 12000)
             
-            raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
-            
-            raw_ripple = 0.0
-            if np.any(self.ripple_mask):
-                raw_ripple = np.std(spl_sum_test[self.ripple_mask]) ** 2
-            
-            mean_spl = np.mean(spl_sum_test[self.mask_flat])
-            
-            score_sum = (raw_mse * WEIGHTS['mse_sum'])
+            if np.any(search_mask):
+                idx_cross = np.argmin(np.abs(mag1[search_mask] - mag2[search_mask]))
+                f_cross = self.freqs[search_mask][idx_cross]
+                dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = WEIGHTS['crossover']
+        
+        raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
+        
+        raw_ripple = 0.0
+        if np.any(self.ripple_mask):
+            raw_ripple = np.std(spl_sum_test[self.ripple_mask]) ** 2
+        
+        mean_spl = np.mean(spl_sum_test[self.mask_flat])
+        
+        score_sum = (raw_mse * WEIGHTS['mse_sum'])
 
-            if score_sum < best_score_sum:
-                best_score_sum = score_sum
-                best_polarities = current_pols
+        if score_sum < best_score_sum:
+            best_score_sum = score_sum
         
         total_mse += best_score_sum
-        individual['best_polarities'] = best_polarities
 
         penalty = 0.0
         
@@ -265,10 +252,6 @@ class CrossoverOptimizer:
         resistor_penalty = n_resistors * (total_mse * WEIGHTS['resistors'])
 
         final_score = total_mse + penalty + comp_penalty + resistor_penalty
-
-        # Mise en cache (uniquement pour un appel sans polarités forcées)
-        if fixed_pols is None:
-            individual['_cached_score'] = final_score
 
         return final_score
 
@@ -366,13 +349,12 @@ class CrossoverOptimizer:
                   (np.log10(BOUNDS_C[0]), np.log10(BOUNDS_C[1])) if isinstance(c, Capacitor) else 
                   (np.log10(BOUNDS_L[0]), np.log10(BOUNDS_L[1])) for c in comps]
         
-        current_pols = individual.get('best_polarities')
                   
         def obj(x_log):
             for i, v in enumerate(x_log): comps[i].value = 10**v
             # Invalider le cache à chaque itération de l'optimiseur (valeurs qui changent)
             individual.pop('_cached_score', None)
-            return self.fitness(individual, fixed_pols=current_pols)
+            return self.fitness(individual)
             
         res = minimize(
             obj, init, 
@@ -388,23 +370,27 @@ class CrossoverOptimizer:
         # Le cache est déjà invalidé par le dernier appel obj() dans minimize
         return individual
 
-    def run(self, generations=50, pop_size=60):
+    def run(self, generations=50, pop_size=60, checkpoint_path=None):
+        """
+        Lance l'optimisation. 
+        Accepte un checkpoint_path optionnel pour ne pas écraser les autres projets.
+        """
         population = []
         
-        if os.path.exists("00_best_crossover.json"):
+        # Chargement intelligent du checkpoint
+        if checkpoint_path and os.path.exists(checkpoint_path):
             try:
-                with open("00_best_crossover.json", "r") as f: data = json.load(f)
+                with open(checkpoint_path, "r") as f: data = json.load(f)
                 tree = Node.from_dict(data["tree"])
                 for n in tree.get_all_nodes():
                     if isinstance(n, DriverNode):
                         way = next(w for w in self.ways if w.label == n.label)
                         n.H_acoustic, n.Z_complex = way.driver.H_acoustic, way.driver.Z_complex
                 
-                best_pols = data.get("best_polarities", [1.0] * len(self.ways))
-                population.append({'tree': tree, 'best_polarities': best_pols})
-                print("[+] Champion chargé.")
-            except Exception as e: print(f"Erreur chargement: {e}")
-        
+                population.append({'tree': tree})
+                print(f"[+] Champion chargé depuis {checkpoint_path}")
+            except Exception as e: 
+                print(f"Erreur chargement du checkpoint: {e}")
         else:
             try:
                if len(self.ways) == 2:
@@ -420,31 +406,19 @@ class CrossoverOptimizer:
             branches = []
             for way in self.ways:
                 branches.append(self.mutator.generate_random_tree(way.driver.copy(), max_depth=2))
-            
             root = branches[0]
             for b in branches[1:]:
                 root = ParallelNode(root, b)
-            
             population.append({'tree': root})
 
         best_score = float('inf')
         best_ind = population[0]
 
-        # ============================================================
-        # OPTIMISATION #1 (suite) : Pool avec initializer
-        # → self est pickled UNE FOIS par worker au démarrage du pool,
-        #   pas à chaque tâche. Gain massif sur les appels map().
-        #   chunksize adaptatif : évite les allers-retours trop fréquents
-        #   pour les petites populations, et les gros blocs pour les grandes.
-        # ============================================================
         n_workers = cpu_count()
         chunksize = max(1, pop_size // (n_workers * 4))
 
         with Pool(processes=n_workers, initializer=_pool_init, initargs=(self,)) as pool:
-            
             for gen in range(generations):
-                
-                # Scoring de la population (cache utilisé pour les ind. inchangés)
                 fitness_results = pool.map(_pool_fitness, population, chunksize=chunksize)
                 scores = [(fit, ind) for fit, ind in zip(fitness_results, population)]
                 scores.sort(key=lambda x: x[0])
@@ -460,38 +434,31 @@ class CrossoverOptimizer:
                     snap_to_standard = True
                     
                 if gen == int(generations * 0.9):
-                    print("Passage en PHASE 3")
+                    print("Passage en PHASE 3 (Standardisation E24)")
                     best_score = float('inf') 
 
                 elite_count = max(2, pop_size // 10)
                 elite_args = [(scores[i][1], max_opt_iter, snap_to_standard) for i in range(elite_count)]
-                
                 optimized_elites = pool.map(_pool_elite, elite_args, chunksize=1)
                 
                 for i in range(elite_count):
                     scores[i] = optimized_elites[i]
-                
                 scores.sort(key=lambda x: x[0])
                 
                 if scores[0][0] < best_score:
                     best_score = scores[0][0]
                     best_ind = scores[0][1]
                     
-                    save_tree = best_ind['tree'].copy()
-                    for comp in save_tree.get_all_nodes():
-                        if isinstance(comp, ComponentNode):
-                            comp.value = snap_to_e24(comp.value)
-                    
-                    n_comps = len([n for n in best_ind['tree'].get_all_nodes() if isinstance(n, ComponentNode)])
-                    
-                    if gen % 5 == 0:
-                        print(f"Gen {gen}: Record {best_score:.2f} | Composants: {n_comps}")
-                    
-                    with open("00_best_crossover.json", "w") as f:
-                        json.dump({
-                            "tree": save_tree.to_dict(), 
-                            "best_polarities": best_ind.get('best_polarities', [1.0] * len(self.ways))
-                        }, f, indent=4)
+                    # Sauvegarde dynamique du checkpoint si le chemin est fourni
+                    if checkpoint_path:
+                        save_tree = best_ind['tree'].copy()
+                        for comp in save_tree.get_all_nodes():
+                            if isinstance(comp, ComponentNode):
+                                comp.value = snap_to_e24(comp.value)
+                        with open(checkpoint_path, "w") as f:
+                            json.dump({
+                                "tree": save_tree.to_dict(), 
+                            }, f, indent=4)
 
                 new_pop = [best_ind]
                 for i in range(1, elite_count):
@@ -504,14 +471,12 @@ class CrossoverOptimizer:
                         return min(competitors, key=lambda x: x[0])[1]
 
                     parent1 = tournament()
-                    
                     if random.random() < 0.30:
                         parent2 = tournament()
                         child_tree = self.mutator.crossover(parent1['tree'], parent2['tree'])
                     else:
                         child_tree = self.mutator.mutate(parent1['tree'].copy())
 
-                    # Pas de '_cached_score' → sera évalué proprement
                     raw_children.append({'tree': child_tree, 'is_optimized': False})
                 
                 if gen < int(generations * 0.9):
@@ -534,48 +499,38 @@ class CrossoverOptimizer:
                 way = next(w for w in self.ways if w.label == comp.label)
                 comp.model_name = way.driver.model_name
 
-        # ============================================================
-        # OPTIMISATION #6 : Le score est déjà connu (best_score),
-        # pas besoin de rappeler self.fitness() juste pour le titre.
-        # ============================================================
-        self.plot_result(best_ind, last_score=best_score)
-    
-        renderer = SchematicRenderer(best_ind['tree'])
-        renderer.save("00_crossover_schematic.png")
-        
+        # On retourne juste le meilleur individu sans tracer les graphiques ici !
         return best_ind
 
-    def plot_result(self, individual, filename=["00_crossover_response.png","00_filter.png"], last_score=None):
+    def plot_result(self, individual, filename_response="response.png", filename_filter="filter.png", last_score=None):
+        """Génère les graphiques avec des chemins personnalisés."""
         root = individual['tree']
         res = self.evaluator.evaluate(root)
         dynamic_spl = self.target_spl
         
+        # 1. Graphique de Réponse SPL
         plt.figure(figsize=(12, 8))
         p_sum = np.zeros_like(self.freqs, dtype=complex)
-        best_pols = individual.get('best_polarities', [1.0] * len(self.ways))
         
         for i, way in enumerate(self.ways):
             p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
-            p_sum += p_real * best_pols[i] 
-            
+            p_sum += p_real
             spl_real = 20 * np.log10(np.abs(p_real) + 1e-10)
-            label_suffix = " (inv)" if best_pols[i] < 0 else ""
-            plt.semilogx(self.freqs, spl_real, label=f"Réel {way.label}{label_suffix}", linewidth=2)
+            plt.semilogx(self.freqs, spl_real, label=f"Réel {way.label}", linewidth=2)
 
         plt.semilogx(self.freqs, 20 * np.log10(np.abs(p_sum) + 1e-10), label="Somme", color='red', linewidth=3)
-
         plt.axhline(dynamic_spl, color='green', linestyle='--', alpha=0.5)
         plt.ylim(dynamic_spl - 40, dynamic_spl + 10)
         plt.xlim(20, 20000)
         plt.grid(True, which="both", alpha=0.2)
         plt.legend()
         
-        # Utilise le score passé en paramètre si disponible, sinon recalcule
         score_display = last_score if last_score is not None else self.fitness(individual)
         plt.title(f"Réponse {len(self.ways)}-voies (Score: {score_display:.2f})")
-        plt.savefig(filename[0])
+        plt.savefig(filename_response)
         plt.close()
         
+        # 2. Graphique de Fonction de Transfert Électrique
         plt.figure(figsize=(12, 8))
         for i, way in enumerate(self.ways):
             v_complex = res.get(way.label, {}).get("V_complex", np.zeros_like(self.freqs))
@@ -590,15 +545,116 @@ class CrossoverOptimizer:
         plt.title("Fonction de transfert électrique du filtre (V_out / V_in)")
         plt.xlabel("Fréquence (Hz)")
         plt.ylabel("Atténuation (dB)")
-        plt.savefig(filename[1])
+        plt.savefig(filename_filter)
         plt.close()
+
+    def draw_schematic(self, individual, filename="schematic.png"):
+        """Méthode dédiée pour sauvegarder le schéma où on le souhaite."""
+        renderer = SchematicRenderer(individual['tree'])
+        renderer.save(filename)
+        
+    def _get_off_axis_H(self, way, angle):
+        """Charge un fichier FRD d'un autre angle et calcule le H_acoustic 3D"""
+        # On remplace magiquement '0deg' par '15deg', '30deg', etc. dans le chemin
+        off_axis_path = way.frd_path.replace('0deg', angle)
+        
+        if not os.path.exists(off_axis_path):
+            return None
+            
+        try:
+            # 1. Chargement des données brutes
+            frd_data = np.loadtxt(off_axis_path)
+            frd_freqs = frd_data[:, 0]
+            mag_db = frd_data[:, 1]
+            ph_unwrapped = np.unwrap(np.deg2rad(frd_data[:, 2]))
+            
+            # 2. Interpolation sur nos 400 fréquences
+            mag_interp = np.interp(self.freqs, frd_freqs, mag_db)
+            ph_interp = np.interp(self.freqs, frd_freqs, ph_unwrapped)
+            H_acoustic = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
+            
+            # 3. Application du Moteur Géométrique 3D
+            x_mm = getattr(way, 'x_offset', 0.0)
+            y_mm = getattr(way, 'y_offset', 0.0)
+            z_mm = getattr(way, 'z_offset', 0.0)
+            listen_dist_mm = 2000.0
+            
+            dist_to_mic_mm = np.sqrt(x_mm**2 + y_mm**2 + (listen_dist_mm - z_mm)**2)
+            path_diff_m = (dist_to_mic_mm - listen_dist_mm) / 1000.0
+            delay_s = path_diff_m / 343.0
+            
+            phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
+            H_acoustic *= phase_delay
+            
+            return H_acoustic
+        except Exception as e:
+            print(f"[-] Erreur lecture {off_axis_path}: {e}")
+            return None
+
+    def plot_directivity(self, individual, filename="directivity.png"):
+        """Évalue et dessine la réponse globale pour tous les angles"""
+        plt.figure(figsize=(12, 8))
+        root = individual['tree']
+        angles = ['0deg', '15deg', '30deg', '45deg']
+        colors = ['red', 'orange', 'green', 'blue']
+        alphas = [1.0, 0.8, 0.6, 0.5]
+        labels = ['0° (Axe)', '15°', '30°', '45°']
+        
+        # 1. Sauvegarde des H_acoustic originaux (0deg) pour ne pas casser le circuit
+        original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
+        
+        for idx, angle in enumerate(angles):
+            valid_angle = True
+            
+            # 2. Remplacement des H_acoustic dans l'arbre pour cet angle
+            for way in self.ways:
+                new_H = original_H[way.label] if angle == '0deg' else self._get_off_axis_H(way, angle)
+                if new_H is None:
+                    valid_angle = False
+                    break
+                    
+                for node in root.get_all_nodes():
+                    if isinstance(node, DriverNode) and node.label == way.label:
+                        node.H_acoustic = new_H
+                        
+            if not valid_angle:
+                continue # On passe cet angle s'il manque des fichiers
+                
+            # 3. Évaluation du circuit avec les courbes modifiées
+            res = self.evaluator.evaluate(root)
+            p_sum = np.zeros_like(self.freqs, dtype=complex)
+            for way in self.ways:
+                p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+                p_sum += p_real
+                
+            spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
+            plt.semilogx(self.freqs, spl_sum, label=labels[idx], color=colors[idx], linewidth=3 if idx==0 else 2, alpha=alphas[idx])
+            
+        # 4. Restauration de l'état d'origine
+        for way in self.ways:
+            for node in root.get_all_nodes():
+                if isinstance(node, DriverNode) and node.label == way.label:
+                    node.H_acoustic = original_H[way.label]
+                    
+        plt.axhline(self.target_spl, color='black', linestyle='--', alpha=0.3, label="Cible SPL")
+        plt.ylim(self.target_spl - 40, self.target_spl + 10)
+        plt.xlim(20, 20000)
+        plt.grid(True, which="both", alpha=0.2)
+        plt.legend()
+        plt.title(f"Réponse en directivité SPL (Off-Axis)")
+        plt.xlabel("Fréquence (Hz)")
+        plt.ylabel("SPL (dB)")
+        plt.savefig(filename)
+        plt.close()
+        
         
 
 if __name__ == "__main__":
     start_time = time.time()
     config = [
-        WayConfig("Woofer", r"crossovers\ER18RNX+27TDFC\SEAS_H1456-08_ER18RNX_SPL.frd", r"crossovers\ER18RNX+27TDFC\SEAS_H1456-08_ER18RNX_ZR.zma", target_type='LP', z_offset_m=0.06),
-        WayConfig("Tweeter", r"crossovers\ER18RNX+27TDFC\Tweeter_SPL.frd", r"crossovers\ER18RNX+27TDFC\Tweeter_ZR.zma", target_type='HP', z_offset_m=0.0)
+        WayConfig("Woofer", r"crossovers\ER18RNX+27TDFC\SEAS_H1456-08_ER18RNX_SPL.frd", r"crossovers\ER18RNX+27TDFC\SEAS_H1456-08_ER18RNX_ZR.zma",
+                  z_offset_m=0.00, y_offset=-100, x_offset=0.00),
+        WayConfig("Tweeter", r"crossovers\ER18RNX+27TDFC\Tweeter_SPL.frd", r"crossovers\ER18RNX+27TDFC\Tweeter_ZR.zma")
     ]
 
     opt = CrossoverOptimizer(config)

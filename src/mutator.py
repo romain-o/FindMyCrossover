@@ -151,7 +151,7 @@ class TreeMutator:
         Le terminal_node (le HP) est TOUJOURS poussé vers la droite (fin de chaîne).
         """
         if max_depth <= 0 or random.random() < 0.3:
-            return terminal_node
+            return terminal_node.copy()  # ✅
             
         new_component = self._generate_random_component()
         op = random.choice(["series", "parallel", "shunt"])
@@ -278,11 +278,11 @@ class TreeMutator:
 
     def simplify(self, node: Node) -> Node:
         """
-        Simplifie l'arbre : Supprime les ShuntNodes devenus inutiles (Numpy) 
-        et fusionne TOUS les composants identiques d'une même branche (série ou parallèle),
-        même s'ils sont séparés par d'autres sous-nœuds.
+        Simplifie l'arbre en fusionnant uniquement les composants passifs CONSÉCUTIFS
+        dans une même branche. Les nœuds complexes (OperatorNode, DriverNode) agissent
+        comme des frontières infranchissables pour éviter toute destruction topologique.
         """
-        # 1. Élimination du ShuntNode
+        # 1. Élimination du ShuntNode (wrapper inutile)
         if isinstance(node, ShuntNode):
             return self.simplify(node.component)
 
@@ -290,43 +290,25 @@ class TreeMutator:
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
 
-            # Fonction pour aplatir toute la branche série
+            # Aplatir la chaîne série EN PRÉSERVANT L'ORDRE
             def flatten_series(n):
-                if n is None: return []
                 if isinstance(n, SeriesNode):
                     return flatten_series(n.left) + flatten_series(n.right)
                 return [n]
-            
+
             elements = flatten_series(node)
-            
-            # Trier et grouper les composants
-            resistors = [e for e in elements if isinstance(e, Resistor)]
-            inductors = [e for e in elements if isinstance(e, Inductor)]
-            capacitors = [e for e in elements if isinstance(e, Capacitor)]
-            others = [e for e in elements if not isinstance(e, (Resistor, Inductor, Capacitor))]
-            
-            new_elements = []
-            
-            # Fusion mathématique en SÉRIE
-            if resistors:
-                new_elements.append(Resistor(sum(r.value for r in resistors)))
-            if inductors:
-                new_elements.append(Inductor(sum(l.value for l in inductors)))
-            if capacitors:
-                inv_c = sum(1.0 / (c.value + 1e-15) for c in capacitors)
-                new_elements.append(Capacitor(1.0 / inv_c))
-                
-            new_elements.extend(others)
-            
-            # Sécurité anti-nœud vide
-            if not new_elements:
-                return None
-            if len(new_elements) == 1:
-                return new_elements[0]
-                
-            # Reconstruire un bel arbre (penché vers la droite pour Schemdraw)
-            root = new_elements[-1]
-            for e in reversed(new_elements[:-1]):
+
+            # Fusionner les groupes de passifs consécutifs (sans traverser les nœuds complexes)
+            merged = self._merge_passives_ordered(elements, mode="series")
+
+            if not merged:
+                return node  # Sécurité : rien à faire
+            if len(merged) == 1:
+                return merged[0]
+
+            # Reconstruction (penchée à droite, pour evaluate et Schemdraw)
+            root = merged[-1]
+            for e in reversed(merged[:-1]):
                 root = SeriesNode(e, root)
             return root
 
@@ -334,46 +316,83 @@ class TreeMutator:
             node.left = self.simplify(node.left)
             node.right = self.simplify(node.right)
 
-            # Fonction pour aplatir toute la branche parallèle
             def flatten_parallel(n):
-                if n is None: return []
                 if isinstance(n, ParallelNode):
                     return flatten_parallel(n.left) + flatten_parallel(n.right)
                 return [n]
-                
+
             elements = flatten_parallel(node)
-            
-            resistors = [e for e in elements if isinstance(e, Resistor)]
-            inductors = [e for e in elements if isinstance(e, Inductor)]
-            capacitors = [e for e in elements if isinstance(e, Capacitor)]
-            others = [e for e in elements if not isinstance(e, (Resistor, Inductor, Capacitor))]
-            
-            new_elements = []
-            
-            # Fusion mathématique en PARALLÈLE
-            if resistors:
-                inv_r = sum(1.0 / (r.value + 1e-15) for r in resistors)
-                new_elements.append(Resistor(1.0 / inv_r))
-            if inductors:
-                inv_l = sum(1.0 / (l.value + 1e-15) for l in inductors)
-                new_elements.append(Inductor(1.0 / inv_l))
-            if capacitors:
-                new_elements.append(Capacitor(sum(c.value for c in capacitors)))
-                
-            new_elements.extend(others)
-            
-            if not new_elements:
-                return None
-            if len(new_elements) == 1:
-                return new_elements[0]
-                
-            # Reconstruire l'arbre
-            root = new_elements[-1]
-            for e in reversed(new_elements[:-1]):
+
+            merged = self._merge_passives_ordered(elements, mode="parallel")
+
+            if not merged:
+                return node
+            if len(merged) == 1:
+                return merged[0]
+
+            root = merged[-1]
+            for e in reversed(merged[:-1]):
                 root = ParallelNode(e, root)
             return root
 
         return node
+
+    def _merge_passives_ordered(self, elements: list, mode: str) -> list:
+        """
+        Parcourt une liste de nœuds et fusionne les passifs (R, L, C) consécutifs.
+        Les nœuds complexes (OperatorNode, DriverNode) brisent les groupes.
+        
+        mode="series"   → R en série s'additionnent, L s'additionne, C s'inverse
+        mode="parallel" → R en parallèle s'inversent, L s'inverse, C s'additionne
+        """
+        result = []
+        passive_group = []  # Accumule les passifs consécutifs
+
+        def flush_group(group):
+            """Fusionne un groupe de passifs accumulés."""
+            if not group:
+                return []
+            
+            resistors  = [e for e in group if isinstance(e, Resistor)]
+            inductors  = [e for e in group if isinstance(e, Inductor)]
+            capacitors = [e for e in group if isinstance(e, Capacitor)]
+            fused = []
+
+            if mode == "series":
+                if resistors:
+                    fused.append(Resistor(sum(r.value for r in resistors)))
+                if inductors:
+                    fused.append(Inductor(sum(l.value for l in inductors)))
+                if capacitors:
+                    inv_c = sum(1.0 / (c.value + 1e-15) for c in capacitors)
+                    fused.append(Capacitor(1.0 / (inv_c + 1e-30)))
+
+            elif mode == "parallel":
+                if resistors:
+                    inv_r = sum(1.0 / (r.value + 1e-15) for r in resistors)
+                    fused.append(Resistor(1.0 / (inv_r + 1e-30)))
+                if inductors:
+                    inv_l = sum(1.0 / (l.value + 1e-15) for l in inductors)
+                    fused.append(Inductor(1.0 / (inv_l + 1e-30)))
+                if capacitors:
+                    fused.append(Capacitor(sum(c.value for c in capacitors)))
+
+            return fused
+
+        for e in elements:
+            if isinstance(e, (Resistor, Capacitor, Inductor)):
+                # Passif : on l'accumule dans le groupe courant
+                passive_group.append(e)
+            else:
+                # Nœud complexe : on vide d'abord le groupe, puis on insère le nœud
+                result.extend(flush_group(passive_group))
+                passive_group = []
+                result.append(e)
+
+        # Ne pas oublier le dernier groupe
+        result.extend(flush_group(passive_group))
+
+        return result
 
     def crossover(self, parent1: Node, parent2: Node) -> Node:
         """

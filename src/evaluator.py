@@ -55,8 +55,6 @@ class CircuitEvaluator:
 
         if isinstance(node, DriverNode):
             p_acoustic = v_in * node.H_acoustic
-            if node.polarity_inverted:
-                p_acoustic = -p_acoustic
             responses[node.label] = {
                 "V_complex": v_in,
                 "P_acoustic": p_acoustic

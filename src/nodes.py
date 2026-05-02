@@ -327,7 +327,7 @@ class DriverNode(Node):
         """Lit un fichier texte à 3 colonnes et retourne des arrays numpy, en ignorant les en-têtes."""
         # On tente de charger uniquement les 3 premières colonnes (Freq, Mag, Phase)
         # skip_header=1 aide souvent, mais genfromtxt avec invalid_raise=False est plus souple
-        data = np.genfromtxt(filepath, usecols=(0, 1, 2), invalid_raise=False)
+        data = np.genfromtxt(filepath, usecols=(0, 1, 2), invalid_raise=False, comments="*")
         
         # Si le résultat est 1D ou vide, il y a un problème de parsing
         if data.ndim == 1:

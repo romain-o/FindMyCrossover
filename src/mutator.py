@@ -89,7 +89,7 @@ class TreeMutator:
             # Vérification supplémentaire pour éviter les boucles infinies
             # Si new_node est déjà présent dans l'arbre (sauf à la place de old_node), 
             # on prend une copie profonde pour casser toute référence circulaire
-            setattr(parent, attr, new_node.copy())
+            setattr(parent, attr, new_node)
             
         return tree
 
@@ -126,7 +126,7 @@ class TreeMutator:
     def mutate_topology(self, tree: Node) -> Node:
         """Change un noeud Série en Parallèle ou inversement."""
         nodes = self._get_all_nodes(tree)
-        operators = [n for n in nodes if isinstance(n, OperatorNode)]
+        operators = [n for n in nodes if isinstance(n, OperatorNode) and n.id != tree.id]
         
         if operators:
             target = random.choice(operators)
@@ -154,15 +154,13 @@ class TreeMutator:
             return terminal_node.copy()  # ✅
             
         new_component = self._generate_random_component()
-        op = random.choice(["series", "parallel", "shunt"])
+        op = random.choice(["series", "parallel"])
         
         if op == "series":
             # Racine(Composant, Sous-Arbre-avec-HP) -> HP est bien à la fin
             return SeriesNode(new_component, self.generate_random_tree(terminal_node, max_depth - 1))
         elif op == "parallel":
             # En parallèle, l'ordre importe peu pour la topologie IN/GND
-            return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), new_component)
-        else: # shunt
             return ParallelNode(self.generate_random_tree(terminal_node, max_depth - 1), new_component)
 
     def _generate_notch(self):
@@ -278,9 +276,9 @@ class TreeMutator:
 
     def simplify(self, node: Node) -> Node:
         """
-        Simplifie l'arbre en fusionnant uniquement les composants passifs CONSÉCUTIFS
-        dans une même branche. Les nœuds complexes (OperatorNode, DriverNode) agissent
-        comme des frontières infranchissables pour éviter toute destruction topologique.
+        Simplifie l'arbre en fusionnant les composants passifs.
+        - En SÉRIE : Fusionne uniquement les composants consécutifs (l'ordre compte).
+        - En PARALLÈLE : Fusionne tous les composants de même type, peu importe leur position.
         """
         # 1. Élimination du ShuntNode (wrapper inutile)
         if isinstance(node, ShuntNode):
@@ -323,7 +321,30 @@ class TreeMutator:
 
             elements = flatten_parallel(node)
 
-            merged = self._merge_passives_ordered(elements, mode="parallel")
+            # --- NOUVELLE LOGIQUE PARALLÈLE (Agnostique de l'ordre) ---
+            capacitors = [e for e in elements if isinstance(e, Capacitor)]
+            inductors = [e for e in elements if isinstance(e, Inductor)]
+            resistors = [e for e in elements if isinstance(e, Resistor)]
+            
+            # On conserve les branches complexes (Haut-parleurs, sous-circuits série)
+            others = [e for e in elements if not isinstance(e, (Capacitor, Inductor, Resistor))]
+
+            merged = []
+            
+            if capacitors:
+                # En parallèle, les condensateurs s'additionnent (C = C1 + C2)
+                merged.append(Capacitor(sum(c.value for c in capacitors)))
+                
+            if inductors:
+                # En parallèle, les inductances se divisent (1/L = 1/L1 + 1/L2)
+                merged.append(Inductor(1.0 / sum(1.0 / l.value for l in inductors)))
+                
+            if resistors:
+                # En parallèle, les résistances se divisent (1/R = 1/R1 + 1/R2)
+                merged.append(Resistor(1.0 / sum(1.0 / r.value for r in resistors)))
+                
+            merged.extend(others)
+            # ----------------------------------------------------------
 
             if not merged:
                 return node

@@ -322,7 +322,8 @@ class VituixAdapter:
                     y_join = max(y_L, y_R) + 2
                     self._add_trace(x_L, y_L, x_L, y_join)
                     self._add_trace(x_R, y_R, x_R, y_join)
-                    self._add_trace(x_L, y_join, x_R, y_join)
+                    self._add_trace(x_L, y_join, x_in, y_join)
+                    self._add_trace(x_in, y_join, x_R, y_join)
 
                     y_end = y_join + 2
                     self._add_trace(x_in, y_join, x_in, y_end)

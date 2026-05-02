@@ -25,12 +25,13 @@ class SchematicRenderer:
             except AttributeError:
                 comp = elm.Resistor() # Fallback visuel
             
+            # Utilise le vrai nom du HP (ex: RS225-8) s'il existe, sinon "Woofer"
             label = getattr(node, 'model_name', node.label)
             
         if direction == 'right':
             d += comp.right().label(label)
             if isinstance(node, DriverNode):
-                # Retour de masse après le haut-parleur
+                # Retour de masse propre après le haut-parleur (orienté vers la droite)
                 d += elm.Line().down().length(1.5)
                 d += elm.Ground()
         else: # direction == 'down'
@@ -50,30 +51,10 @@ class SchematicRenderer:
             has_drv_left = self._has_driver(node.left)
             has_drv_right = self._has_driver(node.right)
             
-            # --- NOUVEAU : Séparation interne sécurisée (Si composant partagé à l'entrée) ---
-            if has_drv_left and has_drv_right:
-                d += elm.Line().right().length(1.0)
-                d += elm.Dot()
-                
-                d.push()
-                d += elm.Line().up().length(8.0)
-                d += elm.Line().right().length(0.5)
-                self._draw_branch(d, node.left, 'right')
-                d.pop()
-                
-                d.push()
-                d += elm.Line().down().length(8.0)
-                d += elm.Line().right().length(0.5)
-                self._draw_branch(d, node.right, 'right')
-                d.pop()
-
-            elif has_drv_left or has_drv_right:
+            if has_drv_left or has_drv_right:
                 # TOPOLOGIE SHUNT (Dérivation vers la masse)
                 main = node.left if has_drv_left else node.right
                 shunt = node.right if has_drv_left else node.left
-                
-                # Coussin d'air AVANT le Shunt pour éviter qu'un Notch n'écrase le composant précédent
-                d += elm.Line().right().length(1.5)
                 
                 d.push()
                 d += elm.Dot()
@@ -81,8 +62,8 @@ class SchematicRenderer:
                 d += elm.Ground()
                 d.pop()
                 
-                # Ecartement MASSIF après le shunt pour protéger les textes et les fils
-                d += elm.Line().right().length(3.5)
+                # Ecartement augmenté pour éviter la superposition des textes !
+                d += elm.Line().right().length(2.5)
                 self._draw_branch(d, main, direction)
                 
             else:
@@ -91,13 +72,13 @@ class SchematicRenderer:
                     d += elm.Line().right().length(0.5)
                     
                     d.push()
-                    d += elm.Line().up().length(2.0) # Augmenté
+                    d += elm.Line().up().length(1.5)
                     self._draw_branch(d, node.left, direction)
                     top_end = d.here
                     d.pop()
                     
                     d.push()
-                    d += elm.Line().down().length(2.0) # Augmenté
+                    d += elm.Line().down().length(1.5)
                     self._draw_branch(d, node.right, direction)
                     bot_end = d.here
                     d.pop()
@@ -117,25 +98,25 @@ class SchematicRenderer:
                     d += elm.Line().at(top_final).to(bot_final)
                     
                     mid_y = (top_final.y + bot_final.y) / 2
-                    d += elm.Line().at((max_x, mid_y)).right().length(1.0)
+                    d += elm.Line().at((max_x, mid_y)).right().length(0.5)
                     
                 elif direction == 'down':
+                    # NOUVEAU : Gestion parfaite du Bouchon en Shunt
                     d += elm.Line().down().length(0.5)
                     
                     d.push()
-                    # Bras gauche allongé pour éviter la superposition de texte
-                    d += elm.Line().left().length(2.5) 
+                    d += elm.Line().left().length(2.0)
                     self._draw_branch(d, node.left, direction)
                     left_end = d.here
                     d.pop()
                     
                     d.push()
-                    # Bras droit allongé
-                    d += elm.Line().right().length(2.5)
+                    d += elm.Line().right().length(2.0)
                     self._draw_branch(d, node.right, direction)
                     right_end = d.here
                     d.pop()
                     
+                    # On cherche le composant qui descend le plus bas
                     min_y = min(left_end.y, right_end.y)
                     
                     left_final = left_end
@@ -155,31 +136,34 @@ class SchematicRenderer:
 
     def save(self, filename="crossover_schematic.png"):
         with schemdraw.Drawing(file=filename, show=False) as d:
-            d.config(fontsize=11)
+            d.config(fontsize=10)
             
+            # --- BLOC ENTRÉE CORRIGÉ (Plus de court-circuit !) ---
+            # On mémorise la position de départ (IN+)
             start_pos = d.here 
             d += elm.Dot().label('IN+', loc='left')
             
             d.push()
+            # On dessine IN- et sa masse 1.5 unités plus bas, SANS tirer de fil depuis IN+
             d += elm.Dot().at((start_pos.x, start_pos.y - 1.5)).label('IN-', loc='left')
             d += elm.Ground()
             d.pop()
             
-            d += elm.Line().right().length(1.5)
+            d += elm.Line().right().length(1)
             
             if isinstance(self.tree, ParallelNode) and self._has_driver(self.tree.left) and self._has_driver(self.tree.right):
                 d += elm.Dot()
                 
-                # Voie 1 (Haut - Woofer) : Marge verticale MASSIVE (8.0 au lieu de 2.5)
+                # Voie 1 (Haut)
                 d.push()
-                d += elm.Line().up().length(8.0)
+                d += elm.Line().up().length(2.5)
                 d += elm.Line().right().length(0.5)
                 self._draw_branch(d, self.tree.left, 'right')
                 d.pop()
                 
-                # Voie 2 (Bas - Tweeter) : Marge verticale MASSIVE
+                # Voie 2 (Bas)
                 d.push()
-                d += elm.Line().down().length(8.0)
+                d += elm.Line().down().length(2.5)
                 d += elm.Line().right().length(0.5)
                 self._draw_branch(d, self.tree.right, 'right')
                 d.pop()

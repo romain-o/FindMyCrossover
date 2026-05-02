@@ -3,27 +3,32 @@ import os
 import shutil
 import subprocess
 import json
-from pathlib import Path
 
 # --- CONFIGURATION ---
-N_CROSSOVERS_A_TRAITER = 2  # Combien de crossovers voulez-vous générer en une fois ?
-DOSSIER_DATA = r"data" # Le dossier propre que nous avons créé
-DOSSIER_SORTIE = r"crossovers" # Là où iront les PDF/PNG/VXP
+N_CROSSOVERS_A_TRAITER = 2
+DOSSIER_DATA = r"data" 
+DOSSIER_SORTIE = r"crossovers"
 FICHIER_CSV = r"data\W_T_pairs.csv"
 
-def get_driver_files(driver_name, category):
-    """Trouve les bons chemins FRD (0deg) et ZMA pour un driver."""
+def check_all_files_exist(driver_name, category):
+    """Vérifie que le ZMA et TOUS les FRD (0, 15, 30, 45) existent pour un HP."""
     cat_folder = "Woofers" if category == 'W' else "Tweeters"
-    frd_path = os.path.join(DOSSIER_DATA, cat_folder, "FRD", "0deg", f"{driver_name}_0deg.frd")
-    zma_path = os.path.join(DOSSIER_DATA, cat_folder, "ZMA", f"{driver_name}.zma")
+    missing = []
     
-    return frd_path, zma_path
+    # ZMA
+    zma_path = os.path.join(DOSSIER_DATA, cat_folder, "ZMA", f"{driver_name}.zma")
+    if not os.path.exists(zma_path): missing.append(zma_path)
+        
+    # FRD Multi-angles
+    for angle in ['0deg', '15deg', '30deg', '45deg']:
+        frd_path = os.path.join(DOSSIER_DATA, cat_folder, "FRD", angle, f"{driver_name}_{angle}.frd")
+        if not os.path.exists(frd_path): missing.append(frd_path)
+            
+    return missing
 
 def process_batch():
-    # 1. Vérifier si les dossiers existent
     os.makedirs(DOSSIER_SORTIE, exist_ok=True)
     
-    # 2. Charger la liste des paires triées par priorité
     try:
         df = pd.read_csv(FICHIER_CSV)
     except FileNotFoundError:
@@ -31,23 +36,17 @@ def process_batch():
         return
 
     crossovers_traites = 0
-
     print(f"[*] Démarrage du Traitement par Lots (Objectif : {N_CROSSOVERS_A_TRAITER} crossovers)")
     print("-" * 50)
 
-    # 3. Parcourir la liste du haut vers le bas
     for index, row in df.iterrows():
         if crossovers_traites >= N_CROSSOVERS_A_TRAITER:
-            break # Objectif atteint !
+            break
 
-        crossovers_traites += 1
-        
         woofer = row['Woofer (W)']
         tweeter = row['Tweeter (T)']
         nom_projet = f"{woofer}_X_{tweeter}"
         
-        # 4. Vérifier si ce projet a déjà été calculé !
-        # On vérifie si un dossier à son nom existe déjà dans Crossovers_Finis
         dossier_projet = os.path.join(DOSSIER_SORTIE, nom_projet)
         if os.path.exists(dossier_projet):
             print(f"[Skip] Le projet {nom_projet} a déjà été calculé. Passage au suivant.")
@@ -55,37 +54,31 @@ def process_batch():
             
         print(f"\n[>>>] Préparation du projet #{crossovers_traites + 1} : {nom_projet}")
         
-        # 5. Récupérer les chemins des fichiers
-        w_frd, w_zma = get_driver_files(woofer, 'W')
-        t_frd, t_zma = get_driver_files(tweeter, 'T')
+        # --- VÉRIFICATION DE SÉCURITÉ ---
+        fichiers_manquants = check_all_files_exist(woofer, 'W') + check_all_files_exist(tweeter, 'T')
         
-        # Vérification d'intégrité (Est-ce qu'on a bien extrait ces fichiers ?)
-        missing = [f for f in [w_frd, w_zma, t_frd, t_zma] if not os.path.exists(f)]
-        if missing:
-            print(f"[-] Impossible de lancer {nom_projet}. Fichiers de données introuvables :")
-            for m in missing: print(f"    - {m}")
+        if fichiers_manquants:
+            print(f"[-] Impossible de traiter {nom_projet}. Données directivité ou impédance manquantes :")
+            for m in fichiers_manquants: 
+                print(f"    - {m}")
             continue
 
-        # 6. Appel de run.py en utilisant subprocess
-        # subprocess.run permet d'exécuter une ligne de commande "python run.py ..."
+        # --- COMMANDE SIMPLIFIÉE ---
         cmd = [
             "python", "run.py",
-            "--woofer_frd", w_frd,
-            "--woofer_zma", w_zma,
-            "--tweeter_frd", t_frd,
-            "--tweeter_zma", t_zma,
+            "--woofer", woofer,
+            "--tweeter", tweeter,
+            "--data_dir", DOSSIER_DATA,
             "--out_dir", dossier_projet,
             "--name", nom_projet,
-            "--gen", "10", 
-            "--pop", "100"
+            "--gen", "10",  # Ajustez le nombre de générations ici
+            "--pop", "120"
         ]
         
         print(f"[*] Lancement de l'algorithme génétique...")
         try:
-            # Exécution de run.py. L'argument capture_output=False permet de voir les prints de run.py dans la console.
-            result = subprocess.run(cmd, check=True)
+            subprocess.run(cmd, check=True)
             
-            # 7. Si l'optimisation réussit, on génère le fichier JSON des métadonnées
             metadata = {
                 "Project_Name": nom_projet,
                 "Woofer": woofer,
@@ -101,10 +94,10 @@ def process_batch():
                 json.dump(metadata, f, indent=4, ensure_ascii=False)
                 
             print(f"[+] Projet {nom_projet} terminé avec succès !")
+            crossovers_traites += 1
             
         except subprocess.CalledProcessError as e:
             print(f"[-] L'optimisation a échoué (Crash) pour {nom_projet}. Code d'erreur : {e.returncode}")
-            # Si ça a planté, on supprime le dossier créé pour qu'il réessaie la prochaine fois
             if os.path.exists(dossier_projet):
                 shutil.rmtree(dossier_projet)
 

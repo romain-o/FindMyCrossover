@@ -71,7 +71,7 @@ class WayConfig:
         self.driver = DriverNode(label, frd_path, zma_path)
 
 class CrossoverOptimizer:
-    def __init__(self, ways_configs):
+    def __init__(self, ways_configs, target_fc=0.0):
         self.freqs = np.geomspace(20, 20000, 400)
         self.ways = ways_configs
         self.evaluator = CircuitEvaluator(self.freqs)
@@ -93,6 +93,7 @@ class CrossoverOptimizer:
         raw_w_spl = 20 * np.log10(raw_w_mag + 1e-12)
         raw_avg = np.mean(raw_w_spl[self.mask_ref]) if np.any(self.mask_ref) else self.target_spl
         self.target_spl = raw_avg - 1.0
+        self.target_fc = target_fc
         print(f"[+] Cible SPL verrouillée à {self.target_spl:.1f} dB (Woofer brut: {raw_avg:.1f} dB)")
         
         max_raw_spl = np.zeros_like(self.freqs)
@@ -110,6 +111,7 @@ class CrossoverOptimizer:
             f_min = self.freqs[min(idx_min + 5, len(self.freqs)-1)]
             f_max = self.freqs[max(idx_max - 5, 0)]
             f_min = max(f_min, 100.0)
+            f_max = min(f_max, 18000.0)
         else:
             f_min, f_max = 100, 18000
             
@@ -205,7 +207,15 @@ class CrossoverOptimizer:
                 idx_cross = np.argmin(np.abs(mag1[search_mask] - mag2[search_mask]))
                 f_cross = self.freqs[search_mask][idx_cross]
                 dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = WEIGHTS['crossover']
-        
+
+                if getattr(self, 'target_fc', 0.0) > 0.0:
+                    # On calcule l'erreur en octaves (logarithmique) plutôt qu'en Hz absolus
+                    octave_err = np.abs(np.log2(f_cross / self.target_fc))
+                    
+                    # Pénalité quadratique agressive (1 octave d'erreur = +5000 de pénalité)
+                    fc_penalty = (octave_err ** 2) * 5000.0
+                    penalty += fc_penalty
+                
         raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
         
         raw_ripple = 0.0
@@ -215,11 +225,8 @@ class CrossoverOptimizer:
         mean_spl = np.mean(spl_sum_test[self.mask_flat])
         
         score_sum = (raw_mse * WEIGHTS['mse_sum'])
-
-        if score_sum < best_score_sum:
-            best_score_sum = score_sum
         
-        total_mse += best_score_sum
+        total_mse += score_sum
 
         penalty = 0.0
         
@@ -521,7 +528,7 @@ class CrossoverOptimizer:
         plt.semilogx(self.freqs, 20 * np.log10(np.abs(p_sum) + 1e-10), label="Somme", color='red', linewidth=3)
         plt.axhline(dynamic_spl, color='green', linestyle='--', alpha=0.5)
         plt.ylim(dynamic_spl - 40, dynamic_spl + 10)
-        plt.xlim(20, 20000)
+        plt.xlim(100, 20000)
         plt.grid(True, which="both", alpha=0.2)
         plt.legend()
         
@@ -539,7 +546,7 @@ class CrossoverOptimizer:
             
         plt.axhline(0, color='black', linestyle='-', alpha=0.5, label="0 dB (Signal Ampli brut)")
         plt.ylim(-40, 5)
-        plt.xlim(20, 20000)
+        plt.xlim(100, 20000)
         plt.grid(True, which="both", alpha=0.2)
         plt.legend()
         plt.title("Fonction de transfert électrique du filtre (V_out / V_in)")
@@ -638,7 +645,7 @@ class CrossoverOptimizer:
                     
         plt.axhline(self.target_spl, color='black', linestyle='--', alpha=0.3, label="Cible SPL")
         plt.ylim(self.target_spl - 40, self.target_spl + 10)
-        plt.xlim(20, 20000)
+        plt.xlim(100, 20000)
         plt.grid(True, which="both", alpha=0.2)
         plt.legend()
         plt.title(f"Réponse en directivité SPL (Off-Axis)")
@@ -647,7 +654,138 @@ class CrossoverOptimizer:
         plt.savefig(filename)
         plt.close()
         
+    def plot_sonogram(self, individual, filename="sonogram.png"):
+        """Génère un Sonogramme Ultra-Haute Définition, clone parfait de VituixCAD"""
+        import matplotlib.ticker as ticker
+        from matplotlib.colors import LinearSegmentedColormap
+        from scipy.interpolate import RectBivariateSpline
+        import numpy as np
         
+        root = individual['tree']
+        
+        # 1. On récolte les angles disponibles
+        test_angles = [0, 15, 30, 45]
+        valid_data = {}
+        original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
+        
+        # 2. Simulation des réponses pour chaque angle
+        for angle in test_angles:
+            angle_str = f"{angle}deg"
+            valid_angle = True
+            
+            for way in self.ways:
+                new_H = original_H[way.label] if angle == 0 else self._get_off_axis_H(way, angle_str)
+                if new_H is None:
+                    valid_angle = False
+                    break
+                for node in root.get_all_nodes():
+                    if isinstance(node, DriverNode) and node.label == way.label:
+                        node.H_acoustic = new_H
+                        
+            if valid_angle:
+                res = self.evaluator.evaluate(root)
+                p_sum = np.zeros_like(self.freqs, dtype=complex)
+                for way in self.ways:
+                    p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+                    p_sum += p_real
+                spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
+                valid_data[angle] = spl_sum
+                
+        # Restauration de l'état du circuit
+        for way in self.ways:
+            for node in root.get_all_nodes():
+                if isinstance(node, DriverNode) and node.label == way.label:
+                    node.H_acoustic = original_H[way.label]
+                    
+        if len(valid_data) < 2:
+            print("[-] Pas assez de données angulaires pour dessiner le Sonogramme HD.")
+            return
+
+        # 3. Création du miroir symétrique (de -45° à +45°)
+        angles_raw = []
+        spl_raw = []
+        for angle in sorted(valid_data.keys(), reverse=True):
+            if angle != 0:
+                angles_raw.append(-angle)
+                spl_raw.append(valid_data[angle])
+        for angle in sorted(valid_data.keys()):
+            angles_raw.append(angle)
+            spl_raw.append(valid_data[angle])
+            
+        angles_raw = np.array(angles_raw)
+        spl_matrix = np.array(spl_raw)
+
+        # 4. INTERPOLATION MATHÉMATIQUE ULTRA-HD
+        # kx=2 (Quadratique) : Lissage parfait sans exagérer les courbes entre les angles
+        spline = RectBivariateSpline(angles_raw, self.freqs, spl_matrix, kx=2, ky=3)
+        
+        # Génération d'une grille dense (500 lignes d'angles x 1000 colonnes de fréquences)
+        angles_hd = np.linspace(angles_raw[0], angles_raw[-1], 500)
+        freqs_hd = np.geomspace(100, 20000, 1000)
+        spl_hd = spline(angles_hd, freqs_hd)
+
+        # 5. CRÉATION DE LA PALETTE DE COULEURS VITUIXCAD (512 Niveaux)
+        vituix_colors = [
+            (0.00, '#000000'),  # Noir pur (Silences)
+            (0.14, '#000088'),  # Bleu Marine
+            (0.28, '#0000FF'),  # Bleu
+            (0.42, '#00FFFF'),  # Cyan
+            (0.57, '#00FF00'),  # Vert
+            (0.71, '#FFFF00'),  # Jaune
+            (0.85, '#FF0000'),  # Rouge
+            (1.00, '#550000')   # Bordeaux Foncé (Pics SPL)
+        ]
+        vituix_cmap = LinearSegmentedColormap.from_list('vituix_pro', vituix_colors, N=512)
+
+        # Échelles de décibels calquées sur Vituix (Dynamique de ~56 dB)
+        max_spl = self.target_spl + 6
+        min_spl = max_spl - 56
+        
+        # 6. DESSIN DU GRAPHIQUE
+        fig, ax = plt.subplots(figsize=(12, 6))
+        X, Y = np.meshgrid(freqs_hd, angles_hd)
+        
+        # Le fond coloré ultra-lissé (200 paliers thermiques pour détruire l'effet de "bandes")
+        c = ax.contourf(X, Y, spl_hd, levels=np.linspace(min_spl, max_spl, 200), 
+                        cmap=vituix_cmap, extend='both', antialiased=True)
+        
+        # Les isocontours stricts (lignes noires fines tous les 3 dB)
+        levels_3db = np.arange(int(min_spl), int(max_spl) + 1, 3)
+        ax.contour(X, Y, spl_hd, levels=levels_3db, colors='black', linewidths=0.5, alpha=0.7, antialiased=True)
+
+        # 7. STYLISATION VITUIXCAD STRICTE
+        ax.set_xscale('log')
+        ax.set_xlim(100, 20000)
+        ax.set_ylim(angles_raw[0], angles_raw[-1])
+        
+        # Axe X : Fréquences formatées (1k, 2k...)
+        ax.set_xticks([100, 200, 500, 1000, 2000, 5000, 10000, 20000])
+        def format_freq(x, pos):
+            if x == 100: return '100Hz'
+            elif x >= 1000: return f'{int(x/1000)}k'
+            else: return f'{int(x)}'
+        ax.get_xaxis().set_major_formatter(ticker.FuncFormatter(format_freq))
+        
+        # Axe Y : Angles placés à droite
+        ax.set_yticks(angles_raw)
+        ax.yaxis.tick_right() 
+        ax.set_ylabel('deg', loc='top', rotation=0, labelpad=-20)
+        
+        # Grilles subtiles
+        ax.grid(True, which='major', color='white', alpha=0.3, linewidth=0.5)
+        ax.grid(True, which='minor', color='white', alpha=0.1, linewidth=0.3)
+        ax.set_title('Directivity (hor)', pad=10)
+
+        # 8. COLORBAR À GAUCHE
+        plt.subplots_adjust(left=0.15, right=0.95) 
+        cbar_ax = fig.add_axes([0.05, 0.15, 0.02, 0.7]) # [Gauche, Bas, Largeur, Hauteur]
+        cbar = fig.colorbar(c, cax=cbar_ax, ticks=np.arange(int(min_spl), int(max_spl), 8))
+        cbar.ax.set_title('dB', pad=10)
+        cbar.ax.yaxis.set_ticks_position('left')
+        
+        # Export en haute résolution
+        plt.savefig(filename, dpi=200, bbox_inches='tight') 
+        plt.close()
 
 if __name__ == "__main__":
     start_time = time.time()

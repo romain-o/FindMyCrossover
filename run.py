@@ -1,3 +1,4 @@
+import json
 import time
 from src.optimizer import CrossoverOptimizer, WayConfig
 from src.vituix_exporter import VituixAdapter
@@ -50,6 +51,7 @@ if __name__ == "__main__":
     vituix_file = os.path.join(args.out_dir, f"{args.name}_VituixCAD.vxp")
     graph_directivity_file = os.path.join(args.out_dir, f"{args.name}_Directivity.png")
     dir_heatmap_file = os.path.join(args.out_dir, f"{args.name}_Directivity_Heatmap.png")
+    graph_impedance_file = os.path.join(args.out_dir, f"{args.name}_Impedance.png")
     # Lancement de l'optimiseur (En passant le checkpoint file)
     opt = CrossoverOptimizer(config, target_fc=args.fc)
     best = opt.run(generations=args.gen, pop_size=args.pop, checkpoint_path=checkpoint_file)
@@ -63,12 +65,23 @@ if __name__ == "__main__":
     opt.plot_result(best, filename_response=graph_response_file, filename_filter=graph_filter_file)
     opt.plot_directivity(best, filename=graph_directivity_file)
     opt.plot_sonogram(best, filename=dir_heatmap_file)
+    opt.plot_impedance(best, filename=graph_impedance_file)
     # 2. Schéma visuel (PNG)
     opt.draw_schematic(best, filename=schema_file)
     
     # 3. Export VituixCAD (.vxp)
     exporter = VituixAdapter(filename=vituix_file, target_spl=opt.target_spl)
     exporter.export(best_ind=best, ways_configs=config)
+    
+    metadata_file = os.path.join(args.out_dir, f"{args.name}_metadata.json")
+    metadata = {
+                "Project_Name": args.name,
+                "Woofer": args.woofer,
+                "Tweeter": args.tweeter,
+            }
+            
+    with open(metadata_file, 'w', encoding='utf-8') as f:
+        json.dump(metadata, f, indent=4, ensure_ascii=False)
 
     end_time = time.time()
     print(f"[{args.name}] ✅ Terminé en {end_time - start_time:.2f} secondes. Fichiers dans : {args.out_dir}")

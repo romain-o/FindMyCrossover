@@ -1,0 +1,68 @@
+{
+    "tree": {
+        "type": "ParallelNode",
+        "id": "3989c256",
+        "left": {
+            "type": "SeriesNode",
+            "id": "5a85ae01",
+            "left": {
+                "type": "Resistor",
+                "id": "a12273d9",
+                "value": 2.2,
+                "unit": "Ohm"
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "dbf6c770",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "12426b86",
+                    "value": 2.7e-06,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "DriverNode",
+                    "id": "d2629ca6",
+                    "label": "Woofer",
+                    "polarity_inverted": false
+                }
+            }
+        },
+        "right": {
+            "type": "SeriesNode",
+            "id": "a8bafda5",
+            "left": {
+                "type": "Capacitor",
+                "id": "0d5ff103",
+                "value": 9.1e-07,
+                "unit": "F"
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "3af47ee0",
+                "left": {
+                    "type": "Inductor",
+                    "id": "137640cb",
+                    "value": 0.015,
+                    "unit": "H"
+                },
+                "right": {
+                    "type": "SeriesNode",
+                    "id": "16c8579a",
+                    "left": {
+                        "type": "Capacitor",
+                        "id": "816ae395",
+                        "value": 5.599999999999999e-07,
+                        "unit": "F"
+                    },
+                    "right": {
+                        "type": "DriverNode",
+                        "id": "c9a775a8",
+                        "label": "Tweeter",
+                        "polarity_inverted": false
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "tree": {
+        "type": "ParallelNode",
+        "id": "231d2fc6",
+        "left": {
+            "type": "SeriesNode",
+            "id": "13f9dcff",
+            "left": {
+                "type": "ParallelNode",
+                "id": "6e1d8f78",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "d37ee862",
+                    "value": 1.5e-06,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "Inductor",
+                    "id": "1d32a7d8",
+                    "value": 0.00039,
+                    "unit": "H"
+                }
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "0221531c",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "486c3cd7",
+                    "value": 2.2e-06,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "DriverNode",
+                    "id": "6c4524e6",
+                    "label": "Woofer",
+                    "polarity_inverted": false
+                }
+            }
+        },
+        "right": {
+            "type": "SeriesNode",
+            "id": "045e28a1",
+            "left": {
+                "type": "Capacitor",
+                "id": "d451079d",
+                "value": 8.2e-06,
+                "unit": "F"
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "862f4411",
+                "left": {
+                    "type": "Inductor",
+                    "id": "00284687",
+                    "value": 0.00043,
+                    "unit": "H"
+                },
+                "right": {
+                    "type": "SeriesNode",
+                    "id": "850d0c93",
+                    "left": {
+                        "type": "Capacitor",
+                        "id": "bc95fd59",
+                        "value": 9.1e-06,
+                        "unit": "F"
+                    },
+                    "right": {
+                        "type": "DriverNode",
+                        "id": "da728f70",
+                        "label": "Tweeter",
+                        "polarity_inverted": false
+                    }
+                }
+            }
+        }
+    }
+}

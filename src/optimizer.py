@@ -45,9 +45,8 @@ WEIGHTS = {
                 'phase': 0.0,
                 'n_comps': 8,
                 'components': 0.05,
-                'mean_spl': 0.0,
                 'crossover': 5,
-                'resistors': 0.01
+                'resistors': 0.15
             }
 
 def snap_to_e24(val):
@@ -83,8 +82,7 @@ class CrossoverOptimizer:
             prob_remove_node=0.05
         )
                             
-        self.ripple_mask = (self.freqs >= 400) & (self.freqs <= 12000)
-        self.mask_ref = (self.freqs > 300) & (self.freqs < 1000)
+        self.mask_ref = (self.freqs > 100) & (self.freqs < 1000)
         
         for way in self.ways:
             self._prepare_driver(way)
@@ -92,7 +90,7 @@ class CrossoverOptimizer:
         raw_w_mag = np.abs(self.ways[0].driver.H_acoustic)
         raw_w_spl = 20 * np.log10(raw_w_mag + 1e-12)
         raw_avg = np.mean(raw_w_spl[self.mask_ref]) if np.any(self.mask_ref) else self.target_spl
-        self.target_spl = raw_avg - 1.0
+        self.target_spl = raw_avg
         self.target_fc = target_fc
         print(f"[+] Cible SPL verrouillée à {self.target_spl:.1f} dB (Woofer brut: {raw_avg:.1f} dB)")
         
@@ -110,10 +108,10 @@ class CrossoverOptimizer:
             idx_max = valid_indices[-1]
             f_min = self.freqs[min(idx_min + 5, len(self.freqs)-1)]
             f_max = self.freqs[max(idx_max - 5, 0)]
-            f_min = max(f_min, 100.0)
+            f_min = max(f_min, 150.0)
             f_max = min(f_max, 18000.0)
         else:
-            f_min, f_max = 100, 18000
+            f_min, f_max = 150, 18000
             
         self.mask_flat = (self.freqs >= f_min) & (self.freqs <= f_max)
         print(f"[+] Plage d'optimisation auto-détectée : {int(f_min)} Hz - {int(f_max)} Hz")
@@ -128,7 +126,8 @@ class CrossoverOptimizer:
 
     def _prepare_driver(self, way):
         d = way.driver
-        d.model_name = os.path.basename(way.frd_path).split('.')[0].split('@')[0]
+        raw_name = os.path.basename(way.frd_path).split('.')[0].split('@')[0]
+        d.model_name = raw_name.replace('_0deg', '')
         mag_db = 20 * np.log10(np.abs(d.H_acoustic) + 1e-10)
         ph_unwrapped = np.unwrap(np.angle(d.H_acoustic))
         
@@ -189,6 +188,8 @@ class CrossoverOptimizer:
         # ============================================================
         dynamic_weight = self._base_weight.copy()
         
+        penalty = 0.0
+        
         for j in range(len(self.ways) - 1):
             mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
             mag2 = 20 * np.log10(np.abs(p_ways[j+1]) + 1e-12)
@@ -204,31 +205,40 @@ class CrossoverOptimizer:
                     search_mask = (self.freqs > 2000) & (self.freqs < 12000)
             
             if np.any(search_mask):
-                idx_cross = np.argmin(np.abs(mag1[search_mask] - mag2[search_mask]))
-                f_cross = self.freqs[search_mask][idx_cross]
+                # Isoler les portions des courbes dans la zone de recherche
+                m1_sub = mag1[search_mask]
+                m2_sub = mag2[search_mask]
+                f_sub = self.freqs[search_mask]
+                
+                # Trouver tous les indices où la voie aiguë (m2) est au-dessus de la voie grave (m1)
+                cross_points = np.where(m2_sub > m1_sub)[0]
+                
+                if len(cross_points) > 0:
+                    # Le croisement est le tout premier point où cela se produit
+                    idx_cross = cross_points[0]
+                else:
+                    # Sécurité : si ça ne croise jamais (filtre catastrophique), on prend le point le plus proche
+                    idx_cross = np.argmin(np.abs(m1_sub - m2_sub))
+                    
+                f_cross = f_sub[idx_cross]
+                
+                # Application du poids dynamique autour de la fréquence trouvée
                 dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = WEIGHTS['crossover']
 
+                # Application de la pénalité si une fréquence cible a été définie
                 if getattr(self, 'target_fc', 0.0) > 0.0:
                     # On calcule l'erreur en octaves (logarithmique) plutôt qu'en Hz absolus
-                    octave_err = np.abs(np.log2(f_cross / self.target_fc))
+                    octave_err = (np.log2(f_cross / self.target_fc))
                     
-                    # Pénalité quadratique agressive (1 octave d'erreur = +5000 de pénalité)
-                    fc_penalty = (octave_err ** 2) * 5000.0
+                    # Pénalité quadratique agressive
+                    fc_penalty = (octave_err ** 2)
                     penalty += fc_penalty
                 
         raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
         
-        raw_ripple = 0.0
-        if np.any(self.ripple_mask):
-            raw_ripple = np.std(spl_sum_test[self.ripple_mask]) ** 2
-        
-        mean_spl = np.mean(spl_sum_test[self.mask_flat])
-        
         score_sum = (raw_mse * WEIGHTS['mse_sum'])
         
         total_mse += score_sum
-
-        penalty = 0.0
         
         Z_in = self.evaluator.get_impedance(root)
         min_Z = np.min(np.abs(Z_in))
@@ -252,8 +262,10 @@ class CrossoverOptimizer:
 
         if n_comps <= WEIGHTS['n_comps']:
             comp_penalty = 0.0
-        else:
+        elif n_comps <= WEIGHTS['n_comps'] + 3:
             comp_penalty = (n_comps - WEIGHTS['n_comps']) * (total_mse * WEIGHTS['components'])
+        else:
+            comp_penalty = 10000.0 + (n_comps - WEIGHTS['n_comps'] - 2) * (total_mse * WEIGHTS['components'] * 5.0)
 
         n_resistors = sum(1 for c in comps if isinstance(c, Resistor))
         resistor_penalty = n_resistors * (total_mse * WEIGHTS['resistors'])
@@ -509,50 +521,108 @@ class CrossoverOptimizer:
         # On retourne juste le meilleur individu sans tracer les graphiques ici !
         return best_ind
 
-    def plot_result(self, individual, filename_response="response.png", filename_filter="filter.png", last_score=None):
-        """Génère les graphiques avec des chemins personnalisés."""
+    def plot_result(self, individual, filename_response="response.png", filename_filter="filter.png"):
+        """Génère les graphiques SPL et de transfert électrique en anglais"""
         root = individual['tree']
         res = self.evaluator.evaluate(root)
-        dynamic_spl = self.target_spl
         
-        # 1. Graphique de Réponse SPL
-        plt.figure(figsize=(12, 8))
+        # --- GRAPH 1 : SPL RESPONSE ---
+        plt.figure(figsize=(12, 7))
         p_sum = np.zeros_like(self.freqs, dtype=complex)
         
-        for i, way in enumerate(self.ways):
+        for way in self.ways:
             p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
             p_sum += p_real
-            spl_real = 20 * np.log10(np.abs(p_real) + 1e-10)
-            plt.semilogx(self.freqs, spl_real, label=f"Réel {way.label}", linewidth=2)
+            spl_real = 20 * np.log10(np.abs(p_real) + 1e-12)
+            
+            # Utilisation du nom exact du haut-parleur (ex: "RS150-8")
+            plt.semilogx(self.freqs, spl_real, label=way.driver.model_name, linewidth=2)
 
-        plt.semilogx(self.freqs, 20 * np.log10(np.abs(p_sum) + 1e-10), label="Somme", color='red', linewidth=3)
-        plt.axhline(dynamic_spl, color='green', linestyle='--', alpha=0.5)
-        plt.ylim(dynamic_spl - 40, dynamic_spl + 10)
-        plt.xlim(100, 20000)
+        spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
+        plt.semilogx(self.freqs, spl_sum, label="System Sum", color='red', linewidth=3)
+        plt.axhline(self.target_spl, color='green', linestyle='--', alpha=0.5, label="Target SPL")
+            
+        plt.title(f"System SPL Response")
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("SPL (dB)")
+        plt.xlim(20, 20000)
+        plt.ylim(self.target_spl - 30, self.target_spl + 10)
         plt.grid(True, which="both", alpha=0.2)
         plt.legend()
-        
-        score_display = last_score if last_score is not None else self.fitness(individual)
-        plt.title(f"Réponse {len(self.ways)}-voies (Score: {score_display:.2f})")
         plt.savefig(filename_response)
         plt.close()
-        
-        # 2. Graphique de Fonction de Transfert Électrique
+
+        # --- GRAPH 2 : ELECTRICAL TRANSFER ---
         plt.figure(figsize=(12, 8))
-        for i, way in enumerate(self.ways):
+        for way in self.ways:
             v_complex = res.get(way.label, {}).get("V_complex", np.zeros_like(self.freqs))
             filter_db = 20 * np.log10(np.abs(v_complex) + 1e-12)
-            plt.semilogx(self.freqs, filter_db, label=f"Filtre {way.label}", linewidth=2)
+            plt.semilogx(self.freqs, filter_db, label=f"{way.driver.model_name} Filter", linewidth=2)
             
-        plt.axhline(0, color='black', linestyle='-', alpha=0.5, label="0 dB (Signal Ampli brut)")
+        plt.title("Electrical Transfer Functions")
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("Magnitude (dB)")
+        plt.xlim(20, 20000)
         plt.ylim(-40, 5)
-        plt.xlim(100, 20000)
         plt.grid(True, which="both", alpha=0.2)
         plt.legend()
-        plt.title("Fonction de transfert électrique du filtre (V_out / V_in)")
-        plt.xlabel("Fréquence (Hz)")
-        plt.ylabel("Atténuation (dB)")
         plt.savefig(filename_filter)
+        plt.close()
+
+    def plot_directivity(self, individual, filename="directivity.png"):
+        """Génère le graphique de directivité avec légendes anglaises"""
+        plt.figure(figsize=(12, 7))
+        root = individual['tree']
+        angles = ['0deg', '15deg', '30deg', '45deg']
+        colors = ['red', 'orange', 'green', 'blue']
+        alphas = [1.0, 0.8, 0.6, 0.5]
+        
+        # Légendes traduites
+        labels = ['0° (On-Axis)', '15°', '30°', '45°']
+        
+        original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
+        
+        for idx, angle in enumerate(angles):
+            valid_angle = True
+            
+            for way in self.ways:
+                new_H = original_H[way.label] if angle == '0deg' else self._get_off_axis_H(way, angle)
+                if new_H is None:
+                    valid_angle = False
+                    break
+                for node in root.get_all_nodes():
+                    if isinstance(node, DriverNode) and node.label == way.label:
+                        node.H_acoustic = new_H
+                        
+            if not valid_angle:
+                continue 
+                
+            res = self.evaluator.evaluate(root)
+            p_sum = np.zeros_like(self.freqs, dtype=complex)
+            for way in self.ways:
+                p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
+                p_sum += p_real
+                
+            spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
+            plt.semilogx(self.freqs, spl_sum, label=labels[idx], color=colors[idx], linewidth=3 if idx==0 else 2, alpha=alphas[idx])
+            
+        for way in self.ways:
+            for node in root.get_all_nodes():
+                if isinstance(node, DriverNode) and node.label == way.label:
+                    node.H_acoustic = original_H[way.label]
+                    
+        plt.axhline(self.target_spl, color='black', linestyle='--', alpha=0.3, label="Target SPL")
+        plt.ylim(self.target_spl - 30, self.target_spl + 10)
+        plt.xlim(20, 20000)
+        plt.grid(True, which="both", alpha=0.2)
+        plt.legend()
+        
+        # Titres traduits
+        plt.title("Off-Axis SPL Directivity")
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("SPL (dB)")
+        
+        plt.savefig(filename)
         plt.close()
 
     def draw_schematic(self, individual, filename="schematic.png"):
@@ -597,62 +667,6 @@ class CrossoverOptimizer:
         except Exception as e:
             print(f"[-] Erreur lecture {off_axis_path}: {e}")
             return None
-
-    def plot_directivity(self, individual, filename="directivity.png"):
-        """Évalue et dessine la réponse globale pour tous les angles"""
-        plt.figure(figsize=(12, 8))
-        root = individual['tree']
-        angles = ['0deg', '15deg', '30deg', '45deg']
-        colors = ['red', 'orange', 'green', 'blue']
-        alphas = [1.0, 0.8, 0.6, 0.5]
-        labels = ['0° (Axe)', '15°', '30°', '45°']
-        
-        # 1. Sauvegarde des H_acoustic originaux (0deg) pour ne pas casser le circuit
-        original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
-        
-        for idx, angle in enumerate(angles):
-            valid_angle = True
-            
-            # 2. Remplacement des H_acoustic dans l'arbre pour cet angle
-            for way in self.ways:
-                new_H = original_H[way.label] if angle == '0deg' else self._get_off_axis_H(way, angle)
-                if new_H is None:
-                    valid_angle = False
-                    break
-                    
-                for node in root.get_all_nodes():
-                    if isinstance(node, DriverNode) and node.label == way.label:
-                        node.H_acoustic = new_H
-                        
-            if not valid_angle:
-                continue # On passe cet angle s'il manque des fichiers
-                
-            # 3. Évaluation du circuit avec les courbes modifiées
-            res = self.evaluator.evaluate(root)
-            p_sum = np.zeros_like(self.freqs, dtype=complex)
-            for way in self.ways:
-                p_real = res.get(way.label, {}).get("P_acoustic", np.zeros_like(self.freqs))
-                p_sum += p_real
-                
-            spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
-            plt.semilogx(self.freqs, spl_sum, label=labels[idx], color=colors[idx], linewidth=3 if idx==0 else 2, alpha=alphas[idx])
-            
-        # 4. Restauration de l'état d'origine
-        for way in self.ways:
-            for node in root.get_all_nodes():
-                if isinstance(node, DriverNode) and node.label == way.label:
-                    node.H_acoustic = original_H[way.label]
-                    
-        plt.axhline(self.target_spl, color='black', linestyle='--', alpha=0.3, label="Cible SPL")
-        plt.ylim(self.target_spl - 40, self.target_spl + 10)
-        plt.xlim(100, 20000)
-        plt.grid(True, which="both", alpha=0.2)
-        plt.legend()
-        plt.title(f"Réponse en directivité SPL (Off-Axis)")
-        plt.xlabel("Fréquence (Hz)")
-        plt.ylabel("SPL (dB)")
-        plt.savefig(filename)
-        plt.close()
         
     def plot_sonogram(self, individual, filename="sonogram.png"):
         """Génère un Sonogramme Ultra-Haute Définition, clone parfait de VituixCAD"""
@@ -739,7 +753,7 @@ class CrossoverOptimizer:
 
         # Échelles de décibels calquées sur Vituix (Dynamique de ~56 dB)
         max_spl = self.target_spl + 6
-        min_spl = max_spl - 56
+        min_spl = max_spl - 40
         
         # 6. DESSIN DU GRAPHIQUE
         fig, ax = plt.subplots(figsize=(12, 6))
@@ -785,6 +799,113 @@ class CrossoverOptimizer:
         
         # Export en haute résolution
         plt.savefig(filename, dpi=200, bbox_inches='tight') 
+        plt.close()
+        
+    def _calc_node_impedance(self, node):
+        """Calcule l'impédance complexe équivalente d'un nœud ou sous-arbre."""
+        name = node.__class__.__name__
+        
+        # Composants passifs
+        if name == "Resistor":
+            return np.full_like(self.freqs, node.value, dtype=complex)
+        elif name == "Capacitor":
+            return 1.0 / (1j * 2 * np.pi * self.freqs * node.value + 1e-15)
+        elif name == "Inductor":
+            return 1j * 2 * np.pi * self.freqs * node.value
+            
+        # Nœud Haut-Parleur : On récupère la vraie courbe ZMA mesurée
+        elif name == "DriverNode":
+            for way in self.ways:
+                if way.label == node.label:
+                    if hasattr(way.driver, 'Z_complex'): return way.driver.Z_complex
+                    if hasattr(way.driver, 'Z'): return way.driver.Z
+            return np.full_like(self.freqs, 8.0, dtype=complex) # Fallback 8 Ohms
+            
+        # Lois de Kirchhoff (Série et Parallèle)
+        elif name == "SeriesNode":
+            return self._calc_node_impedance(node.left) + self._calc_node_impedance(node.right)
+        elif name == "ParallelNode":
+            z1 = self._calc_node_impedance(node.left)
+            z2 = self._calc_node_impedance(node.right)
+            return 1.0 / (1.0 / (z1 + 1e-15) + 1.0 / (z2 + 1e-15))
+            
+        return np.full_like(self.freqs, 1e6, dtype=complex)
+    
+    def _get_max_power_dissipation(self, node, V_in):
+        """
+        Calcule la tension aux bornes de chaque composant de manière récursive 
+        et retourne la puissance dissipée maximale (en Watts) par une résistance du circuit.
+        """
+        name = node.__class__.__name__
+        
+        if name == "Resistor":
+            # P = |U|^2 / R (On prend la pire dissipation sur toute la plage de fréquences)
+            power_array = (np.abs(V_in)**2) / node.value
+            return np.max(power_array)
+            
+        elif name in ["Capacitor", "Inductor", "DriverNode"]:
+            # Les composants purement réactifs et les HP ne "brûlent" pas le filtre
+            return 0.0
+            
+        elif name == "ParallelNode":
+            # En parallèle, la tension est identique sur les deux branches
+            p_left = self._get_max_power_dissipation(node.left, V_in)
+            p_right = self._get_max_power_dissipation(node.right, V_in)
+            return max(p_left, p_right)
+            
+        elif name == "SeriesNode":
+            # En série, on a un diviseur de tension complexe
+            z_left = self._calc_node_impedance(node.left)
+            z_right = self._calc_node_impedance(node.right)
+            z_tot = z_left + z_right + 1e-15
+            
+            v_left = V_in * (z_left / z_tot)
+            v_right = V_in * (z_right / z_tot)
+            
+            p_left = self._get_max_power_dissipation(node.left, v_left)
+            p_right = self._get_max_power_dissipation(node.right, v_right)
+            return max(p_left, p_right)
+            
+        return 0.0
+
+    def plot_impedance(self, individual, filename="impedance.png"):
+        """Génère le graphique de l'impédance globale du système (Module) en anglais."""
+        import matplotlib.ticker as ticker
+        
+        root = individual['tree']
+        
+        # Calcul de l'impédance totale à l'entrée du filtre
+        Z_in = self._calc_node_impedance(root)
+        mag_Z = np.abs(Z_in)
+        
+        fig, ax1 = plt.subplots(figsize=(12, 6))
+        
+        # 1. Axe principal : Module (Ohms)
+        color1 = '#0077BB' # Bleu Pro
+        ax1.set_xlabel('Frequency (Hz)')
+        ax1.set_ylabel('Impedance (Ω)', color=color1, fontweight='bold')
+        ax1.semilogx(self.freqs, mag_Z, color=color1, linewidth=2.5, label="Magnitude")
+        ax1.tick_params(axis='y', labelcolor=color1)
+        ax1.set_xlim(20, 20000)
+        
+        # Échelle intelligente (plafond à 60 Ohms max pour éviter d'écraser le graphe si forte résonance)
+        y_max = min(60, max(20, np.max(mag_Z) * 1.1))
+        ax1.set_ylim(0, y_max)
+        
+        # Formatage de l'axe X (100Hz, 1k, etc.)
+        def format_freq(x, pos):
+            if x == 100: return '100Hz'
+            elif x >= 1000: return f'{int(x/1000)}k'
+            else: return f'{int(x)}'
+        ax1.get_xaxis().set_major_formatter(ticker.FuncFormatter(format_freq))
+        
+        # Regroupement des légendes
+        lines_1, labels_1 = ax1.get_legend_handles_labels()
+        ax1.legend(lines_1, labels_1, loc='upper right')
+            
+        plt.title(f"System Impedance")
+        fig.tight_layout()  
+        plt.savefig(filename)
         plt.close()
 
 if __name__ == "__main__":

@@ -80,12 +80,12 @@ class FindMyCrossoverApp(ctk.CTk):
 
         ctk.CTkLabel(right_frame, text="Générations :").pack(anchor="w", padx=20)
         self.gen_entry = ctk.CTkEntry(right_frame)
-        self.gen_entry.insert(0, "100")
+        self.gen_entry.insert(0, "50")
         self.gen_entry.pack(pady=(0, 10), padx=20, fill="x")
 
         ctk.CTkLabel(right_frame, text="Taille Population :").pack(anchor="w", padx=20)
         self.pop_entry = ctk.CTkEntry(right_frame)
-        self.pop_entry.insert(0, "120")
+        self.pop_entry.insert(0, "500")
         self.pop_entry.pack(pady=(0, 15), padx=20, fill="x")
 
         # --- BOUTON RUN ---

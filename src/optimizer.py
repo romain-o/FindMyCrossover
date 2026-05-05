@@ -40,14 +40,37 @@ BOUNDS_L = (0.05e-3, 15e-3)
 E24_SERIES = np.array([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 
                        3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1])
 
+# WEIGHTS = {
+#     # Poids de la cible principale
+#     'mse_sum': 1.0,           # Ancre de calcul (1 point = 1 dB d'erreur quadratique)
+#     'mean_spl': 0.01,         # Bonus très léger pour les sensibilités globales élevées
+#     'crossover': 3.0,         # Multiplicateur d'importance de la zone de raccord
+    
+#     # Seuils fixes
+#     'n_comps': 8,             # Nombre idéal max de composants
+    
+#     # Multiplicateurs des Gradients (Pentes de pénalité)
+#     'fc_err': 100.0,          # Pénalité pour l'écart de fréquence de coupure (octave_err ^ 2)
+#     'impedance': 100.0,       # Pénalité d'impédance sous 3.2 Ohms (diff ^ 3)
+#     'tweeter_low': 20.0,      # Pénalité pour le tweeter qui joue du grave (diff ^ 2)
+#     'woofer_attenuation': 2500.0, # Pénalité si le woofer est bridé (diff ^ 3)
+#     'thermal': 0.1,           # Pénalité thermique au-delà de 20W (diff ^ 2)
+#     'components': 0.5,        # Pénalité par composant supplémentaire (excess ^ 2.5)
+#     'resistors': 0.1          # Pénalité linéaire par résistance présente
+# }
+
 WEIGHTS = {
-                'mse_sum': 1.0,
-                'phase': 0.0,
-                'n_comps': 8,
-                'components': 0.05,
-                'crossover': 5,
-                'resistors': 0.15
-            }
+    'crossover': 3.2549,
+    'fc_err': 556.1274,
+    'impedance': 142.9232,
+    'tweeter_low': 48.4022,
+    'woofer_attenuation': 218.2858,
+    'thermal': 0.1216,
+    'components': 0.6808,
+    'resistors': 0.6518,
+    'mse_sum': 1.0000,
+    'n_comps': 8,
+}
 
 def snap_to_e24(val):
     """Arrondit une valeur mathématique à la valeur E24 la plus proche."""
@@ -70,7 +93,7 @@ class WayConfig:
         self.driver = DriverNode(label, frd_path, zma_path)
 
 class CrossoverOptimizer:
-    def __init__(self, ways_configs, target_fc=0.0):
+    def __init__(self, ways_configs, target_fc=0.0, weights=None):
         self.freqs = np.geomspace(20, 20000, 400)
         self.ways = ways_configs
         self.evaluator = CircuitEvaluator(self.freqs)
@@ -81,8 +104,11 @@ class CrossoverOptimizer:
             prob_add_node=0.35,
             prob_remove_node=0.05
         )
+        
+        global WEIGHTS
+        self.weights = weights if weights is not None else WEIGHTS
                             
-        self.mask_ref = (self.freqs > 100) & (self.freqs < 1000)
+        self.mask_ref = (self.freqs > 200) & (self.freqs < 1000)
         
         for way in self.ways:
             self._prepare_driver(way)
@@ -90,7 +116,7 @@ class CrossoverOptimizer:
         raw_w_mag = np.abs(self.ways[0].driver.H_acoustic)
         raw_w_spl = 20 * np.log10(raw_w_mag + 1e-12)
         raw_avg = np.mean(raw_w_spl[self.mask_ref]) if np.any(self.mask_ref) else self.target_spl
-        self.target_spl = raw_avg
+        self.target_spl = raw_avg - 1.0
         self.target_fc = target_fc
         print(f"[+] Cible SPL verrouillée à {self.target_spl:.1f} dB (Woofer brut: {raw_avg:.1f} dB)")
         
@@ -108,10 +134,10 @@ class CrossoverOptimizer:
             idx_max = valid_indices[-1]
             f_min = self.freqs[min(idx_min + 5, len(self.freqs)-1)]
             f_max = self.freqs[max(idx_max - 5, 0)]
-            f_min = max(f_min, 150.0)
+            f_min = max(f_min, 80.0)
             f_max = min(f_max, 18000.0)
         else:
-            f_min, f_max = 150, 18000
+            f_min, f_max = 80, 18000
             
         self.mask_flat = (self.freqs >= f_min) & (self.freqs <= f_max)
         print(f"[+] Plage d'optimisation auto-détectée : {int(f_min)} Hz - {int(f_max)} Hz")
@@ -150,7 +176,7 @@ class CrossoverOptimizer:
         if type == 'HP': return (s**4) / poly
         return np.ones_like(self.freqs)
 
-    def fitness(self, individual):
+    def fitness(self, individual, return_components=False):
         # ============================================================
         # OPTIMISATION #3 : Cache du score de fitness
         # → Un individu non modifié n'est JAMAIS réévalué.
@@ -161,12 +187,19 @@ class CrossoverOptimizer:
         # ============================================================
 
         root = individual['tree']
+        
+        for comp in root.get_all_nodes():
+            if isinstance(comp, Resistor):
+                comp.value = float(np.clip(comp.value, BOUNDS_R[0], BOUNDS_R[1]))
+            elif isinstance(comp, Capacitor):
+                comp.value = float(np.clip(comp.value, BOUNDS_C[0], BOUNDS_C[1]))
+            elif isinstance(comp, Inductor):
+                comp.value = float(np.clip(comp.value, BOUNDS_L[0], BOUNDS_L[1]))
 
         if not isinstance(root, ParallelNode): 
             return 1e9
 
         res = self.evaluator.evaluate(root)
-        dynamic_spl = self.target_spl
         total_mse = 0.0
 
         best_score_sum = float('inf')
@@ -180,15 +213,23 @@ class CrossoverOptimizer:
             p_sum_test += p_real
             
         spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
+        dynamic_spl = self.target_spl
+        # dynamic_spl = spl_sum_test[self.mask_ref].mean()
         diff = spl_sum_test - dynamic_spl
         
-        # ============================================================
-        # OPTIMISATION #4 : Partir du poids pré-calculé (copie rapide)
-        # au lieu de recrér un array de zéros + le remplir
-        # ============================================================
-        dynamic_weight = self._base_weight.copy()
+        # --- NOUVEAU : DICTIONNAIRE DE TRACKING ---
+        comps_track = {
+            'MSE_SPL': 0.0,
+            'FC_Penalty': 0.0,
+            'Impedance_Penalty': 0.0,
+            'Tweeter_LowFreq_Penalty': 0.0,
+            'Woofer_Attenuation_Penalty': 0.0, # <-- NOUVEAU
+            'Thermal_Penalty': 0.0,            # <-- NOUVEAU
+            'Component_Count_Penalty': 0.0,
+            'Resistor_Count_Penalty': 0.0
+        }
         
-        penalty = 0.0
+        dynamic_weight = self._base_weight.copy()
         
         for j in range(len(self.ways) - 1):
             mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
@@ -197,81 +238,95 @@ class CrossoverOptimizer:
             if len(self.ways) == 2:
                 search_mask = (self.freqs > 800) & (self.freqs < 5000)
             else:
-                if j == 0:
-                    search_mask = (self.freqs > 150) & (self.freqs < 1000)
-                elif j == 1:
-                    search_mask = (self.freqs > 1000) & (self.freqs < 8000)
-                else:
-                    search_mask = (self.freqs > 2000) & (self.freqs < 12000)
+                if j == 0: search_mask = (self.freqs > 150) & (self.freqs < 1000)
+                elif j == 1: search_mask = (self.freqs > 1000) & (self.freqs < 8000)
+                else: search_mask = (self.freqs > 2000) & (self.freqs < 12000)
             
             if np.any(search_mask):
-                # Isoler les portions des courbes dans la zone de recherche
                 m1_sub = mag1[search_mask]
                 m2_sub = mag2[search_mask]
                 f_sub = self.freqs[search_mask]
                 
-                # Trouver tous les indices où la voie aiguë (m2) est au-dessus de la voie grave (m1)
                 cross_points = np.where(m2_sub > m1_sub)[0]
-                
-                if len(cross_points) > 0:
-                    # Le croisement est le tout premier point où cela se produit
-                    idx_cross = cross_points[0]
-                else:
-                    # Sécurité : si ça ne croise jamais (filtre catastrophique), on prend le point le plus proche
-                    idx_cross = np.argmin(np.abs(m1_sub - m2_sub))
+                if len(cross_points) > 0: idx_cross = cross_points[0]
+                else: idx_cross = np.argmin(np.abs(m1_sub - m2_sub))
                     
                 f_cross = f_sub[idx_cross]
-                
-                # Application du poids dynamique autour de la fréquence trouvée
-                dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = WEIGHTS['crossover']
+                dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = self.weights['crossover']
 
-                # Application de la pénalité si une fréquence cible a été définie
                 if getattr(self, 'target_fc', 0.0) > 0.0:
-                    # On calcule l'erreur en octaves (logarithmique) plutôt qu'en Hz absolus
                     octave_err = (np.log2(f_cross / self.target_fc))
-                    
-                    # Pénalité quadratique agressive
-                    fc_penalty = (octave_err ** 2)
-                    penalty += fc_penalty
+                    # Rangement dans le dictionnaire
+                    comps_track['FC_Penalty'] += (octave_err ** 2) * 100.0
                 
         raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
+        comps_track['MSE_SPL'] = (raw_mse * self.weights['mse_sum'])
         
-        score_sum = (raw_mse * WEIGHTS['mse_sum'])
-        
-        total_mse += score_sum
-        
+        # ==========================================
+        # 1. GRADIENT D'IMPÉDANCE (Limite 3.2 Ω)
+        # ==========================================
         Z_in = self.evaluator.get_impedance(root)
         min_Z = np.min(np.abs(Z_in))
         if min_Z < 3.2: 
-            penalty += 10000.0 + (3.2 - min_Z) * 5000.0
+            # --- MODIFIÉ ---
+            comps_track['Impedance_Penalty'] += ((3.2 - min_Z) ** 3) * self.weights['impedance']
         
+        # ==========================================
+        # 2. GRADIENT DE SÉCURITÉ DU TWEETER
+        # ==========================================
         last_way_v = res.get(self.ways[-1].label, {}).get("V_complex", np.zeros_like(self.freqs))
-        
         v_low = np.abs(last_way_v)[self.freqs < 1000.0]
-        if np.any(v_low > 0.1):
-            penalty += 10000.0 + np.sum(v_low) * 1000.0
+        v_excess = np.maximum(0, v_low - 0.1)
+        if np.any(v_excess > 0):
+            # --- MODIFIÉ ---
+            comps_track['Tweeter_LowFreq_Penalty'] += np.sum(v_excess ** 2) * self.weights['tweeter_low']
 
-        # ============================================================
-        # OPTIMISATION #5 : get_all_nodes() appelé une seule fois
-        # → On réutilise `all_nodes` pour comps ET n_resistors
-        #   au lieu de traverser l'arbre deux fois.
-        # ============================================================
+        # ==========================================
+        # 3. GRADIENT ANTI-ATTÉNUATION WOOFER
+        # ==========================================
+        v_woofer = res.get(self.ways[0].label, {}).get("V_complex", np.zeros_like(self.freqs))
+        max_w_gain = np.max(np.abs(v_woofer))
+        if max_w_gain < 0.95:  
+            # --- MODIFIÉ ---
+            comps_track['Woofer_Attenuation_Penalty'] += ((0.95 - max_w_gain) ** 3) * self.weights['woofer_attenuation']
+
+        # ==========================================
+        # 4. GRADIENT THERMIQUE (Limite 20W)
+        # ==========================================
+        if hasattr(self, '_get_max_power_dissipation'):
+            V_amp_test = np.full_like(self.freqs, 28.28, dtype=complex)
+            max_resistor_power = self._get_max_power_dissipation(root, V_amp_test)
+            
+            if max_resistor_power > 20.0:
+                # --- MODIFIÉ ---
+                comps_track['Thermal_Penalty'] += ((max_resistor_power - 20.0) ** 2) * self.weights['thermal']
+
+        # ==========================================
+        # 5. GRADIENT DU NOMBRE DE COMPOSANTS
+        # ==========================================
         all_nodes = root.get_all_nodes()
         comps = [n for n in all_nodes if isinstance(n, ComponentNode)]
         n_comps = len(comps)
 
-        if n_comps <= WEIGHTS['n_comps']:
-            comp_penalty = 0.0
-        elif n_comps <= WEIGHTS['n_comps'] + 3:
-            comp_penalty = (n_comps - WEIGHTS['n_comps']) * (total_mse * WEIGHTS['components'])
+        if n_comps <= self.weights['n_comps']:
+            comps_track['Component_Count_Penalty'] = 0.0
         else:
-            comp_penalty = 10000.0 + (n_comps - WEIGHTS['n_comps'] - 2) * (total_mse * WEIGHTS['components'] * 5.0)
+            excess = n_comps - self.weights['n_comps']
+            # --- MODIFIÉ ---
+            comps_track['Component_Count_Penalty'] = (excess ** 2.5) * self.weights['components']
 
         n_resistors = sum(1 for c in comps if isinstance(c, Resistor))
-        resistor_penalty = n_resistors * (total_mse * WEIGHTS['resistors'])
+        # --- MODIFIÉ ---
+        comps_track['Resistor_Count_Penalty'] = n_resistors * self.weights['resistors']
 
-        final_score = total_mse + penalty + comp_penalty + resistor_penalty
+        # ==========================================
+        # CALCUL FINAL
+        # ==========================================
+        final_score = sum(comps_track.values())
 
+        if return_components:
+            return final_score, comps_track
+            
         return final_score
 
 
@@ -441,6 +496,24 @@ class CrossoverOptimizer:
                 fitness_results = pool.map(_pool_fitness, population, chunksize=chunksize)
                 scores = [(fit, ind) for fit, ind in zip(fitness_results, population)]
                 scores.sort(key=lambda x: x[0])
+                
+                if not hasattr(self, 'loss_history'):
+                    self.loss_history = []
+                
+                # On prend les meilleurs 10%
+                top_10_count = max(1, pop_size // 10)
+                top_inds = [s[1] for s in scores[:top_10_count]]
+                
+                # On re-calcule silencieusement pour obtenir les dictionnaires
+                gen_comps = []
+                for ind in top_inds:
+                    _, comps = self.fitness(ind, return_components=True)
+                    gen_comps.append(comps)
+                
+                # On fait la moyenne de chaque pénalité pour cette génération
+                avg_comps = {k: np.mean([c[k] for c in gen_comps]) for k in gen_comps[0].keys()}
+                self.loss_history.append(avg_comps)
+                # ----------------------------------------------------
                 
                 if gen < int(generations * 0.4):      
                     max_opt_iter = 2
@@ -799,6 +872,49 @@ class CrossoverOptimizer:
         
         # Export en haute résolution
         plt.savefig(filename, dpi=200, bbox_inches='tight') 
+        plt.close()
+        
+    def plot_loss_history(self, filename="loss_history.png"):
+        """Génère un graphique à barres empilées de l'évolution des composantes de la loss."""
+        if not hasattr(self, 'loss_history') or not self.loss_history:
+            print("[-] Aucune donnée de loss à afficher.")
+            return
+
+        generations = np.arange(len(self.loss_history))
+        keys = list(self.loss_history[0].keys())
+        
+        plt.figure(figsize=(12, 7))
+        bottom = np.zeros(len(generations))
+        
+        # Palette de couleurs professionnelle et distincte
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2']
+        
+        for i, key in enumerate(keys):
+            values = np.array([gen[key] for gen in self.loss_history])
+            # width=1.0 permet aux barres de se toucher et de créer un effet "bloc" (stacked area continu)
+            plt.bar(generations, values, bottom=bottom, width=1.0, 
+                    label=key.replace('_', ' '), color=colors[i % len(colors)], edgecolor='none')
+            bottom += values
+            
+        plt.title("Evolution of Loss Components (Top 10% Average)", fontsize=14, fontweight='bold')
+        plt.xlabel("Generation", fontsize=12)
+        plt.ylabel("Absolute Loss Score", fontsize=12)
+        
+        # --- Cadrage Intelligent ---
+        # On ignore les pics massifs des toutes premières générations pour rendre la fin lisible
+        focus_idx = max(0, int(len(generations) * 0.15)) 
+        if len(bottom) > focus_idx:
+            max_y = np.max(bottom[focus_idx:]) * 1.5 
+            plt.ylim(0, max_y)
+        
+        plt.xlim(0, len(generations) - 1)
+        plt.grid(True, axis='y', linestyle='--', alpha=0.5)
+        
+        # On sort la légende du graphique pour ne pas cacher les données
+        plt.legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
+        plt.tight_layout()
+        
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
         plt.close()
         
     def _calc_node_impedance(self, node):

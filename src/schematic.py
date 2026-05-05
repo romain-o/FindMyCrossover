@@ -128,7 +128,7 @@ class SchematicRenderer:
                 
                 # Le composant descend, son texte prend environ 1.8 unités à droite.
                 # Si le shunt s'est étendu (sous-circuit), on prend sa vraie largeur + 0.5.
-                safe_x = max(pre_shunt_x + 2.2, shunt_max_x + 1)
+                safe_x = max(pre_shunt_x + 2.2, shunt_max_x + 1.4)
                 advance = safe_x - pre_shunt_x
                 
                 if advance > 0:

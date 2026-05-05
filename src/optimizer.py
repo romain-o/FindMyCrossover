@@ -33,9 +33,9 @@ def _pool_lamarckian(child):
     return _pool_optimizer._lamarckian_worker(child)
 
 
-BOUNDS_R = (0.1, 50.0)
-BOUNDS_C = (0.1e-6, 150e-6)
-BOUNDS_L = (0.05e-3, 15e-3)
+BOUNDS_R = (0.1, 220.0)
+BOUNDS_C = (0.1e-6, 300e-6)
+BOUNDS_L = (0.05e-3, 5e-3)
 
 E24_SERIES = np.array([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 
                        3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1])
@@ -61,7 +61,7 @@ E24_SERIES = np.array([1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.
 
 WEIGHTS = {
     'crossover': 3.2549,
-    'fc_err': 556.1274,
+    'fc_err': 20.0,
     'impedance': 142.9232,
     'tweeter_low': 48.4022,
     'woofer_attenuation': 218.2858,
@@ -116,7 +116,7 @@ class CrossoverOptimizer:
         raw_w_mag = np.abs(self.ways[0].driver.H_acoustic)
         raw_w_spl = 20 * np.log10(raw_w_mag + 1e-12)
         raw_avg = np.mean(raw_w_spl[self.mask_ref]) if np.any(self.mask_ref) else self.target_spl
-        self.target_spl = raw_avg - 1.0
+        self.target_spl = raw_avg - 0.7
         self.target_fc = target_fc
         print(f"[+] Cible SPL verrouillée à {self.target_spl:.1f} dB (Woofer brut: {raw_avg:.1f} dB)")
         
@@ -168,13 +168,6 @@ class CrossoverOptimizer:
         z_mag = np.abs(d.Z_complex)
         z_ph = np.unwrap(np.angle(d.Z_complex))
         d.Z_complex = np.interp(self.freqs, d.zma_freqs, z_mag) * np.exp(1j * np.interp(self.freqs, d.zma_freqs, z_ph))
-
-    def _get_lr4_transfer(self, f_target, type='LP'):
-        s = 1j * (self.freqs / f_target)
-        poly = (s**2 + np.sqrt(2)*s + 1)**2
-        if type == 'LP': return 1 / poly
-        if type == 'HP': return (s**4) / poly
-        return np.ones_like(self.freqs)
 
     def fitness(self, individual, return_components=False):
         # ============================================================
@@ -257,9 +250,9 @@ class CrossoverOptimizer:
                 if getattr(self, 'target_fc', 0.0) > 0.0:
                     octave_err = (np.log2(f_cross / self.target_fc))
                     # Rangement dans le dictionnaire
-                    comps_track['FC_Penalty'] += (octave_err ** 2) * 100.0
+                    comps_track['FC_Penalty'] = (octave_err ** 2) * self.weights['fc_err']
                 
-        raw_mse = np.mean(np.where(diff > 0, (diff**2) * 5.0, diff**2) * dynamic_weight)
+        raw_mse = np.mean(np.where(diff > 0, (diff**2) * 1.5, diff**2) * dynamic_weight)
         comps_track['MSE_SPL'] = (raw_mse * self.weights['mse_sum'])
         
         # ==========================================
@@ -466,15 +459,58 @@ class CrossoverOptimizer:
             except Exception as e: 
                 print(f"Erreur chargement du checkpoint: {e}")
         else:
-            try:
-               if len(self.ways) == 2:
-                    w_branch = SeriesNode(Inductor(1.5e-3), ParallelNode(Capacitor(10e-6), SeriesNode(Inductor(0.5e-3), self.ways[0].driver.copy())))
-                    t_branch = SeriesNode(Capacitor(4.7e-6), ParallelNode(Inductor(0.3e-3), SeriesNode(Capacitor(10e-6), self.ways[1].driver.copy())))
-                    seed_tree = ParallelNode(w_branch, t_branch)
-                    population.append({'tree': seed_tree})
-                    print("[+] Graine (Template 3ème ordre) injectée.")
-            except Exception as e:
-                pass
+            if len(self.ways) == 2:
+                try:
+                    seeds = []
+                    
+                    # Raccourcis pour la lisibilité
+                    w_drv = lambda: self.ways[0].driver.copy()
+                    t_drv = lambda: self.ways[1].driver.copy()
+
+                    # Template 1 : 1er Ordre (Très simple, 6dB/oct)
+                    w1 = SeriesNode(Inductor(1.0e-3), w_drv())
+                    t1 = SeriesNode(Capacitor(4.7e-6), t_drv())
+                    seeds.append(ParallelNode(w1, t1))
+
+                    # Template 2 : 2ème Ordre Classique (12dB/oct)
+                    w2 = SeriesNode(Inductor(1.2e-3), ParallelNode(Capacitor(10e-6), w_drv()))
+                    t2 = SeriesNode(Capacitor(5.6e-6), ParallelNode(Inductor(0.4e-3), t_drv()))
+                    seeds.append(ParallelNode(w2, t2))
+
+                    # Template 3 : 3ème Ordre (La graine d'origine)
+                    w3 = SeriesNode(Inductor(1.5e-3), ParallelNode(Capacitor(10e-6), SeriesNode(Inductor(0.5e-3), w_drv())))
+                    t3 = SeriesNode(Capacitor(4.7e-6), ParallelNode(Inductor(0.3e-3), SeriesNode(Capacitor(10e-6), t_drv())))
+                    seeds.append(ParallelNode(w3, t3))
+
+                    # Template 4 : L'Arme Secrète (Filtre Bouchon en série sur le Woofer + 2ème Ordre)
+                    notch = ParallelNode(Capacitor(15e-6), Inductor(0.1e-3))
+                    w4 = SeriesNode(Inductor(1.2e-3), ParallelNode(Capacitor(8.2e-6), SeriesNode(notch, w_drv())))
+                    t4 = SeriesNode(Capacitor(5.6e-6), ParallelNode(Inductor(0.4e-3), t_drv()))
+                    seeds.append(ParallelNode(w4, t4))
+
+                    # Template 5 : Tweeter Atténué (L-Pad) + 2ème Ordre
+                    lpad_t = SeriesNode(Resistor(3.3), ParallelNode(Resistor(10.0), t_drv()))
+                    w5 = SeriesNode(Inductor(1.2e-3), ParallelNode(Capacitor(10e-6), w_drv()))
+                    t5 = SeriesNode(Capacitor(6.8e-6), ParallelNode(Inductor(0.4e-3), lpad_t))
+                    seeds.append(ParallelNode(w5, t5))
+
+                    # Injection des graines dans la population
+                    print(f"[+] Injection de {len(seeds)} templates fondamentaux dans la population.")
+                    for s in seeds:
+                        # On ajoute la graine pure
+                        population.append({'tree': s, 'is_optimized': False})
+                        
+                        # On ajoute 10 versions légèrement mutées de cette graine 
+                        # (change les valeurs, ajoute/retire un composant)
+                        for _ in range(10):
+                            mutated_s = self.mutator.mutate(s.copy())
+                            population.append({'tree': mutated_s, 'is_optimized': False})
+                            
+                    print(f"[+] {len(seeds) * 10} mutants de première génération créés avec succès.")
+                            
+                except Exception as e:
+                    print(f"[-] Erreur lors de l'injection des graines : {e}")
+                    pass
 
         while len(population) < pop_size:
             branches = []
@@ -615,6 +651,21 @@ class CrossoverOptimizer:
         plt.semilogx(self.freqs, spl_sum, label="System Sum", color='red', linewidth=3)
         plt.axhline(self.target_spl, color='green', linestyle='--', alpha=0.5, label="Target SPL")
             
+        # --- NOUVEAU : Calcul et affichage de l'écart Min-Max (300Hz - 17kHz) ---
+        mask_range = (self.freqs >= 300) & (self.freqs <= 17000)
+        if np.any(mask_range):
+            spl_in_range = spl_sum[mask_range]
+            spl_diff = np.max(spl_in_range) - np.min(spl_in_range)
+            
+            # L'argument 'transform=plt.gca().transAxes' permet d'utiliser des pourcentages (0 à 1) 
+            # de la taille de l'écran plutôt que les vraies valeurs des axes X et Y.
+            plt.text(0.02, 0.95, f"Ripple (300Hz-17kHz): {spl_diff:.1f} dB", 
+                     transform=plt.gca().transAxes, 
+                     fontsize=11, fontweight='bold', color='black',
+                     verticalalignment='top', horizontalalignment='left',
+                     bbox=dict(boxstyle='round,pad=0.5', facecolor='white', edgecolor='gray', alpha=0.9))
+        # -------------------------------------------------------------------------
+        
         plt.title(f"System SPL Response")
         plt.xlabel("Frequency (Hz)")
         plt.ylabel("SPL (dB)")

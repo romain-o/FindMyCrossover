@@ -1,0 +1,118 @@
+{
+    "tree": {
+        "type": "ParallelNode",
+        "id": "a8f6b588",
+        "left": {
+            "type": "SeriesNode",
+            "id": "8e442566",
+            "left": {
+                "type": "ParallelNode",
+                "id": "364a3afd",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "26767bf3",
+                    "value": 5.1e-07,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "Inductor",
+                    "id": "80e89e85",
+                    "value": 0.00068,
+                    "unit": "H"
+                }
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "a0705186",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "cab836e1",
+                    "value": 4.2999999999999995e-06,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "DriverNode",
+                    "id": "e66bb2f8",
+                    "label": "Woofer",
+                    "polarity_inverted": false
+                }
+            }
+        },
+        "right": {
+            "type": "SeriesNode",
+            "id": "92f88331",
+            "left": {
+                "type": "Capacitor",
+                "id": "f33c8aec",
+                "value": 2.7e-06,
+                "unit": "F"
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "3df8fae2",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "4520b849",
+                    "value": 7.499999999999999e-06,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "ParallelNode",
+                    "id": "2643a333",
+                    "left": {
+                        "type": "Inductor",
+                        "id": "eb6df728",
+                        "value": 0.00016,
+                        "unit": "H"
+                    },
+                    "right": {
+                        "type": "ParallelNode",
+                        "id": "49c1f13f",
+                        "left": {
+                            "type": "SeriesNode",
+                            "id": "d8079dc6",
+                            "left": {
+                                "type": "ParallelNode",
+                                "id": "7086eb7c",
+                                "left": {
+                                    "type": "Capacitor",
+                                    "id": "f7768087",
+                                    "value": 3.0000000000000004e-05,
+                                    "unit": "F"
+                                },
+                                "right": {
+                                    "type": "Inductor",
+                                    "id": "43d55693",
+                                    "value": 0.0022,
+                                    "unit": "H"
+                                }
+                            },
+                            "right": {
+                                "type": "DriverNode",
+                                "id": "7abcbfa0",
+                                "label": "Tweeter",
+                                "polarity_inverted": false
+                            }
+                        },
+                        "right": {
+                            "type": "SeriesNode",
+                            "id": "87541735",
+                            "left": {
+                                "type": "Inductor",
+                                "id": "14e1fc5b",
+                                "value": 0.00030000000000000003,
+                                "unit": "H"
+                            },
+                            "right": {
+                                "type": "Capacitor",
+                                "id": "a82c8e9d",
+                                "value": 2.2000000000000003e-05,
+                                "unit": "F"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

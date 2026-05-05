@@ -12,10 +12,10 @@ def extract_model_name(filename):
 
 def detect_angle(filename):
     name_lower = filename.lower()
-    if any(x in name_lower for x in ['@0', '_0deg', '0_deg', 'on-axis', 'onaxis']): return '0deg'
-    elif any(x in name_lower for x in ['@15', '_15deg', '15_deg']): return '15deg'
-    elif any(x in name_lower for x in ['@30', '_30deg', '30_deg']): return '30deg'
-    elif any(x in name_lower for x in ['@45', '_45deg', '45_deg', '@40']): return '45deg'
+    if any(x in name_lower for x in ['@0', '_0deg', '0_deg', 'on-axis', 'onaxis','_0']): return '0deg'
+    elif any(x in name_lower for x in ['@15', '_15deg', '15_deg','_15']): return '15deg'
+    elif any(x in name_lower for x in ['@30', '_30deg', '30_deg','_30']): return '30deg'
+    elif any(x in name_lower for x in ['@45', '_45deg', '45_deg', '_45']): return '45deg'
     return '0deg'
 
 def clean_and_format_data(raw_bytes):

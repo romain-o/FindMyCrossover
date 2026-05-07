@@ -1,0 +1,23 @@
+{
+    "Project_Name": "DS215-8_X_DS135-8_X_DC28F-8",
+    "Woofer": "DS215-8",
+    "Midrange": "DS135-8",
+    "Tweeter": "DC28F-8",
+    "target_fc": null,
+    "weights": {
+        "crossover": 3.25,
+        "fc_err": 20.0,
+        "impedance": 142.92,
+        "tweeter_low": 48.4,
+        "midrange_low": 25.0,
+        "midrange_high": 25.0,
+        "midrange_participation": 80.0,
+        "woofer_attenuation": 218.29,
+        "midrange_attenuation": 200,
+        "thermal": 0.12,
+        "components": 0.68,
+        "resistors": 0.65,
+        "mse_sum": 1.0,
+        "n_comps": 14
+    }
+}

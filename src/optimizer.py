@@ -9,6 +9,8 @@ from src.mutator import TreeMutator
 from scipy.optimize import minimize
 from src.schematic import SchematicRenderer
 import time
+import csv
+
 
 # ============================================================
 # OPTIMISATION #1 : Fonctions module-level pour multiprocessing
@@ -64,12 +66,16 @@ WEIGHTS = {
     'fc_err': 20.0,
     'impedance': 142.9232,
     'tweeter_low': 48.4022,
+    'midrange_low': 25.0,
+    'midrange_high': 25.0,
+    'midrange_participation': 60.0,       
     'woofer_attenuation': 218.2858,
+    'midrange_attenuation': 200,
     'thermal': 0.1216,
     'components': 0.6808,
     'resistors': 0.6518,
     'mse_sum': 1.0000,
-    'n_comps': 8,
+    'n_comps': 10,
 }
 
 def snap_to_e24(val):
@@ -93,7 +99,7 @@ class WayConfig:
         self.driver = DriverNode(label, frd_path, zma_path)
 
 class CrossoverOptimizer:
-    def __init__(self, ways_configs, target_fc=0.0, weights=None):
+    def __init__(self, ways_configs, target_fc=None, weights=None):
         self.freqs = np.geomspace(20, 20000, 400)
         self.ways = ways_configs
         self.evaluator = CircuitEvaluator(self.freqs)
@@ -107,15 +113,25 @@ class CrossoverOptimizer:
         
         global WEIGHTS
         self.weights = weights if weights is not None else WEIGHTS
-                            
-        self.mask_ref = (self.freqs > 200) & (self.freqs < 1000)
         
+        if len(self.ways) == 2:
+            self.mask_ref = [
+                (self.freqs > 200) & (self.freqs < 1000),
+                (self.freqs > 3000) & (self.freqs < 13000)
+            ]
+        elif len(self.ways) == 3:
+            self.mask_ref = [
+                            (self.freqs > 100) & (self.freqs < 700),
+                            (self.freqs > 1000) & (self.freqs < 4000),
+                            (self.freqs > 4000) & (self.freqs < 13000)
+                            ]
+    
         for way in self.ways:
             self._prepare_driver(way)
-        
-        raw_w_mag = np.abs(self.ways[0].driver.H_acoustic)
-        raw_w_spl = 20 * np.log10(raw_w_mag + 1e-12)
-        raw_avg = np.mean(raw_w_spl[self.mask_ref]) if np.any(self.mask_ref) else self.target_spl
+        for j in range(len(self.ways) - 1):
+            raw_mag = np.abs(self.ways[j].driver.H_acoustic)
+            raw_spl = 20 * np.log10(raw_mag + 1e-12)
+            raw_avg = np.mean(raw_spl[self.mask_ref[j]]) if np.any(self.mask_ref[j]) else self.target_spl
         self.target_spl = raw_avg - 0.7
         self.target_fc = target_fc
         print(f"[+] Cible SPL verrouillée à {self.target_spl:.1f} dB (Woofer brut: {raw_avg:.1f} dB)")
@@ -223,6 +239,7 @@ class CrossoverOptimizer:
         }
         
         dynamic_weight = self._base_weight.copy()
+        detected_fc = []
         
         for j in range(len(self.ways) - 1):
             mag1 = 20 * np.log10(np.abs(p_ways[j]) + 1e-12)
@@ -231,8 +248,8 @@ class CrossoverOptimizer:
             if len(self.ways) == 2:
                 search_mask = (self.freqs > 800) & (self.freqs < 5000)
             else:
-                if j == 0: search_mask = (self.freqs > 150) & (self.freqs < 1000)
-                elif j == 1: search_mask = (self.freqs > 1000) & (self.freqs < 8000)
+                if j == 0: search_mask = (self.freqs > 200) & (self.freqs < 3000)
+                elif j == 1: search_mask = (self.freqs > 1500) & (self.freqs < 12000)
                 else: search_mask = (self.freqs > 2000) & (self.freqs < 12000)
             
             if np.any(search_mask):
@@ -245,12 +262,19 @@ class CrossoverOptimizer:
                 else: idx_cross = np.argmin(np.abs(m1_sub - m2_sub))
                     
                 f_cross = f_sub[idx_cross]
+                detected_fc.append(f_cross) # <-- On sauvegarde !
                 dynamic_weight[(self.freqs > f_cross / 2.0) & (self.freqs < f_cross * 2.0)] = self.weights['crossover']
 
-                if getattr(self, 'target_fc', 0.0) > 0.0:
-                    octave_err = (np.log2(f_cross / self.target_fc))
-                    # Rangement dans le dictionnaire
-                    comps_track['FC_Penalty'] = (octave_err ** 2) * self.weights['fc_err']
+                if self.target_fc is not None:
+                    # Résolution de la cible : float (2-voies) ou tuple (3-voies)
+                    if isinstance(self.target_fc, (tuple, list)):
+                        target = self.target_fc[j] if j < len(self.target_fc) else 0.0
+                    else:
+                        target = self.target_fc if j == 0 else 0.0
+
+                    if target > 0.0:
+                        octave_err = np.log2(f_cross / target)
+                        comps_track['FC_Penalty'] += (octave_err ** 2) * self.weights['fc_err']
                 
         raw_mse = np.mean(np.where(diff > 0, (diff**2) * 1.5, diff**2) * dynamic_weight)
         comps_track['MSE_SPL'] = (raw_mse * self.weights['mse_sum'])
@@ -265,7 +289,7 @@ class CrossoverOptimizer:
             comps_track['Impedance_Penalty'] += ((3.2 - min_Z) ** 3) * self.weights['impedance']
         
         # ==========================================
-        # 2. GRADIENT DE SÉCURITÉ DU TWEETER
+        # 2. GRADIENT DE SÉCURITÉ DU TWEETER / MID
         # ==========================================
         last_way_v = res.get(self.ways[-1].label, {}).get("V_complex", np.zeros_like(self.freqs))
         v_low = np.abs(last_way_v)[self.freqs < 1000.0]
@@ -275,6 +299,83 @@ class CrossoverOptimizer:
             comps_track['Tweeter_LowFreq_Penalty'] += np.sum(v_excess ** 2) * self.weights['tweeter_low']
 
         # ==========================================
+        # Gestion du MID
+        # ==========================================
+        if len(self.ways) >= 3:
+            comps_track['Midrange_LowFreq_Penalty']  = 0.0
+            comps_track['Midrange_HighFreq_Penalty'] = 0.0
+            comps_track['Midrange_Participation']    = 0.0
+
+            # Déduction des seuils depuis target_fc si dispo
+            if isinstance(self.target_fc, (tuple, list)) and len(self.target_fc) >= 2:
+                fc_low, fc_high = self.target_fc[0], self.target_fc[1]
+            else:
+                # --- NOUVEAU : MODE AUTO INTELLIGENT ---
+                fc_low = detected_fc[0] if len(detected_fc) > 0 else 400.0
+                fc_high = detected_fc[1] if len(detected_fc) > 1 else 3000.0
+                
+                # On force un écartement naturel pour laisser vivre le médium.
+                # Si le tweeter croise trop près du woofer, on punit l'écrasement.
+                min_gap_ratio = 2.5 # Minimum 1.3 octaves d'écart (ex: 500Hz -> 1250Hz minimum)
+                if fc_high < fc_low * min_gap_ratio:
+                    octave_squash = np.log2((fc_low * min_gap_ratio) / fc_high)
+                    # On simule une erreur de fc pour forcer l'IA à écarter les drivers
+                    comps_track['FC_Penalty'] += (octave_squash ** 2) * self.weights['fc_err'] * 3.0
+                    
+                    # On décale fc_high virtuellement pour garantir un bon test de participation
+                    fc_high = fc_low * min_gap_ratio
+
+            # On adapte parfaitement la zone de jeu aux fréquences trouvées
+            mid_low_thresh  = fc_low  * 0.40   
+            mid_high_thresh = fc_high * 2.00   
+            mid_band_lo     = fc_low  * 0.8    # Le médium doit jouer juste après fc_low
+            mid_band_hi     = fc_high * 1.2    # Et s'arrêter juste avant fc_high
+
+            for mid_idx in range(1, len(self.ways) - 1):
+                mid_v    = res.get(self.ways[mid_idx].label, {}).get("V_complex", np.zeros_like(self.freqs))
+                mid_vmag = np.abs(mid_v)
+
+                # --- Trop bas ---
+                v_low    = mid_vmag[self.freqs < mid_low_thresh]
+                excess_l = np.maximum(0, v_low - 0.15)
+                if np.any(excess_l > 0):
+                    comps_track['Midrange_LowFreq_Penalty'] += (
+                        np.sum(excess_l ** 2) * self.weights.get('midrange_low', 25.0)
+                    )
+
+                # --- Trop haut ---
+                v_high   = mid_vmag[self.freqs > mid_high_thresh]
+                excess_h = np.maximum(0, v_high - 0.15)
+                if np.any(excess_h > 0):
+                    comps_track['Midrange_HighFreq_Penalty'] += (
+                        np.sum(excess_h ** 2) * self.weights.get('midrange_high', 25.0)
+                    )
+                    
+                # --- Participation OBLIGATOIRE dans la bande propre ---
+                mid_band_mask = (self.freqs >= mid_band_lo) & (self.freqs <= mid_band_hi)
+                v_in_band     = mid_vmag[mid_band_mask]
+                max_activity  = np.max(v_in_band) if len(v_in_band) > 0 else 0.0
+
+                # Le médium DOIT atteindre au moins 0.5 en tension (-6dB) pour justifier sa présence.
+                # (Anciennement 0.25, ce qui permettait de le "cacher").
+                MIN_ACTIVITY = 0.70  
+                if max_activity < MIN_ACTIVITY:
+                    shortfall = MIN_ACTIVITY - max_activity
+                    comps_track['Midrange_Participation'] += (
+                        shortfall ** 2 * self.weights.get('midrange_participation', 80.0) * 3
+                    )
+                    
+                mid_spl = 20 * np.log10(np.abs(mid_vmag[mid_band_mask]) + 1e-12)
+                sum_spl_in_band = 20 * np.log10(np.abs(np.abs(p_sum_test)[mid_band_mask]) + 1e-12)
+
+                if len(mid_spl) > 0 and len(sum_spl_in_band) > 0:
+                    # Le médium doit être à moins de 6dB de la somme dans sa bande
+                    mid_vs_sum_gap = np.mean(sum_spl_in_band) - np.mean(mid_spl)
+                    if mid_vs_sum_gap > 6.0:
+                        gap_excess = mid_vs_sum_gap - 6.0
+                        comps_track['Midrange_Participation'] += gap_excess ** 2 * self.weights.get('midrange_participation', 80.0)
+            
+        # ==========================================
         # 3. GRADIENT ANTI-ATTÉNUATION WOOFER
         # ==========================================
         v_woofer = res.get(self.ways[0].label, {}).get("V_complex", np.zeros_like(self.freqs))
@@ -282,6 +383,19 @@ class CrossoverOptimizer:
         if max_w_gain < 0.95:  
             # --- MODIFIÉ ---
             comps_track['Woofer_Attenuation_Penalty'] += ((0.95 - max_w_gain) ** 3) * self.weights['woofer_attenuation']
+
+        # Dans la section pénalités, après le woofer_attenuation :
+        if len(self.ways) >= 3:
+            for mid_idx in range(1, len(self.ways) - 1):
+                mid_v = res.get(self.ways[mid_idx].label, {}).get("V_complex", np.zeros_like(self.freqs))
+                # Dans la bande propre du médium, il ne doit pas être trop atténué
+                if len(detected_fc) >= 2:
+                    mid_own_mask = (self.freqs >= detected_fc[0]) & (self.freqs <= detected_fc[1])
+                    v_mid_inband = np.max(np.abs(mid_v)[mid_own_mask]) if np.any(mid_own_mask) else 0.0
+                    if v_mid_inband < 0.80:
+                        shortfall = 0.80 - v_mid_inband
+                        comps_track['Midrange_Participation'] += (shortfall ** 2) * self.weights.get('midrange_attenuation', 100.0)
+
 
         # ==========================================
         # 4. GRADIENT THERMIQUE (Limite 20W)
@@ -511,6 +625,60 @@ class CrossoverOptimizer:
                 except Exception as e:
                     print(f"[-] Erreur lors de l'injection des graines : {e}")
                     pass
+            elif len(self.ways) == 3:
+                try:
+                    seeds = []
+                    w_drv = lambda: self.ways[0].driver.copy()
+                    m_drv = lambda: self.ways[1].driver.copy()
+                    t_drv = lambda: self.ways[2].driver.copy()
+
+                    # Template 1 : 2ème ordre sur chaque voie
+                    # Woofer LP : L série + C shunt
+                    # Médium BP : C série (coupe grave) + L shunt (coupe aigu)
+                    # Tweeter HP : C série + L shunt
+                    w1 = SeriesNode(Inductor(2.5e-3), ParallelNode(Capacitor(33e-6), w_drv()))
+                    m1 = SeriesNode(Capacitor(22e-6), ParallelNode(Inductor(0.5e-3), m_drv()))
+                    t1 = SeriesNode(Capacitor(6.8e-6), ParallelNode(Inductor(0.4e-3), t_drv()))
+                    seeds.append(ParallelNode(w1, ParallelNode(m1, t1)))
+
+                    # Template 2 : 3ème ordre woofer, 2ème ordre médium/tweeter
+                    w2 = SeriesNode(Inductor(2.0e-3), ParallelNode(Capacitor(22e-6), SeriesNode(Inductor(1.0e-3), w_drv())))
+                    m2 = SeriesNode(Capacitor(15e-6), ParallelNode(Inductor(0.6e-3), SeriesNode(Capacitor(10e-6), m_drv())))
+                    t2 = SeriesNode(Capacitor(6.8e-6), ParallelNode(Inductor(0.4e-3), t_drv()))
+                    seeds.append(ParallelNode(w2, ParallelNode(m2, t2)))
+
+                    # Template 3 : Filtre bouchon sur le woofer (correction résonance)
+                    notch = ParallelNode(Capacitor(33e-6), Inductor(0.1e-3))
+                    w3 = SeriesNode(Inductor(2.5e-3), ParallelNode(Capacitor(33e-6), SeriesNode(notch, w_drv())))
+                    m3 = SeriesNode(Capacitor(22e-6), ParallelNode(Inductor(0.5e-3), m_drv()))
+                    t3 = SeriesNode(Capacitor(6.8e-6), ParallelNode(Inductor(0.3e-3), t_drv()))
+                    seeds.append(ParallelNode(w3, ParallelNode(m3, t3)))
+
+                    # Template 4 : L-Pad sur le médium (atténuation si sensibilité trop haute)
+                    lpad_m = SeriesNode(Resistor(2.2), ParallelNode(Resistor(15.0), m_drv()))
+                    w4 = SeriesNode(Inductor(2.5e-3), ParallelNode(Capacitor(33e-6), w_drv()))
+                    m4 = SeriesNode(Capacitor(22e-6), ParallelNode(Inductor(0.5e-3), lpad_m))
+                    t4 = SeriesNode(Capacitor(6.8e-6), ParallelNode(Inductor(0.3e-3), t_drv()))
+                    seeds.append(ParallelNode(w4, ParallelNode(m4, t4)))
+
+                    # Template 5 : L-Pad tweeter + Zobel médium
+                    zobel_m = SeriesNode(Resistor(6.8), Capacitor(10e-6))
+                    lpad_t = SeriesNode(Resistor(3.3), ParallelNode(Resistor(10.0), t_drv()))
+                    w5 = SeriesNode(Inductor(2.5e-3), ParallelNode(Capacitor(33e-6), w_drv()))
+                    m5 = SeriesNode(Capacitor(22e-6), ParallelNode(Inductor(0.5e-3), ParallelNode(zobel_m, m_drv())))
+                    t5 = SeriesNode(Capacitor(6.8e-6), ParallelNode(Inductor(0.3e-3), lpad_t))
+                    seeds.append(ParallelNode(w5, ParallelNode(m5, t5)))
+
+                    print(f"[+] Injection de {len(seeds)} templates 3-voies dans la population.")
+                    for s in seeds:
+                        population.append({'tree': s, 'is_optimized': False})
+                        for _ in range(10):
+                            mutated_s = self.mutator.mutate(s.copy())
+                            population.append({'tree': mutated_s, 'is_optimized': False})
+                    print(f"[+] {len(seeds) * 10} mutants de première génération créés.")
+
+                except Exception as e:
+                    print(f"[-] Erreur injection seeds 3-voies : {e}")
 
         while len(population) < pop_size:
             branches = []
@@ -1074,6 +1242,79 @@ class CrossoverOptimizer:
         fig.tight_layout()  
         plt.savefig(filename)
         plt.close()
+        
+    def export_bom_csv(self, individual, filename="bom.csv"):
+        """Génère un fichier CSV (Bill of Materials) listant les composants avec des ID identiques au schéma."""
+        root = individual['tree']
+        
+        comp_counts = {'C': 0, 'L': 0, 'R': 0}
+        bom_list = []
+        
+        def _has_driver(node):
+            """Vérifie si la branche contient un haut-parleur (comme dans schematic.py)"""
+            if node.__class__.__name__ == "DriverNode": return True
+            if hasattr(node, 'left') and hasattr(node, 'right'):
+                return _has_driver(node.left) or _has_driver(node.right)
+            return False
+
+        def _traverse(node):
+            """Parcours strict de l'arbre calqué sur le moteur de rendu graphique"""
+            name_cls = node.__class__.__name__
+            
+            # 1. Composants purs
+            if name_cls in ["Resistor", "Capacitor", "Inductor"]:
+                if name_cls == "Resistor":
+                    comp_counts['R'] += 1
+                    comp_id = f"R{comp_counts['R']}"
+                    comp_val = f"{node.value:.1f} Ω"
+                elif name_cls == "Capacitor":
+                    comp_counts['C'] += 1
+                    comp_id = f"C{comp_counts['C']}"
+                    comp_val = f"{node.value*1e6:.1f} µF"
+                elif name_cls == "Inductor":
+                    comp_counts['L'] += 1
+                    comp_id = f"L{comp_counts['L']}"
+                    comp_val = f"{node.value*1000:.2f} mH"
+                    
+                bom_list.append([comp_id, name_cls, comp_val, "", ""])
+                
+            # 2. Branche Série (gauche puis droite)
+            elif name_cls == "SeriesNode":
+                _traverse(node.left)
+                _traverse(node.right)
+                
+            # 3. Branche Parallèle (Le cœur du tri)
+            elif name_cls == "ParallelNode":
+                has_drv_left = _has_driver(node.left)
+                has_drv_right = _has_driver(node.right)
+                
+                # Split direct (ex: séparation woofer/tweeter)
+                if has_drv_left and has_drv_right:
+                    _traverse(node.left)
+                    _traverse(node.right)
+                # Composant Shunt (vers la masse)
+                elif has_drv_left or has_drv_right:
+                    main = node.left if has_drv_left else node.right
+                    shunt = node.right if has_drv_left else node.left
+                    _traverse(shunt) # Dans le schéma, le shunt est dessiné en premier
+                    _traverse(main)
+                # Filtre Bouchon pur (sans haut-parleur)
+                else:
+                    _traverse(node.left)
+                    _traverse(node.right)
+                    
+        # Lancement de l'exploration
+        _traverse(root)
+        
+        # Écriture dans le fichier CSV
+        with open(filename, mode='w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            # Écriture des en-têtes
+            writer.writerow(["ID", "Component Type", "Value", "PartsExpress Link", "SoundImports Link"])
+            # Écriture des données
+            writer.writerows(bom_list)
+            
+        print(f"[+] Nomenclature (BOM) exportée avec succès : {filename}")
 
 if __name__ == "__main__":
     start_time = time.time()

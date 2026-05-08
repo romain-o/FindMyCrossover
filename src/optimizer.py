@@ -47,6 +47,7 @@ WEIGHTS = {
     'fc_err': 20.0,
     'impedance': 142.9232,
     'tweeter_low': 48.4022,
+    'woofer_high': 40.0,
     'woofer_attenuation': 218.2858,
     'thermal': 0.1216,
     'components': 0.6808,
@@ -188,7 +189,9 @@ class CrossoverOptimizer:
             combos = [{}]
         else:
             labels = [w.label for w in multi_ways]
-            options = [['series', 'parallel'] for _ in multi_ways]
+            # options = [['series', 'parallel'] for _ in multi_ways]
+            # combos = [dict(zip(labels, c)) for c in itertools.product(*options)]
+            options = [['parallel'] for _ in multi_ways] 
             combos = [dict(zip(labels, c)) for c in itertools.product(*options)]
 
         best_final_score = float('inf')
@@ -219,6 +222,7 @@ class CrossoverOptimizer:
                 'FC_Penalty': 0.0,
                 'Impedance_Penalty': 0.0,
                 'Tweeter_LowFreq_Penalty': 0.0,
+                'Woofer_HighFreq_Penalty': 0.0,
                 'Woofer_Attenuation_Penalty': 0.0,
                 'Thermal_Penalty': 0.0,
                 'Component_Count_Penalty': 0.0,
@@ -267,6 +271,13 @@ class CrossoverOptimizer:
             v_excess = np.maximum(0, v_low - 0.1)
             if np.any(v_excess > 0):
                 comps_track['Tweeter_LowFreq_Penalty'] += np.sum(v_excess ** 2) * self.weights['tweeter_low']
+
+            # ========================================== # 2. GRADIENT DE SÉCURITÉ DU WOOFER # ========================================== 
+            last_way_v = res.get(self.ways[0].label, {}).get("V_complex", np.zeros_like(self.freqs))
+            v_high = np.abs(last_way_v)[self.freqs < f_cross * 1.2]
+            v_excess = np.maximum(0, v_high - 0.1)
+            if np.any(v_excess > 0):
+                comps_track['Woofer_HighFreq_Penalty'] += np.sum(v_excess ** 2) * self.weights['woofer_high']
 
             v_woofer = res.get(self.ways[0].label, {}).get("V_complex", np.zeros_like(self.freqs))
             max_w_gain = np.max(np.abs(v_woofer))
@@ -693,9 +704,17 @@ class CrossoverOptimizer:
         plt.close()
 
     def draw_schematic(self, individual, filename="schematic.png"):
-        # NOUVEAU : On injecte l'information dans l'arbre pour que SchematicRenderer puisse s'en servir
+        # On récupère l'arbre et on lui injecte le câblage trouvé
         root = individual['tree']
         root.wiring = individual.get('wiring', {})
+        
+        # INJECTION DE LA QUANTITÉ pour SchematicRenderer
+        for node in root.get_all_nodes():
+            if isinstance(node, DriverNode):
+                way = next((w for w in self.ways if w.label == node.label), None)
+                if way:
+                    node.count = getattr(way, 'count', 1)
+                    
         renderer = SchematicRenderer(root)
         renderer.save(filename)
         
@@ -822,4 +841,184 @@ class CrossoverOptimizer:
         
         ax.set_yticks(angles_raw)
         ax.yaxis.tick_right() 
-        ax.set_ylabel('deg', loc='top', rotation=
+        ax.set_ylabel('deg', loc='top', rotation=0, labelpad=-20)
+        ax.grid(True, which='major', color='white', alpha=0.3, linewidth=0.5)
+        ax.grid(True, which='minor', color='white', alpha=0.1, linewidth=0.3)
+        ax.set_title('Directivity (hor)', pad=10)
+
+        plt.subplots_adjust(left=0.15, right=0.95) 
+        cbar_ax = fig.add_axes([0.05, 0.15, 0.02, 0.7]) 
+        cbar = fig.colorbar(c, cax=cbar_ax, ticks=np.arange(int(min_spl), int(max_spl), 8))
+        cbar.ax.set_title('dB', pad=10)
+        cbar.ax.yaxis.set_ticks_position('left')
+        plt.savefig(filename, dpi=200, bbox_inches='tight') 
+        plt.close()
+        
+    def plot_loss_history(self, filename="loss_history.png"):
+        if not hasattr(self, 'loss_history') or not self.loss_history: return
+        generations = np.arange(len(self.loss_history))
+        keys = list(self.loss_history[0].keys())
+        plt.figure(figsize=(12, 7))
+        bottom = np.zeros(len(generations))
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2']
+        
+        for i, key in enumerate(keys):
+            values = np.array([gen[key] for gen in self.loss_history])
+            plt.bar(generations, values, bottom=bottom, width=1.0, label=key.replace('_', ' '), color=colors[i % len(colors)], edgecolor='none')
+            bottom += values
+            
+        plt.title("Evolution of Loss Components (Top 10% Average)", fontsize=14, fontweight='bold')
+        plt.xlabel("Generation", fontsize=12)
+        plt.ylabel("Absolute Loss Score", fontsize=12)
+        
+        focus_idx = max(0, int(len(generations) * 0.15)) 
+        if len(bottom) > focus_idx:
+            max_y = np.max(bottom[focus_idx:]) * 1.5 
+            plt.ylim(0, max_y)
+        
+        plt.xlim(0, len(generations) - 1)
+        plt.grid(True, axis='y', linestyle='--', alpha=0.5)
+        plt.legend(loc='center left', bbox_to_anchor=(1.02, 0.5))
+        plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+    def _calc_node_impedance(self, node):
+        name = node.__class__.__name__
+        if name == "Resistor":
+            return np.full_like(self.freqs, node.value, dtype=complex)
+        elif name == "Capacitor":
+            return 1.0 / (1j * 2 * np.pi * self.freqs * node.value + 1e-15)
+        elif name == "Inductor":
+            return 1j * 2 * np.pi * self.freqs * node.value
+        elif name == "DriverNode":
+            for way in self.ways:
+                if way.label == node.label:
+                    if hasattr(way.driver, 'Z_complex'): return way.driver.Z_complex
+                    if hasattr(way.driver, 'Z'): return way.driver.Z
+            return np.full_like(self.freqs, 8.0, dtype=complex)
+        elif name == "SeriesNode":
+            return self._calc_node_impedance(node.left) + self._calc_node_impedance(node.right)
+        elif name == "ParallelNode":
+            z1 = self._calc_node_impedance(node.left)
+            z2 = self._calc_node_impedance(node.right)
+            return 1.0 / (1.0 / (z1 + 1e-15) + 1.0 / (z2 + 1e-15))
+        return np.full_like(self.freqs, 1e6, dtype=complex)
+    
+    def _get_max_power_dissipation(self, node, V_in):
+        name = node.__class__.__name__
+        if name == "Resistor":
+            power_array = (np.abs(V_in)**2) / node.value
+            return np.max(power_array)
+        elif name in ["Capacitor", "Inductor", "DriverNode"]:
+            return 0.0
+        elif name == "ParallelNode":
+            p_left = self._get_max_power_dissipation(node.left, V_in)
+            p_right = self._get_max_power_dissipation(node.right, V_in)
+            return max(p_left, p_right)
+        elif name == "SeriesNode":
+            z_left = self._calc_node_impedance(node.left)
+            z_right = self._calc_node_impedance(node.right)
+            z_tot = z_left + z_right + 1e-15
+            v_left = V_in * (z_left / z_tot)
+            v_right = V_in * (z_right / z_tot)
+            p_left = self._get_max_power_dissipation(node.left, v_left)
+            p_right = self._get_max_power_dissipation(node.right, v_right)
+            return max(p_left, p_right)
+        return 0.0
+
+    def plot_impedance(self, individual, filename="impedance.png"):
+        self.apply_wiring(individual.get('wiring', {})) # NOUVEAU
+        
+        import matplotlib.ticker as ticker
+        root = individual['tree']
+        Z_in = self._calc_node_impedance(root)
+        mag_Z = np.abs(Z_in)
+        
+        fig, ax1 = plt.subplots(figsize=(12, 6))
+        color1 = '#0077BB' 
+        ax1.set_xlabel('Frequency (Hz)')
+        ax1.set_ylabel('Impedance (Ω)', color=color1, fontweight='bold')
+        ax1.semilogx(self.freqs, mag_Z, color=color1, linewidth=2.5, label="Magnitude")
+        ax1.tick_params(axis='y', labelcolor=color1)
+        ax1.set_xlim(20, 20000)
+        
+        y_max = min(60, max(20, np.max(mag_Z) * 1.1))
+        ax1.set_ylim(0, y_max)
+        
+        def format_freq(x, pos):
+            if x == 100: return '100Hz'
+            elif x >= 1000: return f'{int(x/1000)}k'
+            else: return f'{int(x)}'
+        ax1.get_xaxis().set_major_formatter(ticker.FuncFormatter(format_freq))
+        
+        lines_1, labels_1 = ax1.get_legend_handles_labels()
+        ax1.legend(lines_1, labels_1, loc='upper right')
+            
+        plt.title(f"System Impedance")
+        fig.tight_layout()  
+        plt.savefig(filename)
+        plt.close()
+        
+    def generate_parts_list(self, individual, filename="BOM_Parts_List.txt"):
+        comps = [n for n in individual['tree'].get_all_nodes() if isinstance(n, ComponentNode)]
+        inventory = {}
+        total_price = 0.0
+        
+        for comp in comps:
+            ctype = CATALOG.get_comp_type(comp)
+            val_cat = CATALOG.snap_to_catalog(comp.value, ctype)
+            comp.value = val_cat 
+            part_info = CATALOG.get_part_info(val_cat, ctype)
+            part_num = part_info['PartNumber']
+            
+            if part_num not in inventory:
+                inventory[part_num] = {
+                    'Qty': 0, 'Description': part_info['Description'],
+                    'Value': part_info['Value'], 'Type': ctype,
+                    'Price': part_info['Price'], 'URL': part_info['URL']
+                }
+            inventory[part_num]['Qty'] += 1
+
+        print("\n" + "="*60)
+        print("🛒 CROSSOVER BILL OF MATERIALS (BOM)")
+        print("="*60)
+        
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write("=== FINAL CROSSOVER PARTS LIST ===\n\n")
+            for part_num, data in inventory.items():
+                qty = data['Qty']
+                unit_price = data['Price'] if pd.notna(data['Price']) else 0.0
+                line_total = qty * unit_price
+                total_price += line_total
+                
+                unit_str = "μF" if data['Type'] == 'C' else "mH" if data['Type'] == 'L' else "Ω"
+                line_str = f"[{qty}x] {data['Value']}{unit_str} - {data['Description']} (Part #{part_num})\n"
+                line_str += f"      Price: ${unit_price:.2f} each -> Total: ${line_total:.2f}\n"
+                line_str += f"      Link: {data['URL']}\n"
+                print(line_str.strip())
+                f.write(line_str + "\n")
+                
+            f.write("="*40 + "\n")
+            f.write(f"TOTAL ESTIMATED COST (1 Speaker): ${total_price:.2f}\n")
+            f.write(f"TOTAL ESTIMATED COST (Pair):      ${total_price * 2:.2f}\n")
+            f.write("="*40 + "\n")
+            
+        print("="*60)
+        print(f"💰 TOTAL ESTIMATED COST: ${total_price:.2f} / Speaker")
+        print(f"📄 Liste des pièces sauvegardée dans : {filename}\n")
+
+if __name__ == "__main__":
+    start_time = time.time()
+    config = [
+        # NOUVEAU : On peut maintenant passer count=2 à l'initialisation
+        WayConfig("Woofer", r"crossovers\ER18RNX+27TDFC\SEAS_H1456-08_ER18RNX_SPL.frd", r"crossovers\ER18RNX+27TDFC\SEAS_H1456-08_ER18RNX_ZR.zma",
+                  z_offset=0.00, y_offset=-100, x_offset=0.00, count=2),
+        WayConfig("Tweeter", r"crossovers\ER18RNX+27TDFC\Tweeter_SPL.frd", r"crossovers\ER18RNX+27TDFC\Tweeter_ZR.zma")
+    ]
+
+    opt = CrossoverOptimizer(config)
+    best = opt.run(generations=100, pop_size=120)
+    best['tree'].display()
+    end_time = time.time()
+    print(f"Temps d'exécution : {end_time - start_time:.2f} secondes")

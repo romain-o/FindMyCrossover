@@ -15,6 +15,7 @@ def get_driver_paths(data_dir, driver_name, category):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optimiseur de Crossover CLI")
     parser.add_argument("--woofer", required=True, help="Nom exact du Woofer (ex: RS150-8)")
+    parser.add_argument("--woofer_count", type=int, default=1, help="Nombre de woofers (1 ou 2)")
     parser.add_argument("--tweeter", required=True, help="Nom exact du Tweeter (ex: RST28F-4)")
     parser.add_argument("--data_dir", default="data", help="Dossier racine des données")
     parser.add_argument("--out_dir", required=True)
@@ -37,7 +38,7 @@ if __name__ == "__main__":
 
     # Configuration des voies avec les chemins dynamiques
     config = [
-        WayConfig("Woofer", w_frd, w_zma, 
+        WayConfig("Woofer", w_frd, w_zma, count=args.woofer_count,
                   z_offset=0, y_offset=-0.100, x_offset=0),
         WayConfig("Tweeter", t_frd, t_zma, 
                   z_offset=0, y_offset=0, x_offset=0) # Tweeter aligné avec le micro

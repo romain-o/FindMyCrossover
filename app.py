@@ -47,17 +47,28 @@ class FindMyCrossoverApp(ctk.CTk):
         ctk.CTkLabel(left_frame, text="Haut-Parleurs", font=ctk.CTkFont(weight="bold")).pack(pady=(10, 5))
 
         # Variables de texte
-        self.woofer_var = ctk.StringVar(value=self.all_woofers[0])
-        self.tweeter_var = ctk.StringVar(value=self.all_tweeters[0])
+        self.woofer_var = ctk.StringVar(value=self.all_woofers[0] if self.all_woofers else "")
+        self.tweeter_var = ctk.StringVar(value=self.all_tweeters[0] if self.all_tweeters else "")
+        self.w_qty_var = ctk.StringVar(value="1")
 
-        # NOUVEAU : CTkComboBox (Menu avec saisie) au lieu de CTkOptionMenu
-        self.w_menu = ctk.CTkComboBox(left_frame, variable=self.woofer_var, values=self.all_woofers, command=self.update_project_name)
-        self.w_menu.pack(pady=5, padx=20, fill="x")
+        # --- WOOFER (Avec sélecteur de quantité) ---
+        ctk.CTkLabel(left_frame, text="Woofer", text_color="gray").pack(anchor="w", padx=20)
+        w_row = ctk.CTkFrame(left_frame, fg_color="transparent")
+        w_row.pack(pady=(0, 5), padx=20, fill="x")
+        
+        self.w_menu = ctk.CTkComboBox(w_row, variable=self.woofer_var, values=self.all_woofers, command=self.update_project_name)
+        self.w_menu.pack(side="left", fill="x", expand=True, padx=(0, 5))
+        
+        # NOUVEAU : Menu déroulant pour la quantité de woofers
+        self.w_qty_menu = ctk.CTkComboBox(w_row, variable=self.w_qty_var, values=["1", "2"], width=60, command=self.update_project_name)
+        self.w_qty_menu.pack(side="right")
 
+        # --- TWEETER ---
+        ctk.CTkLabel(left_frame, text="Tweeter", text_color="gray").pack(anchor="w", padx=20)
         self.t_menu = ctk.CTkComboBox(left_frame, variable=self.tweeter_var, values=self.all_tweeters, command=self.update_project_name)
-        self.t_menu.pack(pady=5, padx=20, fill="x")
+        self.t_menu.pack(pady=(0, 5), padx=20, fill="x")
 
-        # NOUVEAU : "Triggers" de frappe. À chaque lettre tapée, on filtre la liste !
+        # "Triggers" de frappe. À chaque lettre tapée, on filtre la liste !
         self.woofer_var.trace_add("write", self.filter_woofers)
         self.tweeter_var.trace_add("write", self.filter_tweeters)
 
@@ -72,7 +83,7 @@ class FindMyCrossoverApp(ctk.CTk):
 
         ctk.CTkLabel(right_frame, text="Moteur IA", font=ctk.CTkFont(weight="bold")).pack(pady=(10, 5))
 
-        # --- NOUVEAU WIDGET UI : FREQUENCE ---
+        # --- FREQUENCE ---
         ctk.CTkLabel(right_frame, text="Fréq. Croisement (Hz, 0=Auto) :").pack(anchor="w", padx=20)
         self.fc_entry = ctk.CTkEntry(right_frame)
         self.fc_entry.insert(0, "0") # Valeur classique par défaut
@@ -117,7 +128,12 @@ class FindMyCrossoverApp(ctk.CTk):
         """Génère automatiquement le nom du projet en fonction des choix."""
         w = self.woofer_var.get()
         t = self.tweeter_var.get()
-        suggested_name = f"{w}_X_{t}"
+        qty = self.w_qty_var.get()
+        
+        # Ajout du préfixe "2x_" si l'utilisateur a choisi 2 woofers
+        prefix = f"2x_{w}" if str(qty) == "2" else w
+        suggested_name = f"{prefix}_X_{t}"
+        
         self.name_entry.delete(0, "end")
         self.name_entry.insert(0, suggested_name)
 
@@ -131,6 +147,7 @@ class FindMyCrossoverApp(ctk.CTk):
     def start_optimization(self):
         """Désactive le bouton et lance le thread de calcul."""
         w = self.woofer_var.get()
+        w_qty = self.w_qty_var.get() # NOUVEAU : Récupération de la quantité
         t = self.tweeter_var.get()
         name = self.name_entry.get()
         gen = self.gen_entry.get()
@@ -148,14 +165,15 @@ class FindMyCrossoverApp(ctk.CTk):
         self.console.configure(state="disabled")
         
         # Lancement dans un Thread séparé pour ne pas figer l'interface
-        threading.Thread(target=self._run_process, args=(w, t, name, gen, pop, fc), daemon=True).start()
+        threading.Thread(target=self._run_process, args=(w, w_qty, t, name, gen, pop, fc), daemon=True).start()
 
-    def _run_process(self, w, t, name, gen, pop, fc):
+    def _run_process(self, w, w_qty, t, name, gen, pop, fc):
         """Exécute run.py en interceptant ce qu'il affiche."""
         out_dir = os.path.join("crossovers", name)
         cmd = [
             "python", "run.py",
             "--woofer", w,
+            "--woofer_count", str(w_qty), # NOUVEAU : Envoi de la quantité au script run.py
             "--tweeter", t,
             "--name", name,
             "--out_dir", out_dir,

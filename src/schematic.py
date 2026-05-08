@@ -28,21 +28,72 @@ class SchematicRenderer:
     def _draw_component(self, d, node, direction):
         # 1. Haut-Parleurs
         if isinstance(node, DriverNode):
-            try: comp = elm.Speaker()
-            except AttributeError: comp = elm.Resistor()
-            
+            SpeakerType = elm.Speaker if hasattr(elm, 'Speaker') else elm.Resistor
             label_text = getattr(node, 'model_name', node.label)
             
-            if direction == 'right':
-                d += comp.right().label(label_text, loc='top')
-                self._track_x(d)
-                d += elm.Line().down().length(1.5)
-                d += elm.Ground()
-                self._track_y(d)
-            else: # direction == 'down'
-                d += comp.down().label(label_text, loc='bottom')
-                self._track_y(d)
-                self._track_x(d)
+            # Récupération des informations d'architecture
+            wiring = getattr(self.tree, 'wiring', {}).get(node.label, 'parallel')
+            count = getattr(node, 'count', 1)
+            
+            # --- 1 SEUL HAUT-PARLEUR (Standard) ---
+            if count == 1:
+                if direction == 'right':
+                    d += SpeakerType().right().label(label_text, loc='top')
+                    self._track_x(d)
+                    d += elm.Line().down().length(1.5)
+                    d += elm.Ground()
+                    self._track_y(d)
+                else: 
+                    d += SpeakerType().down().label(label_text, loc='bottom')
+                    self._track_y(d)
+                    self._track_x(d)
+                    
+            # --- 2 HAUT-PARLEURS EN SÉRIE ---
+            elif count == 2 and wiring == 'series':
+                if direction == 'right':
+                    d += SpeakerType().right().label(f"{label_text} (1)", loc='top')
+                    self._track_x(d)
+                    d += SpeakerType().right().label(f"{label_text} (2)", loc='top')
+                    self._track_x(d)
+                    d += elm.Line().down().length(1.5)
+                    d += elm.Ground()
+                    self._track_y(d)
+                else:
+                    d += SpeakerType().down().label(f"{label_text} (1)", loc='bottom')
+                    self._track_y(d)
+                    d += SpeakerType().down().label(f"{label_text} (2)", loc='bottom')
+                    self._track_y(d)
+                    self._track_x(d)
+
+            # --- 2 HAUT-PARLEURS EN PARALLÈLE ---
+            elif count == 2 and wiring == 'parallel':
+                if direction == 'right':
+                    d += elm.Line().right().length(0.5)
+                    d += elm.Dot()
+                    
+                    # Branche Supérieure
+                    d.push()
+                    d += elm.Line().up().length(1.5)
+                    d += SpeakerType().right().label(f"{label_text} (A)", loc='top')
+                    self._track_x(d)
+                    d += elm.Line().down().length(1.5)
+                    d += elm.Ground()
+                    d.pop()
+                    
+                    # Branche Inférieure
+                    d.push()
+                    d += elm.Line().down().length(1.5)
+                    d += SpeakerType().right().label(f"{label_text} (B)", loc='bottom')
+                    self._track_x(d)
+                    d += elm.Line().down().length(1.5)
+                    d += elm.Ground()
+                    self._track_y(d)
+                    d.pop()
+                else:
+                    # Cas d'un shunt avec driver (rare mais couvert par sécurité)
+                    d += SpeakerType().down().label(f"2x {label_text} (Parallèle)", loc='bottom')
+                    self._track_y(d)
+                    self._track_x(d)
             return
 
         # 2. Composants Passifs (Avec Nomenclature)

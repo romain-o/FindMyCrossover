@@ -53,6 +53,7 @@ if __name__ == "__main__":
     dir_heatmap_file = os.path.join(args.out_dir, f"{args.name}_Directivity_Heatmap.png")
     graph_impedance_file = os.path.join(args.out_dir, f"{args.name}_Impedance.png")
     loss_history_file = os.path.join(args.out_dir, f"{args.name}_Loss_History.png")
+    part_list_file = os.path.join(args.out_dir, f"{args.name}_Parts_List.csv")
     # Lancement de l'optimiseur (En passant le checkpoint file)
     opt = CrossoverOptimizer(config, target_fc=args.fc)
     best = opt.run(generations=args.gen, pop_size=args.pop, checkpoint_path=checkpoint_file)
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     opt.plot_impedance(best, filename=graph_impedance_file)
     # 2. Schéma visuel (PNG)
     opt.draw_schematic(best, filename=schema_file)
-    
+    opt.generate_parts_list(best, filename=part_list_file)
     # 3. Export VituixCAD (.vxp)
     exporter = VituixAdapter(filename=vituix_file, target_spl=opt.target_spl)
     exporter.export(best_ind=best, ways_configs=config)

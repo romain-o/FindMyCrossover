@@ -72,6 +72,39 @@ class FindMyCrossoverApp(ctk.CTk):
         self.woofer_var.trace_add("write", self.filter_woofers)
         self.tweeter_var.trace_add("write", self.filter_tweeters)
 
+        # ==========================================
+        # NOUVEAU : POSITION PHYSIQUE DU WOOFER
+        # ==========================================
+        ctk.CTkLabel(left_frame, text="Position Woofer (mètres)", font=ctk.CTkFont(weight="bold")).pack(pady=(15, 0))
+        
+        geom_frame = ctk.CTkFrame(left_frame, fg_color="transparent")
+        geom_frame.pack(padx=20, pady=(0, 5), fill="x")
+        
+        # Axe X (Gauche / Droite)
+        col_x = ctk.CTkFrame(geom_frame, fg_color="transparent")
+        col_x.pack(side="left", expand=True, fill="x", padx=(0, 5))
+        ctk.CTkLabel(col_x, text="X (Horizontal)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
+        self.wx_entry = ctk.CTkEntry(col_x, height=25)
+        self.wx_entry.insert(0, "0.0")
+        self.wx_entry.pack(fill="x")
+
+        # Axe Y (Haut / Bas)
+        col_y = ctk.CTkFrame(geom_frame, fg_color="transparent")
+        col_y.pack(side="left", expand=True, fill="x", padx=(0, 5))
+        ctk.CTkLabel(col_y, text="Y (Vertical)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
+        self.wy_entry = ctk.CTkEntry(col_y, height=25)
+        self.wy_entry.insert(0, "-0.100") # Valeur par défaut 10cm plus bas
+        self.wy_entry.pack(fill="x")
+
+        # Axe Z (Profondeur / Retrait)
+        col_z = ctk.CTkFrame(geom_frame, fg_color="transparent")
+        col_z.pack(side="left", expand=True, fill="x")
+        ctk.CTkLabel(col_z, text="Z (Profondeur)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
+        self.wz_entry = ctk.CTkEntry(col_z, height=25)
+        self.wz_entry.insert(0, "0.0")
+        self.wz_entry.pack(fill="x")
+        # ==========================================
+
         ctk.CTkLabel(left_frame, text="Nom du Projet", font=ctk.CTkFont(weight="bold")).pack(pady=(15, 5))
         self.name_entry = ctk.CTkEntry(left_frame)
         self.name_entry.pack(pady=(0, 15), padx=20, fill="x")
@@ -153,7 +186,10 @@ class FindMyCrossoverApp(ctk.CTk):
         gen = self.gen_entry.get()
         pop = self.pop_entry.get()
         fc = self.fc_entry.get()
-        
+        wx = self.wx_entry.get()
+        wy = self.wy_entry.get()
+        wz = self.wz_entry.get()
+            
         # Vérification si l'utilisateur a tapé n'importe quoi ou validé un champ vide
         if w not in self.all_woofers or t not in self.all_tweeters:
             self.write_console("[-] Erreur : Nom de haut-parleur inconnu dans la base de données.")
@@ -165,9 +201,9 @@ class FindMyCrossoverApp(ctk.CTk):
         self.console.configure(state="disabled")
         
         # Lancement dans un Thread séparé pour ne pas figer l'interface
-        threading.Thread(target=self._run_process, args=(w, w_qty, t, name, gen, pop, fc), daemon=True).start()
+        threading.Thread(target=self._run_process, args=(w, w_qty, t, name, gen, pop, fc, wx, wy, wz), daemon=True).start()
 
-    def _run_process(self, w, w_qty, t, name, gen, pop, fc):
+    def _run_process(self, w, w_qty, t, name, gen, pop, fc, wx, wy, wz):
         """Exécute run.py en interceptant ce qu'il affiche."""
         out_dir = os.path.join("crossovers", name)
         cmd = [

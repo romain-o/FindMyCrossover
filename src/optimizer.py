@@ -3,6 +3,7 @@ import random
 import json
 import os
 import itertools # <-- NOUVEL IMPORT POUR LE BRUTE FORCE
+import csv
 import matplotlib.pyplot as plt
 from src.nodes import DriverNode, SeriesNode, ParallelNode, ShuntNode, Capacitor, Inductor, Resistor, Node, ComponentNode
 from src.evaluator import CircuitEvaluator
@@ -47,13 +48,14 @@ WEIGHTS = {
     'fc_err': 20.0,
     'impedance': 142.9232,
     'tweeter_low': 48.4022,
-    'woofer_high': 40.0,
+    'woofer_high': 10.0,
     'woofer_attenuation': 218.2858,
     'thermal': 0.1216,
-    'components': 0.6808,
+    #'components': 0.6808,
+    'components': 0.5,
     'resistors': 0.6518,
     'mse_sum': 1.0000,
-    'n_comps': 8,
+    'n_comps': 9,
 }
 
 class WayConfig:
@@ -87,6 +89,7 @@ class CrossoverOptimizer:
         self.weights = weights if weights is not None else WEIGHTS
                             
         self.mask_ref = (self.freqs > 200) & (self.freqs < 1000)
+        self.mask_ref_t = (self.freqs > 4000) & (self.freqs < 14000)
         
         for way in self.ways:
             self._prepare_driver(way)
@@ -96,7 +99,12 @@ class CrossoverOptimizer:
         raw_w_mag = np.abs(self.ways[0].driver.H_acoustic)
         raw_w_spl = 20 * np.log10(raw_w_mag + 1e-12)
         raw_avg = np.mean(raw_w_spl[self.mask_ref]) if np.any(self.mask_ref) else self.target_spl
-        self.target_spl = raw_avg - 0.7
+        
+        raw_t_mag = np.abs(self.ways[1].driver.H_acoustic)
+        raw_t_spl = 20 * np.log10(raw_t_mag + 1e-12)
+        raw_t_avg = np.mean(raw_t_spl[self.mask_ref_t])
+        
+        self.target_spl = min(raw_avg, raw_t_avg) - 0.7
         self.target_fc = target_fc
         self.apply_wiring({}) # On restaure à 1
         
@@ -117,10 +125,9 @@ class CrossoverOptimizer:
             f_min = self.freqs[min(idx_min + 5, len(self.freqs)-1)]
             f_max = self.freqs[max(idx_max - 5, 0)]
             f_min = max(f_min, 80.0)
-            f_max = min(f_max, 18000.0)
+            f_max = min(f_max, 20000.0)
         else:
-            f_min, f_max = 80, 18000
-            
+            f_min, f_max = 80, 20000
         self.mask_flat = (self.freqs >= f_min) & (self.freqs <= f_max)
         print(f"[+] Plage d'optimisation auto-détectée : {int(f_min)} Hz - {int(f_max)} Hz")
 
@@ -258,7 +265,7 @@ class CrossoverOptimizer:
                         octave_err = (np.log2(f_cross / self.target_fc))
                         comps_track['FC_Penalty'] = (octave_err ** 2) * self.weights['fc_err']
                     
-            raw_mse = np.mean(np.where(diff > 0, (diff**2) * 1.5, diff**2) * dynamic_weight)
+            raw_mse = np.mean(np.where(diff > 0, (diff**2)*3, diff**2) * dynamic_weight)
             comps_track['MSE_SPL'] = (raw_mse * self.weights['mse_sum'])
             
             Z_in = self.evaluator.get_impedance(root)
@@ -274,7 +281,7 @@ class CrossoverOptimizer:
 
             # ========================================== # 2. GRADIENT DE SÉCURITÉ DU WOOFER # ========================================== 
             last_way_v = res.get(self.ways[0].label, {}).get("V_complex", np.zeros_like(self.freqs))
-            v_high = np.abs(last_way_v)[self.freqs < f_cross * 1.2]
+            v_high = np.abs(last_way_v)[self.freqs > 2000 * 1.2]
             v_excess = np.maximum(0, v_high - 0.1)
             if np.any(v_excess > 0):
                 comps_track['Woofer_HighFreq_Penalty'] += np.sum(v_excess ** 2) * self.weights['woofer_high']
@@ -960,11 +967,16 @@ class CrossoverOptimizer:
         plt.savefig(filename)
         plt.close()
         
-    def generate_parts_list(self, individual, filename="BOM_Parts_List.txt"):
+    def generate_parts_list(self, individual, filename="BOM_Parts_List.csv"):
+        """Génère la nomenclature finale au format CSV et LaTeX."""
         comps = [n for n in individual['tree'].get_all_nodes() if isinstance(n, ComponentNode)]
+        
         inventory = {}
         total_price = 0.0
         
+        # ==========================================
+        # 1. GÉNÉRATION DU CSV ET INVENTAIRE GLOBAL
+        # ==========================================
         for comp in comps:
             ctype = CATALOG.get_comp_type(comp)
             val_cat = CATALOG.snap_to_catalog(comp.value, ctype)
@@ -984,8 +996,10 @@ class CrossoverOptimizer:
         print("🛒 CROSSOVER BILL OF MATERIALS (BOM)")
         print("="*60)
         
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write("=== FINAL CROSSOVER PARTS LIST ===\n\n")
+        with open(filename, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f, delimiter=';')
+            writer.writerow(['Part Number', 'Quantity', 'Value', 'Unit', 'Component', 'Description', 'Unit Price ($)', 'Line Total ($)', 'URL'])
+            
             for part_num, data in inventory.items():
                 qty = data['Qty']
                 unit_price = data['Price'] if pd.notna(data['Price']) else 0.0
@@ -993,20 +1007,60 @@ class CrossoverOptimizer:
                 total_price += line_total
                 
                 unit_str = "μF" if data['Type'] == 'C' else "mH" if data['Type'] == 'L' else "Ω"
-                line_str = f"[{qty}x] {data['Value']}{unit_str} - {data['Description']} (Part #{part_num})\n"
-                line_str += f"      Price: ${unit_price:.2f} each -> Total: ${line_total:.2f}\n"
-                line_str += f"      Link: {data['URL']}\n"
-                print(line_str.strip())
-                f.write(line_str + "\n")
+                comp_type_full = "Capacitor" if data['Type'] == 'C' else "Inductor" if data['Type'] == 'L' else "Resistor"
                 
-            f.write("="*40 + "\n")
-            f.write(f"TOTAL ESTIMATED COST (1 Speaker): ${total_price:.2f}\n")
-            f.write(f"TOTAL ESTIMATED COST (Pair):      ${total_price * 2:.2f}\n")
-            f.write("="*40 + "\n")
+                writer.writerow([part_num, qty, data['Value'], unit_str, comp_type_full, data['Description'], round(unit_price, 2), round(line_total, 2), data['URL']])
+                print(f"[{qty}x] {data['Value']}{unit_str} - {data['Description']} (Part #{part_num})")
+                print(f"      Price: ${unit_price:.2f} each -> Total: ${line_total:.2f}")
+
+            writer.writerow([])
+            writer.writerow(['', '', '', '', '', 'TOTAL (1 Speaker):', f"${total_price:.2f}", '', ''])
+            writer.writerow(['', '', '', '', '', 'TOTAL (Pair):', f"${total_price * 2:.2f}", '', ''])
             
         print("="*60)
         print(f"💰 TOTAL ESTIMATED COST: ${total_price:.2f} / Speaker")
-        print(f"📄 Liste des pièces sauvegardée dans : {filename}\n")
+        print(f"📄 Nomenclature (CSV) sauvegardée dans : {filename}")
+
+        # ==========================================
+        # 2. GÉNÉRATION DU FICHIER LATEX (OVERLEAF)
+        # ==========================================
+        # On remplace l'extension .csv par .tex
+        latex_filename = filename.replace('.csv', '.tex') if filename.endswith('.csv') else filename + ".tex"
+        
+        with open(latex_filename, 'w', encoding='utf-8') as f:
+            f.write("\\begin{table}[H]\n")
+            f.write("    \\centering\n")
+            f.write("    \\renewcommand{\\arraystretch}{1.5}\n")
+            f.write("    \\begin{tabular}{@{}lllrl@{}}\n")
+            f.write("        \\toprule\n")
+            f.write("        \\textbf{ID} & \\textbf{Component} & \\textbf{Value} & \\textbf{Price (\\$/€)} & \\textbf{Buy Link} \\\\\n")
+            f.write("        \\midrule\n")
+            
+            # On liste individuellement chaque composant pour créer les IDs uniques
+            counts = {'C': 0, 'L': 0, 'R': 0}
+            for comp in comps:
+                ctype = CATALOG.get_comp_type(comp)
+                counts[ctype] += 1
+                comp_id = f"{ctype}{counts[ctype]}" # Produit C1, C2, L1, etc.
+                
+                val_cat = CATALOG.snap_to_catalog(comp.value, ctype)
+                part_info = CATALOG.get_part_info(val_cat, ctype)
+                
+                # Formatage spécifique à la syntaxe LaTeX
+                unit_str = "$\\mu$F" if ctype == 'C' else "mH" if ctype == 'L' else "$\\Omega$"
+                comp_type_full = "Capacitor" if ctype == 'C' else "Inductor" if ctype == 'L' else "Resistor"
+                price = part_info['Price'] if pd.notna(part_info['Price']) else 0.0
+                
+                # Protection des caractères spéciaux dans l'URL pour la compilation LaTeX
+                url = str(part_info['URL']).replace('%', '\\%').replace('#', '\\#')
+                
+                f.write(f"        {comp_id} & {comp_type_full} & {part_info['Value']} {unit_str} & {price:.2f} & \\href{{{url}}}{{Link}} \\\\\n")
+                
+            f.write("        \\bottomrule\n")
+            f.write("    \\end{tabular}\n")
+            f.write("\\end{table}\n")
+            
+        print(f"📝 Tableau LaTeX sauvegardé dans : {latex_filename}\n")
 
 if __name__ == "__main__":
     start_time = time.time()

@@ -190,56 +190,6 @@
       </WIRE>
     </PART>
     <PART xi="3">
-      <Type>Capacitor</Type>
-      <CenX>5</CenX>
-      <CenY>9</CenY>
-      <Open>False</Open>
-      <Shorted>False</Shorted>
-      <Rotated>True</Rotated>
-      <PartID>C1</PartID>
-      <GUID/>
-      <PARAM pi="0">
-        <Name>C</Name>
-        <Value>1.7999999999999998</Value>
-        <Unit>uF</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <PARAM pi="1">
-        <Name>ESR</Name>
-        <Value>0.01</Value>
-        <Unit>Ω</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <WIRE wi="0">
-        <X>5</X>
-        <Y>6</Y>
-      </WIRE>
-      <WIRE wi="1">
-        <X>5</X>
-        <Y>12</Y>
-      </WIRE>
-    </PART>
-    <PART xi="4">
-      <Type>Ground</Type>
-      <CenX>5</CenX>
-      <CenY>13</CenY>
-      <Open>False</Open>
-      <Rotated>False</Rotated>
-      <GUID/>
-      <WIRE wi="0">
-        <X>5</X>
-        <Y>12</Y>
-      </WIRE>
-    </PART>
-    <PART xi="5">
       <Type>Wire</Type>
       <CenX>6</CenX>
       <CenY>6</CenY>
@@ -254,7 +204,7 @@
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="6">
+    <PART xi="4">
       <Type>Wire</Type>
       <CenX>8</CenX>
       <CenY>6</CenY>
@@ -269,7 +219,7 @@
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="7">
+    <PART xi="5">
       <Type>Wire</Type>
       <CenX>10</CenX>
       <CenY>6</CenY>
@@ -284,18 +234,18 @@
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="8">
+    <PART xi="6">
       <Type>Capacitor</Type>
       <CenX>14</CenX>
       <CenY>6</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>C2</PartID>
+      <PartID>C1</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>1.5</Value>
+        <Value>1.0</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -322,7 +272,7 @@
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="9">
+    <PART xi="7">
       <Type>Wire</Type>
       <CenX>9</CenX>
       <CenY>9</CenY>
@@ -337,7 +287,7 @@
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="10">
+    <PART xi="8">
       <Type>Wire</Type>
       <CenX>10</CenX>
       <CenY>12</CenY>
@@ -352,19 +302,19 @@
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="11">
-      <Type>Resistor</Type>
+    <PART xi="9">
+      <Type>Inductor</Type>
       <CenX>14</CenX>
       <CenY>12</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>R1</PartID>
+      <PartID>L1</PartID>
       <GUID/>
       <PARAM pi="0">
-        <Name>R</Name>
-        <Value>25.0</Value>
-        <Unit>Ω</Unit>
+        <Name>L</Name>
+        <Value>1.5</Value>
+        <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
         <Min>0.001</Min>
@@ -372,9 +322,39 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <PARAM pi="1">
-        <Name>Pow</Name>
-        <Value>5</Value>
-        <Unit>W</Unit>
+        <Name>DCR</Name>
+        <Value>0.6</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="2">
+        <Name>Wire</Name>
+        <Value>1.4</Value>
+        <Unit>mm</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="3">
+        <Name>Rpar</Name>
+        <Value>1000000</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="4">
+        <Name>Cpar</Name>
+        <Value>0.0001</Value>
+        <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
         <Min>0.001</Min>
@@ -390,77 +370,9 @@
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="12">
-      <Type>Inductor</Type>
-      <CenX>20</CenX>
-      <CenY>12</CenY>
-      <Open>False</Open>
-      <Shorted>False</Shorted>
-      <Rotated>False</Rotated>
-      <PartID>L1</PartID>
-      <GUID/>
-      <PARAM pi="0">
-        <Name>L</Name>
-        <Value>2.5</Value>
-        <Unit>mH</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <PARAM pi="1">
-        <Name>DCR</Name>
-        <Value>1.0</Value>
-        <Unit>Ω</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <PARAM pi="2">
-        <Name>Wire</Name>
-        <Value>1.4</Value>
-        <Unit>mm</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <PARAM pi="3">
-        <Name>Rpar</Name>
-        <Value>1000000</Value>
-        <Unit>Ω</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <PARAM pi="4">
-        <Name>Cpar</Name>
-        <Value>0.0001</Value>
-        <Unit>uF</Unit>
-        <Optimize>False</Optimize>
-        <Expression/>
-        <Min>0.001</Min>
-        <Max>100000</Max>
-        <OptiBlock>False</OptiBlock>
-      </PARAM>
-      <WIRE wi="0">
-        <X>17</X>
-        <Y>12</Y>
-      </WIRE>
-      <WIRE wi="1">
-        <X>23</X>
-        <Y>12</Y>
-      </WIRE>
-    </PART>
-    <PART xi="13">
+    <PART xi="10">
       <Type>Wire</Type>
-      <CenX>21</CenX>
+      <CenX>18</CenX>
       <CenY>6</CenY>
       <Open>False</Open>
       <GUID/>
@@ -469,41 +381,136 @@
         <Y>6</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>25</X>
+        <X>19</X>
+        <Y>6</Y>
+      </WIRE>
+    </PART>
+    <PART xi="11">
+      <Type>Wire</Type>
+      <CenX>18</CenX>
+      <CenY>12</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>17</X>
+        <Y>12</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>19</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="12">
+      <Type>Wire</Type>
+      <CenX>19</CenX>
+      <CenY>9</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>19</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>19</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="13">
+      <Type>Wire</Type>
+      <CenX>20</CenX>
+      <CenY>6</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>19</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>21</X>
         <Y>6</Y>
       </WIRE>
     </PART>
     <PART xi="14">
       <Type>Wire</Type>
-      <CenX>24</CenX>
-      <CenY>12</CenY>
+      <CenX>22</CenX>
+      <CenY>6</CenY>
       <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>21</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>23</X>
+        <Y>6</Y>
+      </WIRE>
+    </PART>
+    <PART xi="15">
+      <Type>Capacitor</Type>
+      <CenX>23</CenX>
+      <CenY>9</CenY>
+      <Open>False</Open>
+      <Shorted>False</Shorted>
+      <Rotated>True</Rotated>
+      <PartID>C2</PartID>
+      <GUID/>
+      <PARAM pi="0">
+        <Name>C</Name>
+        <Value>10.0</Value>
+        <Unit>uF</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="1">
+        <Name>ESR</Name>
+        <Value>0.01</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <WIRE wi="0">
+        <X>23</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>23</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="16">
+      <Type>Ground</Type>
+      <CenX>23</CenX>
+      <CenY>13</CenY>
+      <Open>False</Open>
+      <Rotated>False</Rotated>
       <GUID/>
       <WIRE wi="0">
         <X>23</X>
         <Y>12</Y>
       </WIRE>
-      <WIRE wi="1">
-        <X>25</X>
-        <Y>12</Y>
-      </WIRE>
     </PART>
-    <PART xi="15">
+    <PART xi="17">
       <Type>Wire</Type>
-      <CenX>25</CenX>
-      <CenY>9</CenY>
+      <CenX>24</CenX>
+      <CenY>6</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>25</X>
+        <X>23</X>
         <Y>6</Y>
       </WIRE>
       <WIRE wi="1">
         <X>25</X>
-        <Y>12</Y>
+        <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="16">
+    <PART xi="18">
       <Type>Wire</Type>
       <CenX>26</CenX>
       <CenY>6</CenY>
@@ -518,7 +525,7 @@
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="17">
+    <PART xi="19">
       <Type>Wire</Type>
       <CenX>28</CenX>
       <CenY>6</CenY>
@@ -533,18 +540,86 @@
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="18">
-      <Type>Inductor</Type>
-      <CenX>29</CenX>
-      <CenY>9</CenY>
+    <PART xi="20">
+      <Type>Capacitor</Type>
+      <CenX>32</CenX>
+      <CenY>6</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
-      <Rotated>True</Rotated>
+      <Rotated>False</Rotated>
+      <PartID>C3</PartID>
+      <GUID/>
+      <PARAM pi="0">
+        <Name>C</Name>
+        <Value>22.0</Value>
+        <Unit>uF</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="1">
+        <Name>ESR</Name>
+        <Value>0.01</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <WIRE wi="0">
+        <X>29</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>35</X>
+        <Y>6</Y>
+      </WIRE>
+    </PART>
+    <PART xi="21">
+      <Type>Wire</Type>
+      <CenX>27</CenX>
+      <CenY>9</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>27</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>27</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="22">
+      <Type>Wire</Type>
+      <CenX>28</CenX>
+      <CenY>12</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>27</X>
+        <Y>12</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>29</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="23">
+      <Type>Inductor</Type>
+      <CenX>32</CenX>
+      <CenY>12</CenY>
+      <Open>False</Open>
+      <Shorted>False</Shorted>
+      <Rotated>False</Rotated>
       <PartID>L2</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>5.0</Value>
+        <Value>0.18</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -554,7 +629,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>2.0</Value>
+        <Value>0.072</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -594,43 +669,76 @@
       </PARAM>
       <WIRE wi="0">
         <X>29</X>
-        <Y>6</Y>
+        <Y>12</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>29</X>
+        <X>35</X>
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="19">
-      <Type>Ground</Type>
-      <CenX>29</CenX>
-      <CenY>13</CenY>
-      <Open>False</Open>
-      <Rotated>False</Rotated>
-      <GUID/>
-      <WIRE wi="0">
-        <X>29</X>
-        <Y>12</Y>
-      </WIRE>
-    </PART>
-    <PART xi="20">
+    <PART xi="24">
       <Type>Wire</Type>
-      <CenX>30</CenX>
+      <CenX>36</CenX>
       <CenY>6</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>29</X>
+        <X>35</X>
         <Y>6</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>31</X>
+        <X>37</X>
         <Y>6</Y>
       </WIRE>
     </PART>
-    <PART xi="21">
+    <PART xi="25">
+      <Type>Wire</Type>
+      <CenX>36</CenX>
+      <CenY>12</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>35</X>
+        <Y>12</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>37</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="26">
+      <Type>Wire</Type>
+      <CenX>37</CenX>
+      <CenY>9</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>37</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>37</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="27">
+      <Type>Wire</Type>
+      <CenX>38</CenX>
+      <CenY>6</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>37</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>39</X>
+        <Y>6</Y>
+      </WIRE>
+    </PART>
+    <PART xi="28">
       <Type>Driver</Type>
-      <CenX>32</CenX>
+      <CenX>40</CenX>
       <CenY>9</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
@@ -712,68 +820,68 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>31</X>
+        <X>39</X>
         <Y>6</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>31</X>
+        <X>39</X>
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="22">
+    <PART xi="29">
       <Type>Ground</Type>
-      <CenX>31</CenX>
+      <CenX>39</CenX>
       <CenY>13</CenY>
       <Open>False</Open>
       <Rotated>False</Rotated>
       <GUID/>
       <WIRE wi="0">
-        <X>31</X>
-        <Y>12</Y>
-      </WIRE>
-    </PART>
-    <PART xi="23">
-      <Type>Wire</Type>
-      <CenX>38</CenX>
-      <CenY>12</CenY>
-      <Open>False</Open>
-      <GUID/>
-      <WIRE wi="0">
-        <X>37</X>
-        <Y>12</Y>
-      </WIRE>
-      <WIRE wi="1">
         <X>39</X>
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="24">
+    <PART xi="30">
       <Type>Wire</Type>
-      <CenX>40</CenX>
-      <CenY>12</CenY>
+      <CenX>5</CenX>
+      <CenY>13</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>39</X>
-        <Y>12</Y>
+        <X>5</X>
+        <Y>6</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>41</X>
-        <Y>12</Y>
+        <X>5</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="25">
+    <PART xi="31">
+      <Type>Wire</Type>
+      <CenX>6</CenX>
+      <CenY>21</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>5</X>
+        <Y>21</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>7</X>
+        <Y>21</Y>
+      </WIRE>
+    </PART>
+    <PART xi="32">
       <Type>Capacitor</Type>
-      <CenX>44</CenX>
-      <CenY>12</CenY>
+      <CenX>10</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>C3</PartID>
+      <PartID>C4</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>68.0</Value>
+        <Value>0.68</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -792,48 +900,98 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>41</X>
-        <Y>12</Y>
+        <X>7</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>47</X>
-        <Y>12</Y>
+        <X>13</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="26">
+    <PART xi="33">
       <Type>Wire</Type>
-      <CenX>39</CenX>
-      <CenY>15</CenY>
+      <CenX>14</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>39</X>
-        <Y>12</Y>
+        <X>13</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>39</X>
-        <Y>18</Y>
+        <X>15</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="27">
+    <PART xi="34">
+      <Type>Capacitor</Type>
+      <CenX>15</CenX>
+      <CenY>24</CenY>
+      <Open>False</Open>
+      <Shorted>False</Shorted>
+      <Rotated>True</Rotated>
+      <PartID>C5</PartID>
+      <GUID/>
+      <PARAM pi="0">
+        <Name>C</Name>
+        <Value>2.7</Value>
+        <Unit>uF</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="1">
+        <Name>ESR</Name>
+        <Value>0.01</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <WIRE wi="0">
+        <X>15</X>
+        <Y>21</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>15</X>
+        <Y>27</Y>
+      </WIRE>
+    </PART>
+    <PART xi="35">
+      <Type>Ground</Type>
+      <CenX>15</CenX>
+      <CenY>28</CenY>
+      <Open>False</Open>
+      <Rotated>False</Rotated>
+      <GUID/>
+      <WIRE wi="0">
+        <X>15</X>
+        <Y>27</Y>
+      </WIRE>
+    </PART>
+    <PART xi="36">
       <Type>Wire</Type>
-      <CenX>40</CenX>
-      <CenY>18</CenY>
+      <CenX>16</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>39</X>
-        <Y>18</Y>
+        <X>15</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>41</X>
-        <Y>18</Y>
+        <X>17</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="28">
+    <PART xi="37">
       <Type>Inductor</Type>
-      <CenX>44</CenX>
-      <CenY>18</CenY>
+      <CenX>20</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
@@ -841,7 +999,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>0.45000000000000007</Value>
+        <Value>0.11</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -851,7 +1009,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.18000000000000002</Value>
+        <Value>0.044000000000000004</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -890,86 +1048,41 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>41</X>
-        <Y>18</Y>
+        <X>17</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>47</X>
-        <Y>18</Y>
+        <X>23</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="29">
+    <PART xi="38">
       <Type>Wire</Type>
-      <CenX>48</CenX>
-      <CenY>12</CenY>
+      <CenX>24</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>47</X>
-        <Y>12</Y>
+        <X>23</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>49</X>
-        <Y>12</Y>
+        <X>25</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="30">
-      <Type>Wire</Type>
-      <CenX>48</CenX>
-      <CenY>18</CenY>
-      <Open>False</Open>
-      <GUID/>
-      <WIRE wi="0">
-        <X>47</X>
-        <Y>18</Y>
-      </WIRE>
-      <WIRE wi="1">
-        <X>49</X>
-        <Y>18</Y>
-      </WIRE>
-    </PART>
-    <PART xi="31">
-      <Type>Wire</Type>
-      <CenX>49</CenX>
-      <CenY>15</CenY>
-      <Open>False</Open>
-      <GUID/>
-      <WIRE wi="0">
-        <X>49</X>
-        <Y>12</Y>
-      </WIRE>
-      <WIRE wi="1">
-        <X>49</X>
-        <Y>18</Y>
-      </WIRE>
-    </PART>
-    <PART xi="32">
-      <Type>Wire</Type>
-      <CenX>50</CenX>
-      <CenY>12</CenY>
-      <Open>False</Open>
-      <GUID/>
-      <WIRE wi="0">
-        <X>49</X>
-        <Y>12</Y>
-      </WIRE>
-      <WIRE wi="1">
-        <X>51</X>
-        <Y>12</Y>
-      </WIRE>
-    </PART>
-    <PART xi="33">
+    <PART xi="39">
       <Type>Capacitor</Type>
-      <CenX>54</CenX>
-      <CenY>12</CenY>
+      <CenX>25</CenX>
+      <CenY>24</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
-      <Rotated>False</Rotated>
-      <PartID>C4</PartID>
+      <Rotated>True</Rotated>
+      <PartID>C6</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>68.0</Value>
+        <Value>2.0</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -988,42 +1101,69 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>51</X>
-        <Y>12</Y>
+        <X>25</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>57</X>
-        <Y>12</Y>
+        <X>25</X>
+        <Y>27</Y>
       </WIRE>
     </PART>
-    <PART xi="34">
+    <PART xi="40">
+      <Type>Ground</Type>
+      <CenX>25</CenX>
+      <CenY>28</CenY>
+      <Open>False</Open>
+      <Rotated>False</Rotated>
+      <GUID/>
+      <WIRE wi="0">
+        <X>25</X>
+        <Y>27</Y>
+      </WIRE>
+    </PART>
+    <PART xi="41">
       <Type>Wire</Type>
-      <CenX>58</CenX>
-      <CenY>12</CenY>
+      <CenX>26</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>57</X>
-        <Y>12</Y>
+        <X>25</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>59</X>
-        <Y>12</Y>
+        <X>27</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="35">
-      <Type>Resistor</Type>
-      <CenX>59</CenX>
-      <CenY>15</CenY>
+    <PART xi="42">
+      <Type>Wire</Type>
+      <CenX>28</CenX>
+      <CenY>21</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>27</X>
+        <Y>21</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>29</X>
+        <Y>21</Y>
+      </WIRE>
+    </PART>
+    <PART xi="43">
+      <Type>Inductor</Type>
+      <CenX>29</CenX>
+      <CenY>24</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>True</Rotated>
-      <PartID>R2</PartID>
+      <PartID>L4</PartID>
       <GUID/>
       <PARAM pi="0">
-        <Name>R</Name>
-        <Value>25.0</Value>
-        <Unit>Ω</Unit>
+        <Name>L</Name>
+        <Value>0.39000000000000007</Value>
+        <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
         <Min>0.001</Min>
@@ -1031,9 +1171,39 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <PARAM pi="1">
-        <Name>Pow</Name>
-        <Value>5</Value>
-        <Unit>W</Unit>
+        <Name>DCR</Name>
+        <Value>0.15600000000000003</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="2">
+        <Name>Wire</Name>
+        <Value>1.4</Value>
+        <Unit>mm</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="3">
+        <Name>Rpar</Name>
+        <Value>1000000</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="4">
+        <Name>Cpar</Name>
+        <Value>0.0001</Value>
+        <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
         <Min>0.001</Min>
@@ -1041,45 +1211,45 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>59</X>
-        <Y>12</Y>
+        <X>29</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>59</X>
-        <Y>18</Y>
+        <X>29</X>
+        <Y>27</Y>
       </WIRE>
     </PART>
-    <PART xi="36">
+    <PART xi="44">
       <Type>Ground</Type>
-      <CenX>59</CenX>
-      <CenY>19</CenY>
+      <CenX>29</CenX>
+      <CenY>28</CenY>
       <Open>False</Open>
       <Rotated>False</Rotated>
       <GUID/>
       <WIRE wi="0">
-        <X>59</X>
-        <Y>18</Y>
+        <X>29</X>
+        <Y>27</Y>
       </WIRE>
     </PART>
-    <PART xi="37">
+    <PART xi="45">
       <Type>Wire</Type>
-      <CenX>60</CenX>
-      <CenY>12</CenY>
+      <CenX>30</CenX>
+      <CenY>21</CenY>
       <Open>False</Open>
       <GUID/>
       <WIRE wi="0">
-        <X>59</X>
-        <Y>12</Y>
+        <X>29</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>61</X>
-        <Y>12</Y>
+        <X>31</X>
+        <Y>21</Y>
       </WIRE>
     </PART>
-    <PART xi="38">
+    <PART xi="46">
       <Type>Driver</Type>
-      <CenX>62</CenX>
-      <CenY>15</CenY>
+      <CenX>32</CenX>
+      <CenY>24</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
@@ -1160,24 +1330,24 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>61</X>
-        <Y>12</Y>
+        <X>31</X>
+        <Y>21</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>61</X>
-        <Y>18</Y>
+        <X>31</X>
+        <Y>27</Y>
       </WIRE>
     </PART>
-    <PART xi="39">
+    <PART xi="47">
       <Type>Ground</Type>
-      <CenX>61</CenX>
-      <CenY>19</CenY>
+      <CenX>31</CenX>
+      <CenY>28</CenY>
       <Open>False</Open>
       <Rotated>False</Rotated>
       <GUID/>
       <WIRE wi="0">
-        <X>61</X>
-        <Y>18</Y>
+        <X>31</X>
+        <Y>27</Y>
       </WIRE>
     </PART>
   </CROSSOVER>

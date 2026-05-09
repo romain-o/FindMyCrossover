@@ -2,8 +2,10 @@ import json
 import time
 from src.optimizer import CrossoverOptimizer, WayConfig
 from src.vituix_exporter import VituixAdapter
+from src.latex_gen import LatexReportGenerator 
 import argparse
 import os
+
 
 def get_driver_paths(data_dir, driver_name, category):
     """Reconstruit le chemin vers le FRD (0deg) et le ZMA depuis le nom."""
@@ -25,6 +27,10 @@ if __name__ == "__main__":
     
     parser.add_argument("--fc", type=float, default=0.0, help="Fréquence de coupure cible (0 = Auto)")
     
+    parser.add_argument("--wx", type=float, default=0.0, help="Woofer X offset (gauche/droite en mètres)")
+    parser.add_argument("--wy", type=float, default=-0.100, help="Woofer Y offset (haut/bas en mètres)")
+    parser.add_argument("--wz", type=float, default=0.0, help="Woofer Z offset (profondeur en mètres)")
+    
     args = parser.parse_args()
 
     start_time = time.time()
@@ -38,10 +44,8 @@ if __name__ == "__main__":
 
     # Configuration des voies avec les chemins dynamiques
     config = [
-        WayConfig("Woofer", w_frd, w_zma, count=args.woofer_count,
-                  z_offset=0, y_offset=-0.100, x_offset=0),
-        WayConfig("Tweeter", t_frd, t_zma, 
-                  z_offset=0, y_offset=0, x_offset=0) # Tweeter aligné avec le micro
+        WayConfig("Woofer", w_frd, w_zma, count=args.woofer_count, z_offset=args.wz, y_offset=args.wy, x_offset=args.wx),
+        WayConfig("Tweeter", t_frd, t_zma, z_offset=0, y_offset=0, x_offset=0)
     ]
 
     # Construction des chemins de sauvegarde
@@ -55,6 +59,8 @@ if __name__ == "__main__":
     graph_impedance_file = os.path.join(args.out_dir, f"{args.name}_Impedance.png")
     loss_history_file = os.path.join(args.out_dir, f"{args.name}_Loss_History.png")
     part_list_file = os.path.join(args.out_dir, f"{args.name}_Parts_List.csv")
+    
+    logo_abs_path = "C:/Geekosphere/FindMyCrossover/utils/logo.png"
     # Lancement de l'optimiseur (En passant le checkpoint file)
     opt = CrossoverOptimizer(config, target_fc=args.fc)
     best = opt.run(generations=args.gen, pop_size=args.pop, checkpoint_path=checkpoint_file)
@@ -73,16 +79,27 @@ if __name__ == "__main__":
     # 2. Schéma visuel (PNG)
     opt.draw_schematic(best, filename=schema_file)
     opt.generate_parts_list(best, filename=part_list_file)
+    
+    # Génération LATEX
+    part_list_tex = part_list_file.replace(".csv", ".tex")
+    # On gère l'affichage correct si c'est un "2x_"
+    w_label = f"2x {args.woofer}" if args.woofer_count == 2 else args.woofer
+    report_gen = LatexReportGenerator(args.name, args.out_dir, w_label, args.tweeter, logo_abs_path)
+    report_gen.generate(part_list_tex)
+    # --------------------------------------------------------
+    
     # 3. Export VituixCAD (.vxp)
     exporter = VituixAdapter(filename=vituix_file, target_spl=opt.target_spl)
     exporter.export(best_ind=best, ways_configs=config)
     
     metadata_file = os.path.join(args.out_dir, f"{args.name}_metadata.json")
     metadata = {
-                "Project_Name": args.name,
-                "Woofer": args.woofer,
-                "Tweeter": args.tweeter,
-            }
+        "Woofer": w_label,
+        "Tweeter": args.tweeter,
+        "wx": args.wx, 
+        "wy": args.wy, 
+        "wz": args.wz
+    }
             
     with open(metadata_file, 'w', encoding='utf-8') as f:
         json.dump(metadata, f, indent=4, ensure_ascii=False)

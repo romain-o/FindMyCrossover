@@ -1,118 +1,852 @@
 PartNumber,Description,Value,Power_W,Tolerance_pct,URL,Price
-255-937,Jantzen 0.18 Ohm 10 Watt Audio-Grade Superes Resisto,0.18,10,1,https://www.parts-express.com/Jantzen-0.18-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-937,6.23
-255-939,Jantzen 0.22 Ohm 10 Watt Audio-Grade Superes,0.22,10,1,https://www.parts-express.com/Jantzen-0.22-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-939,6.23
-255-940,Jantzen 0.33 Ohm 10 Watt Audio-Grade Superes,0.33,10,1,https://www.parts-express.com/Jantzen-0.33-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-940,6.23
-006-.33,Dayton Audio DPR10-0.33 0.33 Ohm 10 Watt Precision 1%,0.33,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-0.33-0.33-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-.33,
-004-.33,Dayton Audio DNR-0.33 0.33 Ohm 10W Precision Audio G,0.33,10,2,https://www.parts-express.com/Dayton-Audio-DNR-0.33-0.33-Ohm-10W-Precision-Audio-Grade-Res-004-.33,
-007-.33,Dayton Audio DPR20-0.33 0.33 Ohm 20 Watt Precision 1%,0.33,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-0.33-0.33-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-.33,6.25
-255-941,Jantzen 0.51 Ohm 10 Watt Audio-Grade Superes,0.51,10,1,https://www.parts-express.com/Jantzen-0.51-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-941,6.23
-006-.51,Dayton Audio DPR10-0.51 0.51 Ohm 10 Watt Precision 1%,0.51,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-0.51-0.51-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-.51,
-004-.51,Dayton Audio DNR-0.51 0.51 Ohm 10W Precision Audio G,0.51,10,2,https://www.parts-express.com/Dayton-Audio-DNR-0.51-0.51-Ohm-10W-Precision-Audio-Grade-Res-004-.51,
-007-.51,Dayton Audio DPR20-0.51 0.51 Ohm 20 Watt Precision 1%,0.51,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-0.51-0.51-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-.51,
-255-942,Jantzen 0.68 Ohm 10 Watt Audio-Grade Superes,0.68,10,1,https://www.parts-express.com/Jantzen-0.68-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-942,6.23
-255-943,Jantzen 0.75 Ohm 10 Watt Audio-Grade Superes,0.75,10,1,https://www.parts-express.com/Jantzen-0.75-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-943,6.23
-006-.82,Dayton Audio DPR10-0.82 0.82 Ohm 10 Watt Precision 1%,0.82,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-0.82-0.82-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-.82,2.7
-004-.82,Dayton Audio DNR-0.82 0.82 Ohm 10W Precision Audio G,0.82,10,2,https://www.parts-express.com/Dayton-Audio-DNR-0.82-0.82-Ohm-10W-Precision-Audio-Grade-Res-004-.82,1.25
-007-.82,Dayton Audio DPR20-0.82 0.82 Ohm 20 Watt Precision 1%,0.82,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-0.82-0.82-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-.82,
-006-1,Dayton Audio DPR10-1.0 1 Ohm 10 Watt Precision 1% Audio,1.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-1.0-1-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-1,2.7
-255-944,Jantzen 1.00 Ohm 10 Watt Audio-Grade Superes,1.0,10,1,https://www.parts-express.com/Jantzen-1.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-944,6.23
-004-1,Dayton Audio DNR-1.0 1 Ohm 10W Precision Audio Grade R,1.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-1.0-1-Ohm-10W-Precision-Audio-Grade-Resisto-004-1,1.25
-007-1,Dayton Audio DPR20-1.0 1 Ohm 20 Watt Precision 1% Audio,1.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-1.0-1-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-1,6.25
-006-1.2,Dayton Audio DPR10-1.2 1.2 Ohm 10 Watt Precision 1% A,1.2,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-1.2-1.2-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-1.2,2.7
-004-1.2,Dayton Audio DNR-1.2 1.2 Ohm 10W Precision Audio Gra,1.2,10,2,https://www.parts-express.com/Dayton-Audio-DNR-1.2-1.2-Ohm-10W-Precision-Audio-Grade-Resis-004-1.2,1.25
-007-1.2,Dayton Audio DPR20-1.2 1.2 Ohm 20 Watt Precision 1% Au,1.2,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-1.2-1.2-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-1.2,6.25
-255-945,Jantzen 1.50 Ohm 10 Watt Audio-Grade Superes,1.5,10,1,https://www.parts-express.com/Jantzen-1.50-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-945,6.23
-006-1.5,Dayton Audio DPR10-1.5 1.5 Ohm 10 Watt Precision 1% A,1.5,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-1.5-1.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-1.5,2.7
-004-1.5,Dayton Audio DNR-1.5 1.5 Ohm 10W Precision Audio Gra,1.5,10,2,https://www.parts-express.com/Dayton-Audio-DNR-1.5-1.5-Ohm-10W-Precision-Audio-Grade-Resis-004-1.5,1.25
-005-1.5,Mills 1.5 Ohm 12W Non-Inductive Resistor,1.5,12,1,https://www.parts-express.com/Mills-1.5-Ohm-12W-Non-Inductive-Resistor-005-1.5,1.25
-007-1.5,Dayton Audio DPR20-1.5 1.5 Ohm 20 Watt Precision 1% A,1.5,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-1.5-1.5-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-1.5,6.25
-006-2,Dayton Audio DPR10-2.0 2 Ohm 10 Watt Precision 1% Audio,2.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-2.0-2-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-2,2.7
-004-2,Dayton Audio DNR-2.0 2 Ohm 10W Precision Audio Grade R,2.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-2.0-2-Ohm-10W-Precision-Audio-Grade-Resisto-004-2,1.25
-005-2,Mills 2 Ohm 12W Non-Inductive Resistor,2.0,12,1,https://www.parts-express.com/Mills-2-Ohm-12W-Non-Inductive-Resistor-005-2,
-007-2,Dayton Audio DPR20-2.0 2 Ohm 20 Watt Precision 1% Audio,2.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-2.0-2-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-2,6.25
-255-946,Jantzen 2.20 Ohm 10 Watt Audio-Grade Superes,2.2,10,1,https://www.parts-express.com/Jantzen-2.20-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-946,6.23
-006-2.4,Dayton Audio DPR10-2.4 2.4 Ohm 10 Watt Precision 1% A,2.4,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-2.4-2.4-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-2.4,2.7
-004-2.4,Dayton Audio DNR-2.4 2.4 Ohm 10W Precision Audio Gr,2.4,10,2,https://www.parts-express.com/Dayton-Audio-DNR-2.4-2.4-Ohm-10W-Precision-Audio-Grade-Resi-004-2.4,1.25
-007-2.4,Dayton Audio DPR20-2.4 2.4 Ohm 20 Watt Precision 1% A,2.4,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-2.4-2.4-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-2.4,6.25
-255-947,Jantzen 2.70 Ohm 10 Watt Audio-Grade Superes,2.7,10,1,https://www.parts-express.com/Jantzen-2.70-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-947,6.23
-006-2.7,Dayton Audio DPR10-2.7 2.7 Ohm 10 Watt Precision 1% A,2.7,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-2.7-2.7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-2.7,2.7
-004-2.7,Dayton Audio DNR-2.7 2.7 Ohm 10W Precision Audio Gra,2.7,10,2,https://www.parts-express.com/Dayton-Audio-DNR-2.7-2.7-Ohm-10W-Precision-Audio-Grade-Resis-004-2.7,1.25
-007-2.7,Dayton Audio DPR20-2.7 2.7 Ohm 20 Watt Precision 1% A,2.7,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-2.7-2.7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-2.7,6.25
-006-3,Dayton Audio DPR10-3.0 3 Ohm 10 Watt Precision 1% Audio,3.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-3.0-3-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-3,2.7
-004-3,Dayton Audio DNR-3.0 3 Ohm 10W Precision Audio Grade R,3.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-3.0-3-Ohm-10W-Precision-Audio-Grade-Resisto-004-3,2.7
-007-3,Dayton Audio DPR20-3.0 3 Ohm 20 Watt Precision 1% Audio,3.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-3.0-3-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-3,6.25
-006-3.3,Dayton Audio DPR10-3.3 3.3 Ohm 10 Watt Precision 1% A,3.3,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-3.3-3.3-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-3.3,2.7
-004-3.3,Dayton Audio DNR-3.3 3.3 Ohm 10W Precision Audio Gra,3.3,10,2,https://www.parts-express.com/Dayton-Audio-DNR-3.3-3.3-Ohm-10W-Precision-Audio-Grade-Resis-004-3.3,1.25
-007-3.3,Dayton Audio DPR20-3.3 3.3 Ohm 20 Watt Precision 1% A,3.3,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-3.3-3.3-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-3.3,6.25
-005-3.5,Mills 3.5 Ohm 12W Non-Inductive Resistor,3.5,12,1,https://www.parts-express.com/Mills-3.5-Ohm-12W-Non-Inductive-Resistor-005-3.5,36.99
-006-3.7,Dayton Audio DPR10-3.7 3.7 Ohm 10 Watt Precision 1% A,3.7,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-3.7-3.7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-3.7,2.7
-004-3.7,Dayton Audio DNR-3.7 3.7 Ohm 10W Precision Audio Gra,3.7,10,2,https://www.parts-express.com/Dayton-Audio-DNR-3.7-3.7-Ohm-10W-Precision-Audio-Grade-Resis-004-3.7,1.25
-007-3.7,Dayton Audio DPR20-3.7 3.7 Ohm 20 Watt Precision 1% A,3.7,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-3.7-3.7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-3.7,6.25
-255-948,Jantzen 3.90 Ohm 10 Watt Audio-Grade Superes,3.9,10,1,https://www.parts-express.com/Jantzen-3.90-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-948,6.23
-006-4,Dayton Audio DPR10-4.0 4 Ohm 10 Watt Precision 1% Audio,4.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-4.0-4-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-4,2.7
-004-4,Dayton Audio DNR-4.0 4 Ohm 10W Precision Audio Grade R,4.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-4.0-4-Ohm-10W-Precision-Audio-Grade-Resisto-004-4,1.25
-007-4,Dayton Audio DPR20-4.0 4 Ohm 20 Watt Precision 1% Audio,4.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-4.0-4-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-4,6.25
-006-4.3,Dayton Audio DPR10-4.3 4.3 Ohm 10 Watt Precision 1% A,4.3,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-4.3-4.3-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-4.3,2.7
-004-4.3,Dayton Audio DNR-4.3 4.3 Ohm 10W Precision Audio Gra,4.3,10,2,https://www.parts-express.com/Dayton-Audio-DNR-4.3-4.3-Ohm-10W-Precision-Audio-Grade-Resis-004-4.3,1.25
-007-4.3,Dayton Audio DPR20-4.3 4.3 Ohm 20 Watt Precision 1% A,4.3,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-4.3-4.3-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-4.3,6.25
-006-4.7,Dayton Audio DPR10-4.7 4.7 Ohm 10 Watt Precision 1% A,4.7,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-4.7-4.7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-4.7,2.7
-255-949,Jantzen 4.70 Ohm 10 Watt Audio-Grade Superes,4.7,10,1,https://www.parts-express.com/Jantzen-4.70-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-949,6.23
-004-4.7,Dayton Audio DNR-4.7 4.7 Ohm 10W Precision Audio Gra,4.7,10,5,https://www.parts-express.com/Dayton-Audio-DNR-4.7-4.7-Ohm-10W-Precision-Audio-Grade-Resis-004-4.7,
-007-4.7,Dayton Audio DPR20-4.7 4.7 Ohm 20 Watt Precision 1% A,4.7,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-4.7-4.7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-4.7,6.25
-005-5,Mills 5 Ohm 12W Non-Inductive Resistor,5.0,12,1,https://www.parts-express.com/Mills-5-Ohm-12W-Non-Inductive-Resistor-005-5,
-006-5.1,Dayton Audio DPR10-5.1 5.1 Ohm 10 Watt Precision 1% A,5.1,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-5.1-5.1-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-5.1,2.7
-255-950,Jantzen 5.10 Ohm 10 Watt Audio-Grade Superes,5.1,10,1,https://www.parts-express.com/Jantzen-5.10-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-950,6.23
-004-5.1,Dayton Audio DNR-5.1 5.1 Ohm 10W Precision Audio Gra,5.1,10,2,https://www.parts-express.com/Dayton-Audio-DNR-5.1-5.1-Ohm-10W-Precision-Audio-Grade-Resis-004-5.1,2.7
-007-5.1,Dayton Audio DPR20-5.1 5.1 Ohm 20 Watt Precision 1% A,5.1,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-5.1-5.1-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-5.1,6.25
-006-5.6,Dayton Audio DPR10-5.6 5.6 Ohm 10 Watt Precision 1% A,5.6,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-5.6-5.6-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-5.6,2.7
-004-5.6,Dayton Audio DNR-5.6 5.6 Ohm 10W Precision Audio Gra,5.6,10,2,https://www.parts-express.com/Dayton-Audio-DNR-5.6-5.6-Ohm-10W-Precision-Audio-Grade-Resis-004-5.6,2.7
-007-5.6,Dayton Audio DPR20-5.6 5.6 Ohm 20 Watt Precision 1% A,5.6,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-5.6-5.6-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-5.6,6.25
-006-6,Dayton Audio DPR10-6.0 6 Ohm 10 Watt Precision 1% Audio,6.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-6.0-6-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-6,2.7
-004-6,Dayton Audio DNR-6.0 6 Ohm 10W Precision Audio Grade R,6.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-6.0-6-Ohm-10W-Precision-Audio-Grade-Resisto-004-6,1.25
-007-6,Dayton Audio DPR20-6.0 6 Ohm 20 Watt Precision 1% Audio,6.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-6.0-6-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-6,6.25
-255-951,Jantzen 6.20 Ohm 10 Watt Audio-Grade Superes,6.2,10,1,https://www.parts-express.com/Jantzen-6.20-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-951,6.23
-006-6.5,Dayton Audio DPR10-6.5 6.5 Ohm 10 Watt Precision 1% A,6.5,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-6.5-6.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-6.5,2.7
-004-6.5,Dayton Audio DNR-6.5 6.5 Ohm 10W Precision Audio Gra,6.5,10,2,https://www.parts-express.com/Dayton-Audio-DNR-6.5-6.5-Ohm-10W-Precision-Audio-Grade-Resis-004-6.5,1.25
-007-6.5,Dayton Audio DPR20-6.5 6.5 Ohm 20 Watt Precision 1% A,6.5,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-6.5-6.5-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-6.5,6.25
-006-7,Dayton Audio DPR10-7.0 7 Ohm 10 Watt Precision 1% Audio,7.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-7.0-7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-7,2.7
-004-7,Dayton Audio DNR-7.0 7 Ohm 10W Precision Audio Grade R,7.0,10,5,https://www.parts-express.com/Dayton-Audio-DNR-7.0-7-Ohm-10W-Precision-Audio-Grade-Resisto-004-7,1.25
-005-7,Mills 7 Ohm 12W Non-Inductive Resistor,7.0,12,1,https://www.parts-express.com/Mills-7-Ohm-12W-Non-Inductive-Resistor-005-7,
-007-7,Dayton Audio DPR20-7.0 7 Ohm 20 Watt Precision 1% Audio,7.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-7.0-7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-7,6.25
-006-7.5,Dayton Audio DPR10-7.5 7.5 Ohm 10 Watt Precision 1% A,7.5,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-7.5-7.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-7.5,2.7
-255-952,Jantzen 7.50 Ohm 10 Watt Audio-Grade Superes,7.5,10,1,https://www.parts-express.com/Jantzen-7.50-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-952,
-004-7.5,Dayton Audio DNR-7.5 7.5 Ohm 10W Precision Audio Gra,7.5,10,2,https://www.parts-express.com/Dayton-Audio-DNR-7.5-7.5-Ohm-10W-Precision-Audio-Grade-Resis-004-7.5,1.25
-007-7.5,Dayton Audio DPR20-7.5 7.5 Ohm 20 Watt Precision 1% A,7.5,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-7.5-7.5-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-7.5,6.25
-006-8,Dayton Audio DPR10-8.0 8 Ohm 10 Watt Precision 1% Audio,8.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-8.0-8-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-8,2.7
-004-8,Dayton Audio DNR-8.0 8 Ohm 10W Precision Audio Grade R,8.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-8.0-8-Ohm-10W-Precision-Audio-Grade-Resisto-004-8,2.7
-007-8,Dayton Audio DPR20-8.0 8 Ohm 20 Watt Precision 1% Audio,8.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-8.0-8-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-8,6.25
-255-953,Jantzen 9.10 Ohm 10 Watt Audio-Grade Superes,9.1,10,1,https://www.parts-express.com/Jantzen-9.10-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-953,6.23
-006-9.1,Dayton Audio DPR10-9.1 9.1 Ohm 10 Watt Precision 1% A,9.1,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-9.1-9.1-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-9.1,2.7
-004-9.1,Dayton Audio DNR-9.1 9.1 Ohm 10W Precision Audio Gra,9.1,10,2,https://www.parts-express.com/Dayton-Audio-DNR-9.1-9.1-Ohm-10W-Precision-Audio-Grade-Resis-004-9.1,1.25
-007-9.1,Dayton Audio DPR20-9.1 9.1 Ohm 20 Watt Precision 1% A,9.1,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-9.1-9.1-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-9.1,6.25
-255-954,Jantzen 10.00 Ohm 10 Watt Audio-Grade Superes,10.0,10,1,https://www.parts-express.com/Jantzen-10.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-954,6.23
-006-10,Dayton Audio DPR10-10.0 10 Ohm 10 Watt Precision 1% Au,10.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-10.0-10-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-10,2.7
-004-10,Dayton Audio DNR-10 10 Ohm 10W Precision Audio Grade,10.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-10-10-Ohm-10W-Precision-Audio-Grade-Resisto-004-10,1.25
-007-10,Dayton Audio DPR20-10.0 10 Ohm 20 Watt Precision 1% Au,10.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-10.0-10-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-10,6.25
-006-12.5,Dayton Audio DPR10-12.5 12.5 Ohm 10 Watt Precision 1,12.5,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-12.5-12.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-12.5,2.7
-004-12.5,Dayton Audio DNR-12.5 12.5 Ohm 10W Precision Audio,12.5,10,2,https://www.parts-express.com/Dayton-Audio-DNR-12.5-12.5-Ohm-10W-Precision-Audio-Grade-Res-004-12.5,1.25
-007-12.5,Dayton Audio DPR20-12.5 12.5 Ohm 20 Watt Precision 1,12.5,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-12.5-12.5-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-12.5,6.25
-255-955,Jantzen 15.00 Ohm 10 Watt Audio-Grade Superes,15.0,10,1,https://www.parts-express.com/Jantzen-15.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-955,
-006-16,Dayton Audio DPR10-16.0 16 Ohm 10 Watt Precision 1% Au,16.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-16.0-16-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-16,2.7
-004-16,Dayton Audio DNR-16 16 Ohm 10W Precision Audio Grade,16.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-16-16-Ohm-10W-Precision-Audio-Grade-Resisto-004-16,2.7
-007-16,Dayton Audio DPR20-16.0 16 Ohm 20 Watt Precision 1% Au,16.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-16.0-16-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-16,6.25
-006-20,Dayton Audio DPR10-20.0 20 Ohm 10 Watt Precision 1% Au,20.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-20.0-20-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-20,
-004-20,Dayton Audio DNR-20 20 Ohm 10W Precision Audio Grade,20.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-20-20-Ohm-10W-Precision-Audio-Grade-Resisto-004-20,2.7
-007-20,Dayton Audio DPR20-20.0 20 Ohm 20 Watt Precision 1% Au,20.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-20.0-20-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-20,6.25
-255-956,Jantzen 22.00 Ohm 10 Watt Audio-Grade Superes,22.0,10,1,https://www.parts-express.com/Jantzen-22.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-956,6.23
-006-25,Dayton Audio DPR10-25.0 25 Ohm 10 Watt Precision 1% Au,25.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-25.0-25-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-25,2.7
-004-25,Dayton Audio DNR-25 25 Ohm 10W Precision Audio Grade,25.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-25-25-Ohm-10W-Precision-Audio-Grade-Resisto-004-25,
-007-25,Dayton Audio DPR20-25.0 25 Ohm 20 Watt Precision 1% Au,25.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-25.0-25-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-25,6.25
-006-30,Dayton Audio DPR10-30.0 30 Ohm 10 Watt Precision 1% Au,30.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-30.0-30-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-30,2.7
-004-30,Dayton Audio DNR-30 30 Ohm 10W Precision Audio Grade,30.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-30-30-Ohm-10W-Precision-Audio-Grade-Resist-004-30,1.25
-007-30,Dayton Audio DPR20-30.0 30 Ohm 20 Watt Precision 1% Au,30.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-30.0-30-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-30,
-255-957,Jantzen 33.00 Ohm 10 Watt Audio-Grade Superes,33.0,10,1,https://www.parts-express.com/Jantzen-33.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-957,6.23
-006-40,Dayton Audio DPR10-40.0 40 Ohm 10 Watt Precision 1% Au,40.0,10,1,https://www.parts-express.com/Dayton-Audio-DPR10-40.0-40-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-40,2.7
-004-40,Dayton Audio DNR-40 40 Ohm 10W Precision Audio Grade,40.0,10,2,https://www.parts-express.com/Dayton-Audio-DNR-40-40-Ohm-10W-Precision-Audio-Grade-Resisto-004-40,
-007-40,Dayton Audio DPR20-40.0 40 Ohm 20 Watt Precision 1% Au,40.0,20,1,https://www.parts-express.com/Dayton-Audio-DPR20-40.0-40-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-40,6.25
-005-47,Mills 47 Ohm 12W Non-Inductive Resistor,47.0,12,1,https://www.parts-express.com/Mills-47-Ohm-12W-Non-Inductive-Resistor-005-47,
-255-958,Jantzen 56.00 Ohm 10 Watt Audio-Grade Superes,56.0,10,1,https://www.parts-express.com/Jantzen-56.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-958,
+Jantzen Audio 002-0688,"Jantzen Audio 002-0688 | 0,10 Ω | 10 W | 5%",0.1,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0688.html,0.82
+Intertechnik WAX5/0.10/5,"Intertechnik WAX5/0.10/5 | 0,10 Ω | 5 W | 5%",0.1,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-10-5.html,0.82
+Intertechnik WAX10/0.10/5,"Intertechnik WAX10/0.10/5 | 0,10 Ω | 10 W | 5%",0.1,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-10-5.html,1.23
+Jantzen Audio 002-0001,"Jantzen Audio 002-0001 | 0,10 Ω | 5 W | 1%",0.1,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0001.html,1.64
+"Mundorf MR5-0,10","Mundorf MR5-0,10 | 0,10 Ω | 5 W | 5%",0.1,5.0,5.0,https://www.soundimports.eu/en/mundorf-mr5-010.html,1.64
+Intertechnik WAX20/0.10/5,"Intertechnik WAX20/0.10/5 | 0,10 Ω | 20 W | 5%",0.1,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-10-5.html,1.86
+Jantzen Audio 002-012510010,"Jantzen Audio 002-012510010 | 0,10 Ω | 10 W | 1%",0.1,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012510010.html,5.33
+"Mundorf MRES20-0,10","Mundorf MRES20-0,10 | 0,10 Ω | 20 W | 2%",0.1,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-010.html,20.62
+Intertechnik WAX5/0.12/5,"Intertechnik WAX5/0.12/5 | 0,12 Ω | 5 W | 5%",0.12,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-12-5.html,0.82
+Intertechnik WAX10/0.12/5,"Intertechnik WAX10/0.12/5 | 0,12 Ω | 10 W | 5%",0.12,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-12-5.html,1.23
+Intertechnik WAX20/0.12/5,"Intertechnik WAX20/0.12/5 | 0,12 Ω | 20 W | 5%",0.12,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-12-5.html,1.86
+Jantzen Audio 002-012510012,"Jantzen Audio 002-012510012 | 0,12 Ω | 10 W | 1%",0.12,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012510012.html,5.33
+Intertechnik WAX5/0.15/5,"Intertechnik WAX5/0.15/5 | 0,15 Ω | 5 W | 5%",0.15,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-15-5.html,0.82
+Intertechnik WAX10/0.15/5,"Intertechnik WAX10/0.15/5 | 0,15 Ω | 10 W | 5%",0.15,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-15-5.html,1.23
+Intertechnik WAX20/0.15/5,"Intertechnik WAX20/0.15/5 | 0,15 Ω | 20 W | 5%",0.15,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-15-5.html,1.86
+Jantzen Audio 002-012510015,"Jantzen Audio 002-012510015 | 0,15 Ω | 10 W | 1%",0.15,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012510015.html,5.33
+Intertechnik WAX5/0.18/5,"Intertechnik WAX5/0.18/5 | 0,18 Ω | 5 W | 5%",0.18,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-18-5.html,0.82
+Intertechnik WAX10/0.18/5,"Intertechnik WAX10/0.18/5 | 0,18 Ω | 10 W | 5%",0.18,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-18-5.html,1.23
+Intertechnik WAX20/0.18/5,"Intertechnik WAX20/0.18/5 | 0,18 Ω | 20 W | 5%",0.18,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-18-5.html,1.86
+Jantzen Audio 002-012510018,"Jantzen Audio 002-012510018 | 0,18 Ω | 10 W | 1%",0.18,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012510018.html,5.33
+Intertechnik WAX5/0.22/5,"Intertechnik WAX5/0.22/5 | 0,22 Ω | 5 W | 5%",0.22,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-22-5.html,0.82
+Jantzen Audio 002-0244,"Jantzen Audio 002-0244 | 0,22 Ω | 5 W | 5%",0.22,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0244.html,0.82
+Intertechnik MOX04/022,"Intertechnik MOX04/022 | 0,22 Ω | 4 W | 5%",0.22,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-022.html,0.98
+Jantzen Audio 002-0379,"Jantzen Audio 002-0379 | 0,22 Ω | 10 W | 5%",0.22,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0379.html,1.23
+Intertechnik WAX10/0.22/5,"Intertechnik WAX10/0.22/5 | 0,22 Ω | 10 W | 5%",0.22,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-22-5.html,1.23
+"Mundorf MR5-0,22","Mundorf MR5-0,22 | 0,22 Ω | 5 W | 5%",0.22,5.0,5.0,https://www.soundimports.eu/en/mundorf-mr5-022.html,1.64
+Jantzen Audio 002-0005,"Jantzen Audio 002-0005 | 0,22 Ω | 5 W | 1%",0.22,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0005.html,1.64
+Intertechnik M200/0022,"Intertechnik M200/0022 | 0,22 Ω | 2 W | 1%",0.22,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0022.html,1.86
+Intertechnik WAX20/0.22/5,"Intertechnik WAX20/0.22/5 | 0,22 Ω | 20 W | 5%",0.22,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-22-5.html,1.86
+Intertechnik MOX10/022,"Intertechnik MOX10/022 | 0,22 Ω | 10 W | 2%",0.22,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-022.html,2.47
+Intertechnik ME022,"Intertechnik ME022 | 0,22 Ω | 6 W | 1%",0.22,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me022.html,5.17
+Jantzen Audio 002-012510022,"Jantzen Audio 002-012510022 | 0,22 Ω | 10 W | 1%",0.22,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012510022.html,5.33
+"Mundorf MRES20-0,22","Mundorf MRES20-0,22 | 0,22 Ω | 20 W | 2%",0.22,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-022.html,20.62
+Intertechnik MEF3/022,"Intertechnik MEF3/022 | 0,22 Ω | 3 W | 1%",0.22,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-022.html,41.28
+Intertechnik WAX5/0.27/5,"Intertechnik WAX5/0.27/5 | 0,27 Ω | 5 W | 5%",0.27,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-27-5.html,0.82
+Jantzen Audio 002-0694,"Jantzen Audio 002-0694 | 0,27 Ω | 10 W | 5%",0.27,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0694.html,0.82
+Jantzen Audio 002-0382,"Jantzen Audio 002-0382 | 0,27 Ω | 10 W | 5%",0.27,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0382.html,1.23
+Intertechnik WAX10/0.27/5,"Intertechnik WAX10/0.27/5 | 0,27 Ω | 10 W | 5%",0.27,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-27-5.html,1.23
+Jantzen Audio 002-0006,"Jantzen Audio 002-0006 | 0,27 Ω | 5 W | 1%",0.27,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0006.html,1.64
+Intertechnik WAX20/0.27/5,"Intertechnik WAX20/0.27/5 | 0,27 Ω | 20 W | 5%",0.27,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-27-5.html,1.86
+Jantzen Audio 002-012510027,"Jantzen Audio 002-012510027 | 0,27 Ω | 10 W | 1%",0.27,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012510027.html,5.33
+Jantzen Audio 002-0250,"Jantzen Audio 002-0250 | 0,33 Ω | 5 W | 5%",0.33,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0250.html,0.82
+Intertechnik WAX5/0.33/5,"Intertechnik WAX5/0.33/5 | 0,33 Ω | 5 W | 5%",0.33,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-33-5.html,0.82
+Intertechnik MOX04/033,"Intertechnik MOX04/033 | 0,33 Ω | 4 W | 5%",0.33,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-033.html,0.98
+Jantzen Audio 002-0385,"Jantzen Audio 002-0385 | 0,33 Ω | 10 W | 5%",0.33,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0385.html,1.23
+Intertechnik WAX10/0.33/5,"Intertechnik WAX10/0.33/5 | 0,33 Ω | 10 W | 5%",0.33,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-33-5.html,1.23
+Dayton Audio DNR-0.33,Dayton Audio DNR-0.33 | 0.33 Ω | 10 W | 2%,0.33,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-033.html,1.64
+"Mundorf MR5-0,33","Mundorf MR5-0,33 | 0,33 Ω | 5 W | 2%",0.33,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-033.html,1.64
+Jantzen Audio 002-0007,"Jantzen Audio 002-0007 | 0,33 Ω | 5 W | 1%",0.33,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0007.html,1.64
+Intertechnik WAX20/0.33/5,"Intertechnik WAX20/0.33/5 | 0,33 Ω | 20 W | 5%",0.33,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-33-5.html,1.86
+Intertechnik M200/0033,"Intertechnik M200/0033 | 0,33 Ω | 2 W | 1%",0.33,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0033.html,2.02
+Dayton Audio DPR10-0.33,Dayton Audio DPR10-0.33 | 0.33 Ω | 10 W | 1%,0.33,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-033.html,2.47
+Intertechnik MOX10/033,"Intertechnik MOX10/033 | 0,33 Ω | 10 W | 2%",0.33,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-033.html,2.47
+Intertechnik ME033,"Intertechnik ME033 | 0,33 Ω | 6 W | 1%",0.33,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me033.html,4.34
+Jantzen Audio 002-0126,"Jantzen Audio 002-0126 | 0,33 Ω | 10 W | 1%",0.33,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0126.html,5.33
+Dayton Audio DPR20-0.33,Dayton Audio DPR20-0.33 | 0.33 Ω | 20 W | 1%,0.33,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-033.html,5.74
+"Mundorf MRES20-0,33","Mundorf MRES20-0,33 | 0,33 Ω | 20 W | 2%",0.33,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-033.html,20.62
+Intertechnik MEF3/033,"Intertechnik MEF3/033 | 0,33 Ω | 3 W | 1%",0.33,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-033.html,41.28
+Jantzen Audio 002-012636,"Jantzen Audio 002-012636 | 0,36 Ω | 10 W | 1%",0.36,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012636.html,5.33
+Intertechnik WAX5/0.39/5,"Intertechnik WAX5/0.39/5 | 0,39 Ω | 5 W | 5%",0.39,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-39-5.html,0.82
+Jantzen Audio 002-0253,"Jantzen Audio 002-0253 | 0,39 Ω | 5 W | 5%",0.39,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0253.html,0.82
+Intertechnik MOX04/039,"Intertechnik MOX04/039 | 0,39 Ω | 4 W | 5%",0.39,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-039.html,0.98
+Intertechnik WAX10/0.39/5,"Intertechnik WAX10/0.39/5 | 0,39 Ω | 10 W | 5%",0.39,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-39-5.html,1.23
+Jantzen Audio 002-0388,"Jantzen Audio 002-0388 | 0,39 Ω | 10 W | 5%",0.39,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0388.html,1.23
+Intertechnik WAX20/0.39/5,"Intertechnik WAX20/0.39/5 | 0,39 Ω | 20 W | 5%",0.39,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-39-5.html,1.86
+Intertechnik MOX10/039,"Intertechnik MOX10/039 | 0,39 Ω | 10 W | 2%",0.39,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-039.html,2.47
+Jantzen Audio 002-012639,"Jantzen Audio 002-012639 | 0,39 Ω | 10 W | 1%",0.39,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-012639.html,5.33
+"Mundorf MREU30-0,39T1C","Mundorf MREU30-0,39T1C | 0,39 Ω | 3/30 W | 1%",0.39,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-039t1c.html,31.36
+Jantzen Audio 002-0532,"Jantzen Audio 002-0532 | 0,43 Ω | 5 W | 5%",0.43,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0532.html,0.82
+Jantzen Audio 002-0535,"Jantzen Audio 002-0535 | 0,47 Ω | 5 W | 5%",0.47,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0535.html,0.82
+Intertechnik WAX5/0.47/5,"Intertechnik WAX5/0.47/5 | 0,47 Ω | 5 W | 5%",0.47,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-47-5.html,0.82
+Jantzen Audio 002-0256,"Jantzen Audio 002-0256 | 0,47 Ω | 5 W | 5%",0.47,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0256.html,0.82
+Jantzen Audio 002-0706,"Jantzen Audio 002-0706 | 0,47 Ω | 10 W | 5%",0.47,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0706.html,0.82
+Intertechnik MOX04/047,"Intertechnik MOX04/047 | 0,47 Ω | 4 W | 5%",0.47,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-047.html,0.98
+Jantzen Audio 002-0859,"Jantzen Audio 002-0859 | 0,47 Ω | 20 W | 5%",0.47,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0859.html,1.23
+Jantzen Audio 002-0391,"Jantzen Audio 002-0391 | 0,47 Ω | 10 W | 5%",0.47,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0391.html,1.23
+Intertechnik WAX10/0.47/5,"Intertechnik WAX10/0.47/5 | 0,47 Ω | 10 W | 5%",0.47,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-47-5.html,1.23
+Jantzen Audio 002-0010,"Jantzen Audio 002-0010 | 0,47 Ω | 5 W | 1%",0.47,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0010.html,1.64
+"Mundorf MR5-0,47","Mundorf MR5-0,47 | 0,47 Ω | 5 W | 2%",0.47,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-047.html,1.64
+Intertechnik M200/0047,"Intertechnik M200/0047 | 0,47 Ω | 2 W | 1%",0.47,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0047.html,1.86
+Intertechnik WAX20/0.47/5,"Intertechnik WAX20/0.47/5 | 0,47 Ω | 20 W | 5%",0.47,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-47-5.html,1.86
+Intertechnik MOX10/047,"Intertechnik MOX10/047 | 0,47 Ω | 10 W | 2%",0.47,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-047.html,2.47
+Intertechnik ME047,"Intertechnik ME047 | 0,47 Ω | 6 W | 1%",0.47,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me047.html,4.34
+Jantzen Audio 002-0127,"Jantzen Audio 002-0127 | 0,47 Ω | 10 W | 1%",0.47,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0127.html,5.33
+"Mundorf MRES20-0,47","Mundorf MRES20-0,47 | 0,47 Ω | 20 W | 2%",0.47,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-047.html,20.62
+Intertechnik MEF3/047,"Intertechnik MEF3/047 | 0,47 Ω | 3 W | 1%",0.47,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-047.html,41.28
+Jantzen Audio 002-0538,"Jantzen Audio 002-0538 | 0,51 Ω | 5 W | 5%",0.51,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0538.html,0.82
+Intertechnik WAX5/051/5,"Intertechnik WAX5/051/5 | 0,51 Ω | 5 W | 5%",0.51,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-ww5-ax-051-5.html,0.82
+Dayton Audio DNR-0.51,Dayton Audio DNR-0.51 | 0.51 Ω | 10 W | 2%,0.51,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-051.html,1.64
+Dayton Audio DPR10-0.51,Dayton Audio DPR10-0.51 | 0.51 Ω | 10 W | 1%,0.51,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-051.html,2.47
+Jantzen Audio 002-0130,"Jantzen Audio 002-0130 | 0,51 Ω | 10 W | 1%",0.51,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0130.html,5.33
+Dayton Audio DPR20-0.51,Dayton Audio DPR20-0.51 | 0.51 Ω | 20 W | 1%,0.51,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-051.html,5.74
+Intertechnik WAX5/0.56/5,"Intertechnik WAX5/0.56/5 | 0,56 Ω | 5 W | 5%",0.56,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-56-5.html,0.82
+Jantzen Audio 002-0259,"Jantzen Audio 002-0259 | 0,56 Ω | 5 W | 5%",0.56,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0259.html,0.82
+Jantzen Audio 002-0712,"Jantzen Audio 002-0712 | 0,56 Ω | 10 W | 5%",0.56,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0712.html,0.82
+Intertechnik MOX04/056,"Intertechnik MOX04/056 | 0,56 Ω | 4 W | 5%",0.56,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-056.html,0.98
+Intertechnik WAX10/0.56/5,"Intertechnik WAX10/0.56/5 | 0,56 Ω | 10 W | 5%",0.56,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-56-5.html,1.23
+Jantzen Audio 002-0862,"Jantzen Audio 002-0862 | 0,56 Ω | 20 W | 5%",0.56,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0862.html,1.23
+Jantzen Audio 002-0394,"Jantzen Audio 002-0394 | 0,56 Ω | 10 W | 5%",0.56,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0394.html,1.23
+Jantzen Audio 002-0016,"Jantzen Audio 002-0016 | 0,56 Ω | 5 W | 1%",0.56,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0016.html,1.64
+Intertechnik WAX20/0.56/5,"Intertechnik WAX20/0.56/5 | 0,56 Ω | 20 W | 5%",0.56,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-56-5.html,1.86
+Intertechnik MOX10/056,"Intertechnik MOX10/056 | 0,56 Ω | 10 W | 2%",0.56,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-056.html,2.47
+Jantzen Audio 002-0133,"Jantzen Audio 002-0133 | 0,56 Ω | 10 W | 1%",0.56,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0133.html,5.33
+Jantzen Audio 002-0715,"Jantzen Audio 002-0715 | 0,62 Ω | 10 W | 5%",0.62,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0715.html,0.82
+Jantzen Audio 002-0019,"Jantzen Audio 002-0019 | 0,62 Ω | 5 W | 1%",0.62,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0019.html,1.64
+Jantzen Audio 002-0136,"Jantzen Audio 002-0136 | 0,62 Ω | 10 W | 1%",0.62,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0136.html,5.33
+Intertechnik WAX5/0.68/5,"Intertechnik WAX5/0.68/5 | 0,68 Ω | 5 W | 5%",0.68,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-68-5.html,0.82
+Jantzen Audio 002-0718,"Jantzen Audio 002-0718 | 0,68 Ω | 10 W | 5%",0.68,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0718.html,0.82
+Jantzen Audio 002-0262,"Jantzen Audio 002-0262 | 0,68 Ω | 5 W | 5%",0.68,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0262.html,0.82
+Intertechnik MOX04/068,"Intertechnik MOX04/068 | 0,68 Ω | 4 W | 5%",0.68,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-068.html,0.98
+Intertechnik WAX10/0.68/5,"Intertechnik WAX10/0.68/5 | 0,68 Ω | 10 W | 5%",0.68,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-68-5.html,1.23
+Jantzen Audio 002-0868,"Jantzen Audio 002-0868 | 0,68 Ω | 20 W | 5%",0.68,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0868.html,1.23
+Jantzen Audio 002-0397,"Jantzen Audio 002-0397 | 0,68 Ω | 10 W | 5%",0.68,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0397.html,1.23
+Jantzen Audio 002-0022,"Jantzen Audio 002-0022 | 0,68 Ω | 5 W | 1%",0.68,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0022.html,1.64
+"Mundorf MR5-0,68","Mundorf MR5-0,68 | 0,68 Ω | 5 W | 2%",0.68,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-068.html,1.64
+Intertechnik M200/0068,"Intertechnik M200/0068 | 0,68 Ω | 2 W | 1%",0.68,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0068.html,1.86
+Intertechnik WAX20/0.68/5,"Intertechnik WAX20/0.68/5 | 0,68 Ω | 20 W | 5%",0.68,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-68-5.html,1.86
+Intertechnik MOX10/068,"Intertechnik MOX10/068 | 0,68 Ω | 10 W | 2%",0.68,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-068.html,2.47
+Intertechnik ME068,"Intertechnik ME068 | 0,68 Ω | 6 W | 1%",0.68,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me068.html,4.34
+Jantzen Audio 002-0139,"Jantzen Audio 002-0139 | 0,68 Ω | 10 W | 1%",0.68,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0139.html,5.33
+"Mundorf MRES20-0,68","Mundorf MRES20-0,68 | 0,68 Ω | 20 W | 2%",0.68,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-068.html,20.62
+Intertechnik MEF3/068,"Intertechnik MEF3/068 | 0,68 Ω | 3 W | 1%",0.68,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-068.html,41.28
+Jantzen Audio 002-0142,"Jantzen Audio 002-0142 | 0,75 Ω | 10 W | 1%",0.75,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0142.html,5.33
+Intertechnik WAX5/0.82/5,"Intertechnik WAX5/0.82/5 | 0,82 Ω | 5 W | 5%",0.82,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-0-82-5.html,0.82
+Jantzen Audio 002-0265,"Jantzen Audio 002-0265 | 0,82 Ω | 5 W | 5%",0.82,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0265.html,0.82
+Jantzen Audio 002-0724,"Jantzen Audio 002-0724 | 0,82 Ω | 10 W | 5%",0.82,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0724.html,0.82
+Intertechnik MOX04/082,"Intertechnik MOX04/082 | 0,82 Ω | 4 W | 5%",0.82,4.0,5.0,https://www.soundimports.eu/en/it-intertechnik-mox04-082.html,0.98
+Intertechnik WAX10/0.82/5,"Intertechnik WAX10/0.82/5 | 0,82 Ω | 10 W | 5%",0.82,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-0-82-5.html,1.23
+Jantzen Audio 002-0400,"Jantzen Audio 002-0400 | 0,82 Ω | 10 W | 5%",0.82,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0400.html,1.23
+Jantzen Audio 002-0874,"Jantzen Audio 002-0874 | 0,82 Ω | 20 W | 5%",0.82,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0874.html,1.23
+Jantzen Audio 002-0028,"Jantzen Audio 002-0028 | 0,82 Ω | 5 W | 1%",0.82,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0028.html,1.64
+Dayton Audio DNR-0.82,Dayton Audio DNR-0.82 | 0.82 Ω | 10 W | 2%,0.82,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-082.html,1.64
+"Mundorf MR5-0,82","Mundorf MR5-0,82 | 0,82 Ω | 5 W | 2%",0.82,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-082.html,1.64
+Intertechnik WAX20/0.82/5,"Intertechnik WAX20/0.82/5 | 0,82 Ω | 20 W | 5%",0.82,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-0-82-5.html,1.86
+Dayton Audio DPR10-0.82,Dayton Audio DPR10-0.82 | 0.82 Ω | 10 W | 1%,0.82,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-082.html,2.47
+Intertechnik MOX10/082,"Intertechnik MOX10/082 | 0,82 Ω | 10 W | 2%",0.82,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-082.html,2.47
+Jantzen Audio 002-0145,"Jantzen Audio 002-0145 | 0,82 Ω | 10 W | 1%",0.82,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0145.html,5.33
+Dayton Audio DPR20-0.82,Dayton Audio DPR20-0.82 | 0.82 Ω | 20 W | 1%,0.82,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-082.html,5.74
+Intertechnik MEF3/082,"Intertechnik MEF3/082 | 0,82 Ω | 3 W | 1%",0.82,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-082.html,41.28
+Jantzen Audio 002-0556,"Jantzen Audio 002-0556 | 0,91 Ω | 5 W | 5%",0.91,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0556.html,0.82
+Jantzen Audio 002-0727,"Jantzen Audio 002-0727 | 0,91 Ω | 10 W | 5%",0.91,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0727.html,0.82
+Jantzen Audio 002-0148,"Jantzen Audio 002-0148 | 0,91 Ω | 10 W | 1%",0.91,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0148.html,5.33
+Jantzen Audio 002-0559,"Jantzen Audio 002-0559 | 1,0 Ω | 5 W | 5%",1.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0559.html,0.82
+Jantzen Audio 002-0730,"Jantzen Audio 002-0730 | 1,0 Ω | 10 W | 5%",1.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0730.html,0.82
+Jantzen Audio 002-0268,"Jantzen Audio 002-0268 | 1,0 Ω | 5 W | 5%",1.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0268.html,0.82
+Intertechnik WAX5/1.00/5,"Intertechnik WAX5/1.00/5 | 1,00 Ω | 5 W | 5%",1.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-1-00-5.html,0.82
+Intertechnik MOX04/1.0,"Intertechnik MOX04/1.0 | 1,00 Ω | 4 W | 2%",1.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-1-0.html,0.98
+Jantzen Audio 002-0403,"Jantzen Audio 002-0403 | 1,0 Ω | 10 W | 5%",1.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0403.html,1.23
+Intertechnik WAX10/1.00/5,"Intertechnik WAX10/1.00/5 | 1,00 Ω | 10 W | 5%",1.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-1-00-5.html,1.23
+Jantzen Audio 002-0880,"Jantzen Audio 002-0880 | 1,0 Ω | 20 W | 5%",1.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0880.html,1.23
+"Mundorf MR5-1,00","Mundorf MR5-1,00 | 1,00 Ω | 5 W | 2%",1.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-100.html,1.64
+Dayton Audio DNR-1.0,Dayton Audio DNR-1.0 | 1.0 Ω | 10 W | 2%,1.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-1-0.html,1.64
+Jantzen Audio 002-0034,"Jantzen Audio 002-0034 | 1,0 Ω | 5 W | 1%",1.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0034.html,1.64
+Intertechnik WAX20/1.00/5,"Intertechnik WAX20/1.00/5 | 1,00 Ω | 20 W | 5%",1.0,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-1-00-5.html,1.86
+Dayton Audio DPR10-1.0,Dayton Audio DPR10-1.0 | 1.0 Ω | 10 W | 1%,1.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-1.html,2.47
+Intertechnik MOX10/1.0,"Intertechnik MOX10/1.0 | 1,00 Ω | 10 W | 2%",1.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-1-0.html,2.47
+Monacor LSR-10/20,"Monacor LSR-10/20 | 1,0 Ω | 20 W | 5%",1.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-10-20.html,2.69
+"Mundorf MR10-1,00","Mundorf MR10-1,00 | 1,00 Ω | 10 W | 2%",1.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-100.html,2.88
+Intertechnik ME100,"Intertechnik ME100 | 1,00 Ω | 6 W | 1%",1.0,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me100.html,4.34
+Jantzen Audio 002-0151,"Jantzen Audio 002-0151 | 1,00 Ω | 10 W | 1%",1.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0151.html,5.33
+Dayton Audio DPR20-1.0,Dayton Audio DPR20-1.0 | 1.0 Ω | 20 W | 1%,1.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-1.html,5.74
+"Mundorf MRES20-1,00","Mundorf MRES20-1,00 | 1,00 Ω | 20 W | 2%",1.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-100.html,20.62
+"Mundorf MREU30-1,0T1C","Mundorf MREU30-1,0T1C | 1,00 Ω | 3/30 W | 1%",1.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-1-0t1c.html,31.36
+Intertechnik MEF3/1.0,"Intertechnik MEF3/1.0 | 1,00 Ω | 3 W | 1%",1.0,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-1-0.html,41.28
+Jantzen Audio 002-0271,"Jantzen Audio 002-0271 | 1,1 Ω | 5 W | 5%",1.1,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0271.html,0.82
+Jantzen Audio 002-0406,"Jantzen Audio 002-0406 | 1,1 Ω | 10 W | 5%",1.1,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0406.html,1.23
+Jantzen Audio 002-0037,"Jantzen Audio 002-0037 | 1,1 Ω | 5 W | 1%",1.1,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0037.html,1.64
+Jantzen Audio 002-0154,"Jantzen Audio 002-0154 | 1,1 Ω | 10 W | 1%",1.1,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0154.html,5.33
+Jantzen Audio 002-0736,"Jantzen Audio 002-0736 | 1,2 Ω | 10 W | 5%",1.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0736.html,0.82
+Intertechnik WAX5/1.20/5,"Intertechnik WAX5/1.20/5 | 1,20 Ω | 5 W | 5%",1.2,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-1-20-5.html,0.82
+Jantzen Audio 002-0565,"Jantzen Audio 002-0565 | 1,2 Ω | 5 W | 5%",1.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0565.html,0.82
+Jantzen Audio 002-0274,"Jantzen Audio 002-0274 | 1,2 Ω | 5 W | 5%",1.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0274.html,0.82
+Intertechnik MOX04/1.2,"Intertechnik MOX04/1.2 | 1,20 Ω | 4 W | 2%",1.2,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-1-2.html,0.98
+Jantzen Audio 002-0409,"Jantzen Audio 002-0409 | 1,2 Ω | 10 W | 5%",1.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0409.html,1.23
+Jantzen Audio 002-0886,"Jantzen Audio 002-0886 | 1,2 Ω | 20 W | 5%",1.2,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0886.html,1.23
+Intertechnik WAX10/1.20/5,"Intertechnik WAX10/1.20/5 | 1,20 Ω | 10 W | 5%",1.2,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-1-20-5.html,1.23
+Jantzen Audio 002-0040,"Jantzen Audio 002-0040 | 1,2 Ω | 5 W | 1%",1.2,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0040.html,1.64
+"Mundorf MR5-1,20","Mundorf MR5-1,20 | 1,20 Ω | 5 W | 2%",1.2,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-120.html,1.64
+Dayton Audio DNR-1.2,Dayton Audio DNR-1.2 | 1.2 Ω | 10 W | 2%,1.2,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-12.html,1.64
+Intertechnik WAX20/1.20/5,"Intertechnik WAX20/1.20/5 | 1,20 Ω | 20 W | 5%",1.2,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-1-20-5.html,1.86
+Dayton Audio DPR10-1.2,Dayton Audio DPR10-1.2 | 1.2 Ω | 10 W | 1%,1.2,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-12.html,2.47
+Intertechnik MOX10/1.2,"Intertechnik MOX10/1.2 | 1,20 Ω | 10 W | 2%",1.2,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-1-2.html,2.47
+Monacor LSR-12/20,"Monacor LSR-12/20 | 1,2 Ω | 20 W | 5%",1.2,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-12-20.html,2.69
+"Mundorf MR10-1,20","Mundorf MR10-1,20 | 1,20 Ω | 10 W | 2%",1.2,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-120.html,2.88
+Jantzen Audio 002-0157,"Jantzen Audio 002-0157 | 1,2 Ω | 10 W | 1%",1.2,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0157.html,5.33
+Dayton Audio DPR20-1.2,Dayton Audio DPR20-1.2 | 1.2 Ω | 20 W | 1%,1.2,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-12.html,5.74
+"Mundorf MRES20-1,20","Mundorf MRES20-1,20 | 1,20 Ω | 20 W | 2%",1.2,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-120.html,20.62
+"Mundorf MREU30-1,2T1C","Mundorf MREU30-1,2T1C | 1,20 Ω | 3/30 W | 1%",1.2,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-1-2t1c.html,31.36
+Jantzen Audio 002-0568,"Jantzen Audio 002-0568 | 1,3 Ω | 5 W | 5%",1.3,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0568.html,0.82
+Jantzen Audio 002-0739,"Jantzen Audio 002-0739 | 1,3 Ω | 10 W | 5%",1.3,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0739.html,0.82
+Jantzen Audio 002-0412,"Jantzen Audio 002-0412 | 1,3 Ω | 10 W | 5%",1.3,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0412.html,1.23
+Jantzen Audio 002-0889,"Jantzen Audio 002-0889 | 1,3 Ω | 20 W | 5%",1.3,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0889.html,1.23
+Jantzen Audio 002-0043,"Jantzen Audio 002-0043 | 1,3 Ω | 5 W | 1%",1.3,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0043.html,1.64
+Jantzen Audio 002-0160,"Jantzen Audio 002-0160 | 1,3 Ω | 10 W | 1%",1.3,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0160.html,5.33
+Jantzen Audio 002-0742,"Jantzen Audio 002-0742 | 1,5 Ω | 10 W | 5%",1.5,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0742.html,0.82
+Jantzen Audio 002-0280,"Jantzen Audio 002-0280 | 1,5 Ω | 5 W | 5%",1.5,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0280.html,0.82
+Jantzen Audio 002-0571,"Jantzen Audio 002-0571 | 1,5 Ω | 5 W | 5%",1.5,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0571.html,0.82
+Intertechnik WAX5/1.50/5,"Intertechnik WAX5/1.50/5 | 1,50 Ω | 5 W | 5%",1.5,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-1-50-5.html,0.82
+Intertechnik MOX04/1.5,"Intertechnik MOX04/1.5 | 1,50 Ω | 4 W | 2%",1.5,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-1-5.html,0.98
+Jantzen Audio 002-0415,"Jantzen Audio 002-0415 | 1,5 Ω | 10 W | 5%",1.5,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0415.html,1.23
+Jantzen Audio 002-0892,"Jantzen Audio 002-0892 | 1,5 Ω | 20 W | 5%",1.5,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0892.html,1.23
+Intertechnik WAX10/1.50/5,"Intertechnik WAX10/1.50/5 | 1,50 Ω | 10 W | 5%",1.5,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-1-50-5.html,1.23
+"Mundorf MR5-1,50","Mundorf MR5-1,50 | 1,50 Ω | 5 W | 2%",1.5,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-150.html,1.64
+Dayton Audio DNR-1.5,Dayton Audio DNR-1.5 | 1.5 Ω | 10 W | 2%,1.5,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-15.html,1.64
+Jantzen Audio 002-0046,"Jantzen Audio 002-0046 | 1,5 Ω | 5 W | 1%",1.5,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0046.html,1.64
+Intertechnik WAX20/1.50/5,"Intertechnik WAX20/1.50/5 | 1,50 Ω | 20 W | 5%",1.5,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-1-50-5.html,1.86
+Intertechnik MOX10/1.5,"Intertechnik MOX10/1.5 | 1,50 Ω | 10 W | 2%",1.5,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-1-5.html,2.47
+Dayton Audio DPR10-1.5,Dayton Audio DPR10-1.5 | 1.5 Ω | 10 W | 1%,1.5,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-15.html,2.47
+Monacor LSR-15/20,"Monacor LSR-15/20 | 1,5 Ω | 20 W | 5%",1.5,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-15-20.html,2.85
+"Mundorf MR10-1,50","Mundorf MR10-1,50 | 1,50 Ω | 10 W | 2%",1.5,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-150.html,2.88
+Intertechnik ME150,"Intertechnik ME150 | 1,50 Ω | 6 W | 1%",1.5,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me150.html,4.34
+Jantzen Audio 002-0163,"Jantzen Audio 002-0163 | 1,50 Ω | 10 W | 1%",1.5,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0163.html,5.33
+Dayton Audio DPR20-1.5,Dayton Audio DPR20-1.5 | 1.5 Ω | 20 W | 1%,1.5,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-15.html,5.74
+"Mundorf MRES20-1,50","Mundorf MRES20-1,50 | 1,50 Ω | 20 W | 2%",1.5,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-150.html,20.62
+"Mundorf MREU30-1,5T1C","Mundorf MREU30-1,5T1C | 1,50 Ω | 3/30 W | 1%",1.5,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-1-5t1c.html,31.36
+Intertechnik MEF3/1.5,"Intertechnik MEF3/1.5 | 1,50 Ω | 3 W | 1%",1.5,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-1-5.html,41.28
+Jantzen Audio 002-0418,"Jantzen Audio 002-0418 | 1,6 Ω | 10 W | 5%",1.6,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0418.html,1.23
+Jantzen Audio 002-0049,"Jantzen Audio 002-0049 | 1,6 Ω | 5 W | 1%",1.6,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0049.html,1.64
+Jantzen Audio 002-0166,"Jantzen Audio 002-0166 | 1,6 Ω | 10 W | 1%",1.6,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0166.html,5.33
+Jantzen Audio 002-0748,"Jantzen Audio 002-0748 | 1,8 Ω | 10 W | 5%",1.8,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0748.html,0.82
+Jantzen Audio 002-0577,"Jantzen Audio 002-0577 | 1,8 Ω | 5 W | 5%",1.8,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0577.html,0.82
+Jantzen Audio 002-0286,"Jantzen Audio 002-0286 | 1,8 Ω | 5 W | 5%",1.8,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0286.html,0.82
+Intertechnik WAX5/1.80/5,"Intertechnik WAX5/1.80/5 | 1,80 Ω | 5 W | 5%",1.8,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-1-80-5.html,0.82
+Intertechnik MOX04/1.8,"Intertechnik MOX04/1.8 | 1,80 Ω | 4 W | 2%",1.8,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-1-8.html,0.98
+Intertechnik WAX10/1.80/5,"Intertechnik WAX10/1.80/5 | 1,80 Ω | 10 W | 5%",1.8,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-1-80-5.html,1.23
+Jantzen Audio 002-0898,"Jantzen Audio 002-0898 | 1,8 Ω | 20 W | 5%",1.8,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0898.html,1.23
+Jantzen Audio 002-0421,"Jantzen Audio 002-0421 | 1,8 Ω | 10 W | 5%",1.8,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0421.html,1.23
+"Mundorf MR5-1,80","Mundorf MR5-1,80 | 1,80 Ω | 5 W | 2%",1.8,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-180.html,1.64
+Jantzen Audio 002-0052,"Jantzen Audio 002-0052 | 1,80 Ω | 5 W | 1%",1.8,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0052.html,1.64
+Intertechnik WAX20/1.80/5,"Intertechnik WAX20/1.80/5 | 1,80 Ω | 20 W | 5%",1.8,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-1-80-5.html,1.86
+Intertechnik MOX10/1.8,"Intertechnik MOX10/1.8 | 1,80 Ω | 10 W | 2%",1.8,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-1-8.html,2.47
+Monacor LSR-18/20,"Monacor LSR-18/20 | 1,8 Ω | 20 W | 5%",1.8,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-18-20.html,2.69
+"Mundorf MR10-1,80","Mundorf MR10-1,80 | 1,80 Ω | 10 W | 2%",1.8,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-180.html,2.88
+Jantzen Audio 002-0169,"Jantzen Audio 002-0169 | 1,8 Ω | 10 W | 1%",1.8,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0169.html,5.33
+"Mundorf MRES20-1,80","Mundorf MRES20-1,80 | 1,80 Ω | 20 W | 2%",1.8,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-180.html,20.62
+"Mundorf MREU30-1,8T1C","Mundorf MREU30-1,8T1C | 1,80 Ω | 3/30 W | 1%",1.8,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-1-8t1c.html,31.36
+Jantzen Audio 002-0580,"Jantzen Audio 002-0580 | 2,0 Ω | 5 W | 5%",2.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0580.html,0.82
+Jantzen Audio 002-0289,"Jantzen Audio 002-0289 | 2,0 Ω | 5 W | 5%",2.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0289.html,0.82
+Jantzen Audio 002-0424,"Jantzen Audio 002-0424 | 2,0 Ω | 10 W | 5%",2.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0424.html,1.23
+Dayton Audio DNR-2.0,Dayton Audio DNR-2.0 | 2.0 Ω | 10 W | 2%,2.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-20.html,1.64
+Jantzen Audio 002-0055,"Jantzen Audio 002-0055 | 2,0 Ω | 5 W | 1%",2.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0055.html,1.64
+Dayton Audio DPR10-2.0,Dayton Audio DPR10-2.0 | 2.0 Ω | 10 W | 1%,2.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-2.html,2.47
+Jantzen Audio 002-0172,"Jantzen Audio 002-0172 | 2,0 Ω | 10 W | 1%",2.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0172.html,5.33
+Dayton Audio DPR20-2.0,Dayton Audio DPR20-2.0 | 2.0 Ω | 20 W | 1%,2.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-2.html,5.74
+Jantzen Audio 002-0754,"Jantzen Audio 002-0754 | 2,2 Ω | 10 W | 5%",2.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0754.html,0.82
+Jantzen Audio 002-0292,"Jantzen Audio 002-0292 | 2,2 Ω | 5 W | 5%",2.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0292.html,0.82
+Intertechnik WAX5/2.20/5,"Intertechnik WAX5/2.20/5 | 2,20 Ω | 5 W | 5%",2.2,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-2-20-5.html,0.82
+Jantzen Audio 002-0583,"Jantzen Audio 002-0583 | 2,2 Ω | 5 W | 5%",2.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0583.html,0.82
+Intertechnik MOX04/2.2,"Intertechnik MOX04/2.2 | 2,20 Ω | 4 W | 2%",2.2,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-2-2.html,0.98
+Jantzen Audio 002-0427,"Jantzen Audio 002-0427 | 2,2 Ω | 10 W | 5%",2.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0427.html,1.23
+Intertechnik WAX10/2.20/5,"Intertechnik WAX10/2.20/5 | 2,20 Ω | 10 W | 5%",2.2,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-2-20-5.html,1.23
+Jantzen Audio 002-0904,"Jantzen Audio 002-0904 | 2,2 Ω | 20 W | 5%",2.2,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0904.html,1.23
+Intertechnik M200/0220,"Intertechnik M200/0220 | 2,20 Ω | 2 W | 1%",2.2,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0220.html,1.23
+Jantzen Audio 002-0058,"Jantzen Audio 002-0058 | 2,2 Ω | 5 W | 1%",2.2,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0058.html,1.64
+"Mundorf MR5-2,20","Mundorf MR5-2,20 | 2,20 Ω | 5 W | 2%",2.2,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-220.html,1.64
+Intertechnik WAX20/2.20/5,"Intertechnik WAX20/2.20/5 | 2,20 Ω | 20 W | 5%",2.2,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-2-20-5.html,1.86
+Intertechnik MOX10/2.2,"Intertechnik MOX10/2.2 | 2,20 Ω | 10 W | 2%",2.2,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-2-2.html,2.47
+Monacor LSR-22/20,"Monacor LSR-22/20 | 2,2 Ω | 20 W | 5%",2.2,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-22-20.html,2.47
+"Mundorf MR10-2,20","Mundorf MR10-2,20 | 2,20 Ω | 10 W | 2%",2.2,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-220.html,2.88
+Jantzen Audio 002-0175,"Jantzen Audio 002-0175 | 2,20 Ω | 10 W | 1%",2.2,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0175.html,5.33
+"Mundorf MRES20-2,20","Mundorf MRES20-2,20 | 2,20 Ω | 20 W | 2%",2.2,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-220.html,20.62
+"Mundorf MREU30-2,2T1C","Mundorf MREU30-2,2T1C | 2,20 Ω | 3/30 W | 1%",2.2,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-2-2t1c.html,31.36
+Intertechnik MEF3/2.2,"Intertechnik MEF3/2.2 | 2,20 Ω | 3 W | 1%",2.2,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-2-2.html,41.28
+Jantzen Audio 002-0907,"Jantzen Audio 002-0907 | 2,4 Ω | 20 W | 5%",2.4,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0907.html,1.23
+Jantzen Audio 002-0430,"Jantzen Audio 002-0430 | 2,4 Ω | 10 W | 5%",2.4,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0430.html,1.23
+Dayton Audio DNR-2.4,Dayton Audio DNR-2.4 | 2.4 Ω | 10 W | 2%,2.4,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-24.html,1.64
+Jantzen Audio 002-0061,"Jantzen Audio 002-0061 | 2,4 Ω | 5 W | 1%",2.4,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0061.html,1.64
+Dayton Audio DPR10-2.4,Dayton Audio DPR10-2.4 | 2.4 Ω | 10 W | 1%,2.4,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-24.html,2.47
+Jantzen Audio 002-0178,"Jantzen Audio 002-0178 | 2,4 Ω | 10 W | 1%",2.4,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0178.html,5.33
+Dayton Audio DPR20-2.4,Dayton Audio DPR20-2.4 | 2.4 Ω | 20 W | 1%,2.4,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-24.html,5.74
+Jantzen Audio 002-0760,"Jantzen Audio 002-0760 | 2,7 Ω | 10 W | 5%",2.7,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0760.html,0.82
+Jantzen Audio 002-0298,"Jantzen Audio 002-0298 | 2,7 Ω | 5 W | 5%",2.7,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0298.html,0.82
+Intertechnik WAX5/2.70/5,"Intertechnik WAX5/2.70/5 | 2,70 Ω | 5 W | 5%",2.7,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-2-70-5.html,0.82
+Jantzen Audio 002-0589,"Jantzen Audio 002-0589 | 2,7 Ω | 5 W | 5%",2.7,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0589.html,0.82
+Intertechnik MOX04/2.7,"Intertechnik MOX04/2.7 | 2,70 Ω | 4 W | 2%",2.7,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-2-7.html,0.98
+Jantzen Audio 002-0910,"Jantzen Audio 002-0910 | 2,7 Ω | 20 W | 5%",2.7,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0910.html,1.23
+Jantzen Audio 002-0433,"Jantzen Audio 002-0433 | 2,7 Ω | 10 W | 5%",2.7,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0433.html,1.23
+Intertechnik WAX10/2.70/5,"Intertechnik WAX10/2.70/5 | 2,70 Ω | 10 W | 5%",2.7,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-2-70-5.html,1.23
+Jantzen Audio 002-0064,"Jantzen Audio 002-0064 | 2,7 Ω | 5 W | 1%",2.7,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0064.html,1.64
+"Mundorf MR5-2,70","Mundorf MR5-2,70 | 2,70 Ω | 5 W | 2%",2.7,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-270.html,1.64
+Dayton Audio DNR-2.7,Dayton Audio DNR-2.7 | 2.7 Ω | 10 W | 2%,2.7,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-27.html,1.64
+Intertechnik WAX20/2.70/5,"Intertechnik WAX20/2.70/5 | 2,70 Ω | 20 W | 5%",2.7,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-2-70-5.html,1.86
+Dayton Audio DPR10-2.7,Dayton Audio DPR10-2.7 | 2.7 Ω | 10 W | 1%,2.7,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-27.html,2.47
+Intertechnik MOX10/2.7,"Intertechnik MOX10/2.7 | 2,70 Ω | 10 W | 2%",2.7,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-2-7.html,2.47
+Monacor LSR-27/20,"Monacor LSR-27/20 | 2,7 Ω | 20 W | 5%",2.7,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-27-20.html,2.69
+"Mundorf MR10-2,70","Mundorf MR10-2,70 | 2,70 Ω | 10 W | 2%",2.7,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-270.html,2.88
+Intertechnik ME270,"Intertechnik ME270 | 2,70 Ω | 6 W | 1%",2.7,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me270.html,4.34
+Jantzen Audio 002-0181,"Jantzen Audio 002-0181 | 2,70 Ω | 10 W | 1%",2.7,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0181.html,5.33
+Dayton Audio DPR20-2.7,Dayton Audio DPR20-2.7 | 2.7 Ω | 20 W | 1%,2.7,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-27.html,5.74
+"Mundorf MRES20-2,70","Mundorf MRES20-2,70 | 2,70 Ω | 20 W | 2%",2.7,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-270.html,20.62
+"Mundorf MREU30-2,7T1C","Mundorf MREU30-2,7T1C | 2,70 Ω | 3/30 W | 1%",2.7,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-2-7t1c.html,31.36
+Intertechnik MEF3/2.7,"Intertechnik MEF3/2.7 | 2,70 Ω | 3 W | 1%",2.7,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-2-7.html,41.28
+Jantzen Audio 002-0763,"Jantzen Audio 002-0763 | 3,0 Ω | 10 W | 5%",3.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0763.html,0.82
+Jantzen Audio 002-0301,"Jantzen Audio 002-0301 | 3,0 Ω | 5 W | 5%",3.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0301.html,0.82
+Jantzen Audio 002-0592,"Jantzen Audio 002-0592 | 3,0 Ω | 5 W | 5%",3.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0592.html,0.82
+Intertechnik WAX5/3.00/5,"Intertechnik WAX5/3.00/5 | 3,00 Ω | 5 W | 5%",3.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-3-00-5.html,0.82
+Jantzen Audio 002-0436,"Jantzen Audio 002-0436 | 3,0 Ω | 10 W | 5%",3.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0436.html,1.23
+Intertechnik WAX10/3.00/5,"Intertechnik WAX10/3.00/5 | 3,00 Ω | 10 W | 5%",3.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-3-00-5.html,1.23
+Jantzen Audio 002-0913,"Jantzen Audio 002-0913 | 3,0 Ω | 20 W | 5%",3.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0913.html,1.23
+Dayton Audio DNR-3.0,Dayton Audio DNR-3.0 | 3.0 Ω | 10 W | 2%,3.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-30.html,1.64
+Jantzen Audio 002-0067,"Jantzen Audio 002-0067 | 3,0 Ω | 5 W | 1%",3.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0067.html,1.64
+Dayton Audio DPR10-3.0,Dayton Audio DPR10-3.0 | 3.0 Ω | 10 W | 1%,3.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-3.html,2.47
+Jantzen Audio 002-0184,"Jantzen Audio 002-0184 | 3,0 Ω | 10 W | 1%",3.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0184.html,5.33
+Dayton Audio DPR20-3.0,Dayton Audio DPR20-3.0 | 3.0 Ω | 20 W | 1%,3.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-3.html,5.74
+Jantzen Audio 002-0766,"Jantzen Audio 002-0766 | 3,3 Ω | 10 W | 5%",3.3,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0766.html,0.82
+Jantzen Audio 002-0304,"Jantzen Audio 002-0304 | 3,3 Ω | 5 W | 5%",3.3,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0304.html,0.82
+Intertechnik WAX5/3.30/5,"Intertechnik WAX5/3.30/5 | 3,30 Ω | 5 W | 5%",3.3,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-3-30-5.html,0.82
+Jantzen Audio 002-0595,"Jantzen Audio 002-0595 | 3,3 Ω | 5 W | 5%",3.3,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0595.html,0.82
+Intertechnik MOX04/3.3,"Intertechnik MOX04/3.3 | 3,30 Ω | 4 W | 2%",3.3,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-3-3.html,0.98
+Jantzen Audio 002-0916,"Jantzen Audio 002-0916 | 3,3 Ω | 20 W | 5%",3.3,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0916.html,1.23
+Jantzen Audio 002-0439,"Jantzen Audio 002-0439 | 3,3 Ω | 10 W | 5%",3.3,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0439.html,1.23
+Intertechnik WAX10/3.30/5,"Intertechnik WAX10/3.30/5 | 3,30 Ω | 10 W | 5%",3.3,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-3-30-5.html,1.23
+Jantzen Audio 002-0070,"Jantzen Audio 002-0070 | 3,30 Ω | 5 W | 1%",3.3,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0070.html,1.64
+"Mundorf MR5-3,30","Mundorf MR5-3,30 | 3,30 Ω | 5 W | 2%",3.3,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-330.html,1.64
+Dayton Audio DNR-3.3,Dayton Audio DNR-3.3 | 3.3 Ω | 10 W | 2%,3.3,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-33.html,1.64
+Intertechnik WAX20/3.30/5,"Intertechnik WAX20/3.30/5 | 3,30 Ω | 20 W | 5%",3.3,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-3-30-5.html,1.86
+Intertechnik MOX10/3.3,"Intertechnik MOX10/3.3 | 3,30 Ω | 10 W | 2%",3.3,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-3-3.html,2.47
+Dayton Audio DPR10-3.3,Dayton Audio DPR10-3.3 | 3.3 Ω | 10 W | 1%,3.3,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-33.html,2.47
+Monacor LSR-33/20,"Monacor LSR-33/20 | 3,3 Ω | 20 W | 5%",3.3,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-33-20.html,2.69
+"Mundorf MR10-3,30","Mundorf MR10-3,30 | 3,30 Ω | 10 W | 2%",3.3,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-330.html,2.88
+Intertechnik ME330,"Intertechnik ME330 | 3,30 Ω | 6 W | 1%",3.3,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me330.html,4.34
+Jantzen Audio 002-0187,"Jantzen Audio 002-0187 | 3,30 Ω | 10 W | 1%",3.3,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0187.html,5.33
+Dayton Audio DPR20-3.3,Dayton Audio DPR20-3.3 | 3.3 Ω | 20 W | 1%,3.3,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-33.html,5.74
+"Mundorf MRES20-3,30","Mundorf MRES20-3,30 | 3,30 Ω | 20 W | 2%",3.3,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-330.html,20.62
+"Mundorf MREU30-3,3T1C","Mundorf MREU30-3,3T1C | 3,30 Ω | 3/30 W | 1%",3.3,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-3-3t1c.html,31.36
+Intertechnik MEF3/3.3,"Intertechnik MEF3/3.3 | 3,30 Ω | 3 W | 1%",3.3,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-3-3.html,41.28
+Jantzen Audio 002-0769,"Jantzen Audio 002-0769 | 3,6 Ω | 10 W | 5%",3.6,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0769.html,0.82
+Jantzen Audio 002-0307,"Jantzen Audio 002-0307 | 3,6 Ω | 5 W | 5%",3.6,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0307.html,0.82
+Jantzen Audio 002-0598,"Jantzen Audio 002-0598 | 3,6 Ω | 5 W | 5%",3.6,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0598.html,0.82
+Jantzen Audio 002-0919,"Jantzen Audio 002-0919 | 3,6 Ω | 20 W | 5%",3.6,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0919.html,1.23
+Jantzen Audio 002-0442,"Jantzen Audio 002-0442 | 3,6 Ω | 10 W | 5%",3.6,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0442.html,1.23
+Jantzen Audio 002-0073,"Jantzen Audio 002-0073 | 3,6 Ω | 5 W | 1%",3.6,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0073.html,1.64
+Jantzen Audio 002-0190,"Jantzen Audio 002-0190 | 3,6 Ω | 10 W | 1%",3.6,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0190.html,5.33
+Dayton Audio DNR-3.7,Dayton Audio DNR-3.7 | 3.7 Ω | 10 W | 2%,3.7,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-37.html,1.64
+Dayton Audio DPR10-3.7,Dayton Audio DPR10-3.7 | 3.7 Ω | 10 W | 1%,3.7,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-37.html,2.47
+Dayton Audio DPR20-3.7,Dayton Audio DPR20-3.7 | 3.7 Ω | 20 W | 1%,3.7,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-37.html,5.74
+Jantzen Audio 002-0772,"Jantzen Audio 002-0772 | 3,9 Ω | 10 W | 5%",3.9,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0772.html,0.82
+Jantzen Audio 002-0601,"Jantzen Audio 002-0601 | 3,9 Ω | 5 W | 5%",3.9,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0601.html,0.82
+Jantzen Audio 002-0310,"Jantzen Audio 002-0310 | 3,9 Ω | 5 W | 5%",3.9,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0310.html,0.82
+Intertechnik WAX5/3.90/5,"Intertechnik WAX5/3.90/5 | 3,90 Ω | 5 W | 5%",3.9,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-3-90-5.html,0.82
+Intertechnik MOX04/3.9,"Intertechnik MOX04/3.9 | 3,90 Ω | 4 W | 2%",3.9,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-3-9.html,0.98
+Jantzen Audio 002-0922,"Jantzen Audio 002-0922 | 3,9 Ω | 20 W | 5%",3.9,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0922.html,1.23
+Jantzen Audio 002-0445,"Jantzen Audio 002-0445 | 3,9 Ω | 10 W | 5%",3.9,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0445.html,1.23
+Intertechnik WAX10/3.90/5,"Intertechnik WAX10/3.90/5 | 3,90 Ω | 10 W | 5%",3.9,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-3-90-5.html,1.23
+Jantzen Audio 002-0076,"Jantzen Audio 002-0076 | 3,9 Ω | 5 W | 1%",3.9,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0076.html,1.64
+"Mundorf MR5-3,90","Mundorf MR5-3,90 | 3,90 Ω | 5 W | 2%",3.9,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-390.html,1.64
+Intertechnik WAX20/3.90/5,"Intertechnik WAX20/3.90/5 | 3,90 Ω | 20 W | 5%",3.9,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-3-90-5.html,1.86
+Intertechnik MOX10/3.9,"Intertechnik MOX10/3.9 | 3,90 Ω | 10 W | 2%",3.9,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-3-9.html,2.47
+Monacor LSR-39/20,"Monacor LSR-39/20 | 3,9 Ω | 20 W | 5%",3.9,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-39-20.html,2.47
+"Mundorf MR10-3,90","Mundorf MR10-3,90 | 3,90 Ω | 10 W | 2%",3.9,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-390.html,2.88
+Intertechnik ME390,"Intertechnik ME390 | 3,90 Ω | 6 W | 1%",3.9,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me390.html,4.34
+Jantzen Audio 002-0193,"Jantzen Audio 002-0193 | 3,90 Ω | 10 W | 1%",3.9,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0193.html,5.33
+"Mundorf MRES20-3,90","Mundorf MRES20-3,90 | 3,90 Ω | 20 W | 2%",3.9,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-390.html,20.62
+"Mundorf MREU30-3,9T1C","Mundorf MREU30-3,9T1C | 3,90 Ω | 3/30 W | 1%",3.9,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-3-9t1c.html,31.36
+Intertechnik MEF3/3.9,"Intertechnik MEF3/3.9 | 3,90 Ω | 3 W | 1%",3.9,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-3-9.html,41.28
+Dayton Audio DNR-4.0,Dayton Audio DNR-4.0 | 4.0 Ω | 10 W | 2%,4.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-40.html,1.64
+Dayton Audio DPR10-4.0,Dayton Audio DPR10-4.0 | 4.0 Ω | 10 W | 1%,4.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-4.html,2.47
+Dayton Audio DPR20-4.0,Dayton Audio DPR20-4.0 | 4.0 Ω | 20 W | 1%,4.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-4.html,5.74
+Jantzen Audio 002-0313,"Jantzen Audio 002-0313 | 4,3 Ω | 5 W | 5%",4.3,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0313.html,0.82
+Jantzen Audio 002-0775,"Jantzen Audio 002-0775 | 4,3 Ω | 10 W | 5%",4.3,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0775.html,0.82
+Jantzen Audio 002-0604,"Jantzen Audio 002-0604 | 4,3 Ω | 5 W | 5%",4.3,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0604.html,0.82
+Jantzen Audio 002-0448,"Jantzen Audio 002-0448 | 4,3 Ω | 10 W | 5%",4.3,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0448.html,1.23
+Dayton Audio DNR-4.3,Dayton Audio DNR-4.3 | 4.3 Ω | 10 W | 2%,4.3,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-43.html,1.64
+Jantzen Audio 002-0079,"Jantzen Audio 002-0079 | 4,3 Ω | 5 W | 1%",4.3,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0079.html,1.64
+Dayton Audio DPR10-4.3,Dayton Audio DPR10-4.3 | 4.3 Ω | 10 W | 1%,4.3,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-43.html,2.47
+Jantzen Audio 002-0196,"Jantzen Audio 002-0196 | 4,3 Ω | 10 W | 1%",4.3,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0196.html,5.33
+Dayton Audio DPR20-4.3,Dayton Audio DPR20-4.3 | 4.3 Ω | 20 W | 1%,4.3,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-43.html,5.74
+Intertechnik WAX5/4.70/5,"Intertechnik WAX5/4.70/5 | 4,70 Ω | 5 W | 5%",4.7,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-4-70-5.html,0.82
+Jantzen Audio 002-0316,"Jantzen Audio 002-0316 | 4,7 Ω | 5 W | 5%",4.7,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0316.html,0.82
+Jantzen Audio 002-0778,"Jantzen Audio 002-0778 | 4,7 Ω | 10 W | 5%",4.7,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0778.html,0.82
+Jantzen Audio 002-0607,"Jantzen Audio 002-0607 | 4,7 Ω | 5 W | 5%",4.7,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0607.html,0.82
+Intertechnik MOX04/4.7,"Intertechnik MOX04/4.7 | 4,70 Ω | 4 W | 2%",4.7,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-4-7.html,0.98
+Jantzen Audio 002-0451,"Jantzen Audio 002-0451 | 4,7 Ω | 10 W | 5%",4.7,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0451.html,1.23
+Jantzen Audio 002-0928,"Jantzen Audio 002-0928 | 4,7 Ω | 20 W | 5%",4.7,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0928.html,1.23
+Intertechnik M200/0470,"Intertechnik M200/0470 | 4,70 Ω | 2 W | 1%",4.7,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0470.html,1.23
+Intertechnik WAX10/4.70/5,"Intertechnik WAX10/4.70/5 | 4,70 Ω | 10 W | 5%",4.7,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-4-70-5.html,1.23
+Dayton Audio DNR-4.7,Dayton Audio DNR-4.7 | 4.7 Ω | 10 W | 2%,4.7,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-47.html,1.64
+"Mundorf MR5-4,70","Mundorf MR5-4,70 | 4,70 Ω | 5 W | 2%",4.7,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-470.html,1.64
+Jantzen Audio 002-0082,"Jantzen Audio 002-0082 | 4,7 Ω | 5 W | 1%",4.7,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0082.html,1.64
+Intertechnik WAX20/4.70/5,"Intertechnik WAX20/4.70/5 | 4,70 Ω | 20 W | 5%",4.7,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-4-70-5.html,1.86
+Intertechnik MOX10/4.7,"Intertechnik MOX10/4.7 | 4,70 Ω | 10 W | 2%",4.7,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-4-7.html,2.47
+Dayton Audio DPR10-4.7,Dayton Audio DPR10-4.7 | 4.7 Ω | 10 W | 1%,4.7,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-47.html,2.47
+Monacor LSR-47/20,"Monacor LSR-47/20 | 4,7 Ω | 20 W | 5%",4.7,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-47-20.html,2.69
+"Mundorf MR10-4,70","Mundorf MR10-4,70 | 4,70 Ω | 10 W | 2%",4.7,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-470.html,2.88
+Jantzen Audio 002-0199,"Jantzen Audio 002-0199 | 4,70 Ω | 10 W | 1%",4.7,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0199.html,5.33
+Dayton Audio DPR20-4.7,Dayton Audio DPR20-4.7 | 4.7 Ω | 20 W | 1%,4.7,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-47.html,5.74
+"Mundorf MRES20-4,70","Mundorf MRES20-4,70 | 4,70 Ω | 20 W | 2%",4.7,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-470.html,20.62
+"Mundorf MREU30-4,7T1C","Mundorf MREU30-4,7T1C | 4,70 Ω | 3/30 W | 1%",4.7,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-4-7t1c.html,31.36
+Intertechnik MEF3/4.7,"Intertechnik MEF3/4.7 | 4,70 Ω | 3 W | 1%",4.7,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-4-7.html,41.28
+Jantzen Audio 002-0781,"Jantzen Audio 002-0781 | 5,1 Ω | 10 W | 5%",5.1,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0781.html,0.82
+Jantzen Audio 002-0319,"Jantzen Audio 002-0319 | 5,1 Ω | 5 W | 5%",5.1,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0319.html,0.82
+Jantzen Audio 002-0610,"Jantzen Audio 002-0610 | 5,1 Ω | 5 W | 5%",5.1,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0610.html,0.82
+Intertechnik WAX5/5.10/5,"Intertechnik WAX5/5.10/5 | 5,10 Ω | 5 W | 5%",5.1,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-5-10-5.html,0.82
+Intertechnik WAX10/5.10/5,"Intertechnik WAX10/5.10/5 | 5,10 Ω | 10 W | 5%",5.1,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-5-10-5.html,1.23
+Jantzen Audio 002-0454,"Jantzen Audio 002-0454 | 5,1 Ω | 10 W | 5%",5.1,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0454.html,1.23
+Dayton Audio DNR-5.1,Dayton Audio DNR-5.1 | 5.1 Ω | 10 W | 2%,5.1,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-51.html,1.64
+Jantzen Audio 002-0085,"Jantzen Audio 002-0085 | 5,1 Ω | 5 W | 1%",5.1,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0085.html,1.64
+Dayton Audio DPR10-5.1,Dayton Audio DPR10-5.1 | 5.1 Ω | 10 W | 1%,5.1,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-51.html,2.47
+Jantzen Audio 002-0202,"Jantzen Audio 002-0202 | 5,10 Ω | 10 W | 1%",5.1,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0202.html,5.33
+Dayton Audio DPR20-5.1,Dayton Audio DPR20-5.1 | 5.1 Ω | 20 W | 1%,5.1,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-51.html,5.74
+Jantzen Audio 002-0784,"Jantzen Audio 002-0784 | 5,6 Ω | 10 W | 5%",5.6,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0784.html,0.82
+Jantzen Audio 002-0322,"Jantzen Audio 002-0322 | 5,6 Ω | 5 W | 5%",5.6,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0322.html,0.82
+Jantzen Audio 002-0613,"Jantzen Audio 002-0613 | 5,6 Ω | 5 W | 5%",5.6,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0613.html,0.82
+Intertechnik WAX5/5.60/5,"Intertechnik WAX5/5.60/5 | 5,60 Ω | 5 W | 5%",5.6,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-5-60-5.html,0.82
+Intertechnik MOX04/5.6,"Intertechnik MOX04/5.6 | 5,60 Ω | 4 W | 2%",5.6,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-5-6.html,0.98
+Jantzen Audio 002-0457,"Jantzen Audio 002-0457 | 5,6 Ω | 10 W | 5%",5.6,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0457.html,1.23
+Intertechnik WAX10/5.60/5,"Intertechnik WAX10/5.60/5 | 5,60 Ω | 10 W | 5%",5.6,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-5-60-5.html,1.23
+Jantzen Audio 002-0934,"Jantzen Audio 002-0934 | 5,6 Ω | 20 W | 5%",5.6,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0934.html,1.23
+Jantzen Audio 002-0088,"Jantzen Audio 002-0088 | 5,60 Ω | 5 W | 1%",5.6,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0088.html,1.64
+"Mundorf MR5-5,60","Mundorf MR5-5,60 | 5,60 Ω | 5 W | 2%",5.6,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-560.html,1.64
+Intertechnik WAX20/5.60/5,"Intertechnik WAX20/5.60/5 | 5,60 Ω | 20 W | 5%",5.6,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-5-60-5.html,1.86
+Dayton Audio DNR-5.6,Dayton Audio DNR-5.6 | 5.6 Ω | 10 W | 2%,5.6,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-56.html,1.86
+Dayton Audio DPR10-5.6,Dayton Audio DPR10-5.6 | 5.6 Ω | 10 W | 1%,5.6,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-56.html,2.47
+Intertechnik MOX10/5.6,"Intertechnik MOX10/5.6 | 5,60 Ω | 10 W | 2%",5.6,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-5-6.html,2.47
+Monacor LSR-56/20,"Monacor LSR-56/20 | 5,6 Ω | 20 W | 5%",5.6,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-56-20.html,2.69
+"Mundorf MR10-5,60","Mundorf MR10-5,60 | 5,60 Ω | 10 W | 2%",5.6,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-560.html,2.88
+Intertechnik ME560,"Intertechnik ME560 | 5,60 Ω | 6 W | 1%",5.6,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me560.html,4.34
+Jantzen Audio 002-0205,"Jantzen Audio 002-0205 | 5,6 Ω | 10 W | 1%",5.6,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0205.html,5.33
+Dayton Audio DPR20-5.6,Dayton Audio DPR20-5.6 | 5.6 Ω | 20 W | 1%,5.6,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-56.html,5.74
+"Mundorf MRES20-5,60","Mundorf MRES20-5,60 | 5,60 Ω | 20 W | 2%",5.6,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-560.html,20.62
+"Mundorf MREU30-5,6T1C","Mundorf MREU30-5,6T1C | 5,60 Ω | 3/30 W | 1%",5.6,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-5-6t1c.html,31.36
+Intertechnik MEF3/5.6,"Intertechnik MEF3/5.6 | 5,60 Ω | 3 W | 1%",5.6,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-5-6.html,41.28
+Dayton Audio DNR-6.0,Dayton Audio DNR-6.0 | 6.0 Ω | 10 W | 2%,6.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-60.html,1.64
+Dayton Audio DPR10-6.0,Dayton Audio DPR10-6.0 | 6.0 Ω | 10 W | 1%,6.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-60.html,2.47
+Dayton Audio DPR20-6.0,Dayton Audio DPR20-6.0 | 6.0 Ω | 20 W | 1%,6.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-60.html,5.74
+Jantzen Audio 002-0787,"Jantzen Audio 002-0787 | 6,2 Ω | 10 W | 5%",6.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0787.html,0.82
+Jantzen Audio 002-0325,"Jantzen Audio 002-0325 | 6,2 Ω | 5 W | 5%",6.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0325.html,0.82
+Jantzen Audio 002-0937,"Jantzen Audio 002-0937 | 6,2 Ω | 20 W | 5%",6.2,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0937.html,1.23
+Jantzen Audio 002-0460,"Jantzen Audio 002-0460 | 6,2 Ω | 10 W | 5%",6.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0460.html,1.23
+Jantzen Audio 002-0091,"Jantzen Audio 002-0091 | 6,20 Ω | 5 W | 1%",6.2,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0091.html,1.64
+Jantzen Audio 002-0208,"Jantzen Audio 002-0208 | 6,20 Ω | 10 W | 1%",6.2,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0208.html,5.33
+Dayton Audio DNR-6.5,Dayton Audio DNR-6.5 | 6.5 Ω | 10 W | 2%,6.5,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-65.html,1.64
+Dayton Audio DPR10-6.5,Dayton Audio DPR10-6.5 | 6.5 Ω | 10 W | 1%,6.5,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-65.html,2.47
+Dayton Audio DPR20-6.5,Dayton Audio DPR20-6.5 | 6.5 Ω | 20 W | 1%,6.5,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-65.html,5.74
+Jantzen Audio 002-0328,"Jantzen Audio 002-0328 | 6,8 Ω | 5 W | 5%",6.8,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0328.html,0.82
+Intertechnik WAX5/6.80/5,"Intertechnik WAX5/6.80/5 | 6,80 Ω | 5 W | 5%",6.8,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-6-80-5.html,0.82
+Jantzen Audio 002-0790,"Jantzen Audio 002-0790 | 6,8 Ω | 10 W | 5%",6.8,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0790.html,0.82
+Jantzen Audio 002-0619,"Jantzen Audio 002-0619 | 6,8 Ω | 5 W | 5%",6.8,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0619.html,0.82
+Intertechnik MOX04/6.8,"Intertechnik MOX04/6.8 | 6,80 Ω | 4 W | 2%",6.8,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-6-8.html,0.98
+Intertechnik WAX10/6.80/5,"Intertechnik WAX10/6.80/5 | 6,80 Ω | 10 W | 5%",6.8,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-6-80-5.html,1.23
+Jantzen Audio 002-0463,"Jantzen Audio 002-0463 | 6,8 Ω | 10 W | 5%",6.8,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0463.html,1.23
+Jantzen Audio 002-0940,"Jantzen Audio 002-0940 | 6,8 Ω | 20 W | 5%",6.8,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0940.html,1.23
+Intertechnik M200/0680,"Intertechnik M200/0680 | 6,80 Ω | 2 W | 1%",6.8,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-0680.html,1.23
+"Mundorf MR5-6,80","Mundorf MR5-6,80 | 6,80 Ω | 5 W | 2%",6.8,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-680.html,1.64
+Jantzen Audio 002-0094,"Jantzen Audio 002-0094 | 6,8 Ω | 5 W | 1%",6.8,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0094.html,1.64
+Intertechnik WAX20/6.80/5,"Intertechnik WAX20/6.80/5 | 6,80 Ω | 20 W | 5%",6.8,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-6-80-5.html,1.86
+Monacor LSR-68/20,"Monacor LSR-68/20 | 6,8 Ω | 20 W | 5%",6.8,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-68-20.html,2.47
+Intertechnik MOX10/6.8,"Intertechnik MOX10/6.8 | 6,80 Ω | 10 W | 2%",6.8,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-6-8.html,2.47
+"Mundorf MR10-6,80","Mundorf MR10-6,80 | 6,80 Ω | 10 W | 2%",6.8,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-680.html,2.88
+Intertechnik ME680,"Intertechnik ME680 | 6,80 Ω | 6 W | 1%",6.8,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me680.html,4.34
+Jantzen Audio 002-0211,"Jantzen Audio 002-0211 | 6,80 Ω | 10 W | 1%",6.8,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0211.html,5.33
+"Mundorf MRES20-6,80","Mundorf MRES20-6,80 | 6,80 Ω | 20 W | 2%",6.8,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-680.html,20.62
+"Mundorf MREU30-6,8T1C","Mundorf MREU30-6,8T1C | 6,80 Ω | 3/30 W | 1%",6.8,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-6-8t1c.html,31.36
+Intertechnik MEF3/6.8,"Intertechnik MEF3/6.8 | 6,80 Ω | 3 W | 1%",6.8,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-6-8.html,41.28
+Dayton Audio DNR-7.0,Dayton Audio DNR-7.0 | 7.0 Ω | 10 W | 2%,7.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-70.html,1.64
+Dayton Audio DPR10-7.0,Dayton Audio DPR10-7.0 | 7.0 Ω | 10 W | 1%,7.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-70.html,2.47
+Dayton Audio DPR20-7.0,Dayton Audio DPR20-7.0 | 7.0 Ω | 20 W | 1%,7.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-70.html,5.74
+Jantzen Audio 002-0793,"Jantzen Audio 002-0793 | 7,5 Ω | 10 W | 5%",7.5,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0793.html,0.82
+Jantzen Audio 002-0331,"Jantzen Audio 002-0331 | 7,5 Ω | 5 W | 5%",7.5,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0331.html,0.82
+Jantzen Audio 002-0466,"Jantzen Audio 002-0466 | 7,5 Ω | 10 W | 5%",7.5,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0466.html,1.23
+Intertechnik WAX10/7.5/5,"Intertechnik WAX10/7.5/5 | 7,50 Ω | 10 W | 5%",7.5,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-7-5-5.html,1.23
+Jantzen Audio 002-0097,"Jantzen Audio 002-0097 | 7,5 Ω | 5 W | 1%",7.5,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0097.html,1.64
+Dayton Audio DNR-7.5,Dayton Audio DNR-7.5 | 7.5 Ω | 10 W | 2%,7.5,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-75.html,1.64
+Dayton Audio DPR10-7.5,Dayton Audio DPR10-7.5 | 7.5 Ω | 10 W | 1%,7.5,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-75.html,2.47
+Jantzen Audio 002-0214,"Jantzen Audio 002-0214 | 7,50 Ω | 10 W | 1%",7.5,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0214.html,5.33
+Dayton Audio DPR20-7.5,Dayton Audio DPR20-7.5 | 7.5 Ω | 20 W | 1%,7.5,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-75.html,5.74
+Dayton Audio DNR-8.0,Dayton Audio DNR-8.0 | 8.0 Ω | 10 W | 2%,8.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-80.html,1.64
+Dayton Audio DPR10-8.0,Dayton Audio DPR10-8.0 | 8.0 Ω | 10 W | 1%,8.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-80.html,2.47
+Dayton Audio DPR20-8.0,Dayton Audio DPR20-8.0 | 8.0 Ω | 20 W | 1%,8.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-80.html,5.74
+Jantzen Audio 002-0796,"Jantzen Audio 002-0796 | 8,2 Ω | 10 W | 5%",8.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0796.html,0.82
+Jantzen Audio 002-0334,"Jantzen Audio 002-0334 | 8,2 Ω | 5 W | 5%",8.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0334.html,0.82
+Intertechnik WAX5/8.20/5,"Intertechnik WAX5/8.20/5 | 8,20 Ω | 5 W | 5%",8.2,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-8-20-5.html,0.82
+Jantzen Audio 002-0625,"Jantzen Audio 002-0625 | 8,2 Ω | 5 W | 5%",8.2,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0625.html,0.82
+Intertechnik MOX04/8.2,"Intertechnik MOX04/8.2 | 8,20 Ω | 4 W | 2%",8.2,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-8-2.html,0.98
+Jantzen Audio 002-0943,"Jantzen Audio 002-0943 | 8,2 Ω | 20 W | 5%",8.2,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0943.html,1.23
+Intertechnik WAX10/8.20/5,"Intertechnik WAX10/8.20/5 | 8,20 Ω | 10 W | 5%",8.2,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-8-20-5.html,1.23
+Jantzen Audio 002-0469,"Jantzen Audio 002-0469 | 8,2 Ω | 10 W | 5%",8.2,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0469.html,1.23
+"Mundorf MR5-8,20","Mundorf MR5-8,20 | 8,20 Ω | 5 W | 2%",8.2,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-820.html,1.64
+Jantzen Audio 002-0100,"Jantzen Audio 002-0100 | 8,2 Ω | 5 W | 1%",8.2,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0100.html,1.64
+Intertechnik WAX20/8.20/5,"Intertechnik WAX20/8.20/5 | 8,20 Ω | 20 W | 5%",8.2,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-8-20-5.html,1.86
+Intertechnik MOX10/8.2,"Intertechnik MOX10/8.2 | 8,20 Ω | 10 W | 2%",8.2,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-8-2.html,2.47
+Monacor LSR-82/20,"Monacor LSR-82/20 | 8,2 Ω | 20 W | 5%",8.2,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-82-20.html,2.69
+"Mundorf MR10-8,20","Mundorf MR10-8,20 | 8,20 Ω | 10 W | 2%",8.2,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-820.html,2.88
+Intertechnik ME820,"Intertechnik ME820 | 8,20 Ω | 6 W | 1%",8.2,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me820.html,4.34
+Jantzen Audio 002-0217,"Jantzen Audio 002-0217 | 8,20 Ω | 10 W | 1%",8.2,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0217.html,5.33
+"Mundorf MRES20-8,20","Mundorf MRES20-8,20 | 8,20 Ω | 20 W | 2%",8.2,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-820.html,20.62
+"Mundorf MREU30-8,2T1C","Mundorf MREU30-8,2T1C | 8,20 Ω | 3/30 W | 1%",8.2,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-8-2t1c.html,31.36
+Jantzen Audio 002-0799,"Jantzen Audio 002-0799 | 9,1 Ω | 10 W | 5%",9.1,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0799.html,0.82
+Jantzen Audio 002-0628,"Jantzen Audio 002-0628 | 9,1 Ω | 5 W | 5%",9.1,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0628.html,0.82
+Jantzen Audio 002-0337,"Jantzen Audio 002-0337 | 9,1 Ω | 5 W | 5%",9.1,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0337.html,0.82
+Jantzen Audio 002-0472,"Jantzen Audio 002-0472 | 9,1 Ω | 10 W | 5%",9.1,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0472.html,1.23
+Jantzen Audio 002-0103,"Jantzen Audio 002-0103 | 9,1 Ω | 5 W | 1%",9.1,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0103.html,1.64
+Dayton Audio DNR-9.1,Dayton Audio DNR-9.1 | 9.1 Ω | 10 W | 2%,9.1,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-91.html,1.64
+Dayton Audio DPR10-9.1,Dayton Audio DPR10-9.1 | 9.1 Ω | 10 W | 1%,9.1,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-91.html,2.47
+Jantzen Audio 002-0220,"Jantzen Audio 002-0220 | 9,10 Ω | 10 W | 1%",9.1,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0220.html,5.33
+Dayton Audio DPR20-9.1,Dayton Audio DPR20-9.1 | 9.1 Ω | 20 W | 1%,9.1,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-91.html,5.74
+Jantzen Audio 002-0802,Jantzen Audio 002-0802 | 10 Ω | 10 W | 5%,10.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0802.html,0.82
+Intertechnik WAX5/10.0/5,Intertechnik WAX5/10.0/5 | 10 Ω | 5 W | 5%,10.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-10-0-5.html,0.82
+Jantzen Audio 002-0340,Jantzen Audio 002-0340 | 10 Ω | 5 W | 5%,10.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0340.html,0.82
+Intertechnik M200/1000,Intertechnik M200/1000 | 10 Ω | 2 W | 1%,10.0,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-1000.html,0.82
+Jantzen Audio 002-0631,Jantzen Audio 002-0631 | 10 Ω | 5 W | 5%,10.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0631.html,0.82
+Intertechnik MOX04/10,Intertechnik MOX04/10 | 10 Ω | 4 W | 2%,10.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-10.html,0.98
+Jantzen Audio 002-0946,Jantzen Audio 002-0946 | 10 Ω | 20 W | 5%,10.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0946.html,1.23
+Jantzen Audio 002-0475,Jantzen Audio 002-0475 | 10 Ω | 10 W | 5%,10.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0475.html,1.23
+Intertechnik WAX10/10.0/5,Intertechnik WAX10/10.0/5 | 10 Ω | 10 W | 5%,10.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-10-0-5.html,1.23
+Dayton Audio DNR-10,Dayton Audio DNR-10 | 10.0 Ω | 10 W | 2%,10.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-10.html,1.64
+Mundorf MR5-10,Mundorf MR5-10 | 10 Ω | 5 W | 2%,10.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-10.html,1.64
+Jantzen Audio 002-0106,Jantzen Audio 002-0106 | 10 Ω | 5 W | 1%,10.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0106.html,1.64
+Intertechnik WAX20/10/5,Intertechnik WAX20/10/5 | 10 Ω | 20 W | 5%,10.0,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-10-5.html,1.86
+Dayton Audio DPR10-10,Dayton Audio DPR10-10 | 10 Ω | 10 W | 1%,10.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-10.html,2.47
+Intertechnik MOX10/10,Intertechnik MOX10/10 | 10 Ω | 10 W | 2%,10.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-10.html,2.47
+Monacor LSR-100/20,Monacor LSR-100/20 | 10 Ω | 20 W | 5%,10.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-100-20.html,2.85
+Mundorf MR10-10,Mundorf MR10-10 | 10 Ω | 10 W | 2%,10.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-10.html,2.88
+Intertechnik ME1000,Intertechnik ME1000 | 10 Ω | 6 W | 1%,10.0,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me1000.html,4.34
+Jantzen Audio 002-0223,Jantzen Audio 002-0223 | 10 Ω | 10 W | 1%,10.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0223.html,5.33
+Dayton Audio DPR20-10,Dayton Audio DPR20-10 | 10 Ω | 20 W | 1%,10.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-10.html,5.74
+Mundorf MRES20-10,Mundorf MRES20-10 | 10 Ω | 20 W | 2%,10.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-10.html,20.62
+Mundorf MREU30-10T1C,Mundorf MREU30-10T1C | 10 Ω | 3/30 W | 1%,10.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-10t1c.html,31.36
+Intertechnik MEF3/10.0,Intertechnik MEF3/10.0 | 10 Ω | 3 W | 1%,10.0,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-10-0.html,41.28
+Jantzen Audio 002-0805,Jantzen Audio 002-0805 | 12 Ω | 10 W | 5%,12.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0805.html,0.82
+Jantzen Audio 002-0343,Jantzen Audio 002-0343 | 12 Ω | 5 W | 5%,12.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0343.html,0.82
+Jantzen Audio 002-0634,Jantzen Audio 002-0634 | 12 Ω | 5 W | 5%,12.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0634.html,0.82
+Intertechnik WAX5/12.0/5,Intertechnik WAX5/12.0/5 | 12 Ω | 5 W | 5%,12.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-12-0-5.html,0.82
+Intertechnik MOX04/12,Intertechnik MOX04/12 | 12 Ω | 4 W | 2%,12.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-12.html,0.98
+Jantzen Audio 002-0949,Jantzen Audio 002-0949 | 12 Ω | 20 W | 5%,12.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0949.html,1.23
+Jantzen Audio 002-0478,Jantzen Audio 002-0478 | 12 Ω | 10 W | 5%,12.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0478.html,1.23
+Intertechnik WAX10/12.0/5,Intertechnik WAX10/12.0/5 | 12 Ω | 10 W | 5%,12.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-12-0-5.html,1.23
+Mundorf MR5-12,Mundorf MR5-12 | 12 Ω | 5 W | 2%,12.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-12.html,1.64
+Jantzen Audio 002-0109,Jantzen Audio 002-0109 | 12 Ω | 5 W | 1%,12.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0109.html,1.64
+Intertechnik WAX20/12/5,Intertechnik WAX20/12/5 | 12 Ω | 20 W | 5%,12.0,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-12-5.html,1.86
+Intertechnik MOX10/12,Intertechnik MOX10/12 | 12 Ω | 10 W | 2%,12.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-12.html,2.47
+Monacor LSR-120/20,Monacor LSR-120/20 | 12 Ω | 20 W | 5%,12.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-120-20.html,2.47
+Mundorf MR10-12,Mundorf MR10-12 | 12 Ω | 10 W | 2%,12.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-12.html,2.88
+Jantzen Audio 002-0226,Jantzen Audio 002-0226 | 12 Ω | 10 W | 1%,12.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0226.html,5.33
+Mundorf MRES20-12,Mundorf MRES20-12 | 12 Ω | 20 W | 2%,12.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-12.html,20.62
+Mundorf MREU30-12T1C,Mundorf MREU30-12T1C | 12 Ω | 3/30 W | 1%,12.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-12t1c.html,31.36
+Dayton Audio DNR-12.5,Dayton Audio DNR-12.5 | 12.5 Ω | 10 W | 2%,12.5,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-125.html,1.64
+Dayton Audio DPR10-12.5,Dayton Audio DPR10-12.5 | 12.5 Ω | 10 W | 1%,12.5,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-125.html,2.47
+Dayton Audio DPR20-12.5,Dayton Audio DPR20-12.5 | 12.5 Ω | 20 W | 1%,12.5,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-125.html,5.74
+Jantzen Audio 002-0637,Jantzen Audio 002-0637 | 15 Ω | 5 W | 5%,15.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0637.html,0.82
+Jantzen Audio 002-0808,Jantzen Audio 002-0808 | 15 Ω | 10 W | 5%,15.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0808.html,0.82
+Jantzen Audio 002-0346,Jantzen Audio 002-0346 | 15 Ω | 5 W | 5%,15.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0346.html,0.82
+Intertechnik WAX5/15.0/5,Intertechnik WAX5/15.0/5 | 15 Ω | 5 W | 5%,15.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-15-0-5.html,0.82
+Intertechnik M200/1500,Intertechnik M200/1500 | 15 Ω | 2 W | 1%,15.0,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-1500.html,0.82
+Intertechnik MOX04/15,Intertechnik MOX04/15 | 15 Ω | 4 W | 2%,15.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-15.html,0.98
+Jantzen Audio 002-0481,Jantzen Audio 002-0481 | 15 Ω | 10 W | 5%,15.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0481.html,1.23
+Intertechnik WAX10/15.0/5,Intertechnik WAX10/15.0/5 | 15 Ω | 10 W | 5%,15.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-15-0-5.html,1.23
+Jantzen Audio 002-0952,Jantzen Audio 002-0952 | 15 Ω | 20 W | 5%,15.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0952.html,1.23
+Mundorf MR5-15,Mundorf MR5-15 | 15 Ω | 5 W | 2%,15.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-15.html,1.64
+Jantzen Audio 002-0112,Jantzen Audio 002-0112 | 15 Ω | 5 W | 1%,15.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0112.html,1.64
+Intertechnik WAX20/15/5,Intertechnik WAX20/15/5 | 15 Ω | 20 W | 5%,15.0,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-15-5.html,1.86
+Monacor LSR-150/20,Monacor LSR-150/20 | 15 Ω | 20 W | 5%,15.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-150-20.html,2.47
+Intertechnik MOX10/15,Intertechnik MOX10/15 | 15 Ω | 10 W | 2%,15.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-15.html,2.47
+Mundorf MR10-15,Mundorf MR10-15 | 15 Ω | 10 W | 2%,15.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-15.html,2.88
+Intertechnik ME1500,Intertechnik ME1500 | 15 Ω | 6 W | 1%,15.0,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me1500.html,4.34
+Jantzen Audio 002-0229,Jantzen Audio 002-0229 | 15 Ω | 10 W | 1%,15.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0229.html,5.33
+Mundorf MRES20-15,Mundorf MRES20-15 | 15 Ω | 20 W | 2%,15.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-15.html,20.62
+Mundorf MREU30-15T1C,Mundorf MREU30-15T1C | 15 Ω | 3/30 W | 1%,15.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-15t1c.html,31.36
+Intertechnik MEF3/15.0,Intertechnik MEF3/15.0 | 15 Ω | 3 W | 1%,15.0,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-15-0.html,41.28
+Dayton Audio DNR-16,Dayton Audio DNR-16 | 16 Ω | 10 W | 2%,16.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-16.html,1.64
+Dayton Audio DPR10-16,Dayton Audio DPR10-16 | 16 Ω | 10 W | 1%,16.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-16.html,2.47
+Dayton Audio DPR20-16,Dayton Audio DPR20-16 | 16 Ω | 20 W | 1%,16.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-16.html,5.74
+Jantzen Audio 002-0640,Jantzen Audio 002-0640 | 18 Ω | 5 W | 5%,18.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0640.html,0.82
+Jantzen Audio 002-0811,Jantzen Audio 002-0811 | 18 Ω | 10 W | 5%,18.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0811.html,0.82
+Jantzen Audio 002-0349,Jantzen Audio 002-0349 | 18 Ω | 5 W | 5%,18.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0349.html,0.82
+Intertechnik WAX5/18.0/5,Intertechnik WAX5/18.0/5 | 18 Ω | 5 W | 5%,18.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-18-0-5.html,0.82
+Intertechnik MOX04/18,Intertechnik MOX04/18 | 18 Ω | 4 W | 2%,18.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-18.html,0.98
+Jantzen Audio 002-0955,Jantzen Audio 002-0955 | 18 Ω | 20 W | 5%,18.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0955.html,1.23
+Intertechnik WAX10/18.0/5,Intertechnik WAX10/18.0/5 | 18 Ω | 10 W | 5%,18.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-18-0-5.html,1.23
+Jantzen Audio 002-0484,Jantzen Audio 002-0484 | 18 Ω | 10 W | 5%,18.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0484.html,1.23
+Mundorf MR5-18,Mundorf MR5-18 | 18 Ω | 5 W | 2%,18.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-18.html,1.64
+Jantzen Audio 002-0115,Jantzen Audio 002-0115 | 18 Ω | 5 W | 1%,18.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0115.html,1.64
+Intertechnik WAX20/18/5,Intertechnik WAX20/18/5 | 18 Ω | 20 W | 5%,18.0,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-18-5.html,1.86
+Monacor LSR-180/20,Monacor LSR-180/20 | 18 Ω | 20 W | 5%,18.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-180-20.html,2.47
+Intertechnik MOX10/18,Intertechnik MOX10/18 | 18 Ω | 10 W | 2%,18.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-18.html,2.47
+Mundorf MR10-18,Mundorf MR10-18 | 18 Ω | 10 W | 2%,18.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-18.html,2.88
+Jantzen Audio 002-0232,Jantzen Audio 002-0232 | 18 Ω | 10 W | 1%,18.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0232.html,5.33
+Mundorf MRES20-18,Mundorf MRES20-18 | 18 Ω | 20 W | 2%,18.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-18.html,20.62
+Mundorf MREU30-18T1C,Mundorf MREU30-18T1C | 18 Ω | 3/30 W | 1%,18.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-18t1c.html,31.36
+Jantzen Audio 002-0956,Jantzen Audio 002-0956 | 20 Ω | 20 W | 5%,20.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0956.html,1.23
+Dayton Audio DNR-20,Dayton Audio DNR-20 | 20 Ω | 10 W | 2%,20.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-2-0.html,1.64
+Dayton Audio DPR10-20,Dayton Audio DPR10-20 | 20 Ω | 10 W | 1%,20.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-20.html,2.47
+Dayton Audio DPR20-20,Dayton Audio DPR20-20 | 20 Ω | 20 W | 1%,20.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-20.html,5.74
+Intertechnik WAX5/22.0/5,Intertechnik WAX5/22.0/5 | 22 Ω | 5 W | 5%,22.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-22-0-5.html,0.82
+Jantzen Audio 002-0814,Jantzen Audio 002-0814 | 22 Ω | 10 W | 5%,22.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0814.html,0.82
+Jantzen Audio 002-0352,Jantzen Audio 002-0352 | 22 Ω | 5 W | 5%,22.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0352.html,0.82
+Jantzen Audio 002-0643,Jantzen Audio 002-0643 | 22 Ω | 5 W | 5%,22.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0643.html,0.82
+Intertechnik MOX04/22,Intertechnik MOX04/22 | 22 Ω | 4 W | 2%,22.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-22.html,0.98
+Jantzen Audio 002-0487,Jantzen Audio 002-0487 | 22 Ω | 10 W | 5%,22.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0487.html,1.23
+Jantzen Audio 002-0958,Jantzen Audio 002-0958 | 22 Ω | 20 W | 5%,22.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0958.html,1.23
+Intertechnik WAX10/22.0/5,Intertechnik WAX10/22.0/5 | 22 Ω | 10 W | 5%,22.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-22-0-5.html,1.23
+Mundorf MR5-22,Mundorf MR5-22 | 22 Ω | 5 W | 2%,22.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-22.html,1.64
+Jantzen Audio 002-0118,Jantzen Audio 002-0118 | 22 Ω | 5 W | 1%,22.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0118.html,1.64
+Intertechnik WAX20/22/5,Intertechnik WAX20/22/5 | 22 Ω | 20 W | 5%,22.0,20.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax20-22-5.html,1.86
+Monacor LSR-220/20,Monacor LSR-220/20 | 22 Ω | 20 W | 5%,22.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-220-20.html,2.47
+Intertechnik MOX10/22,Intertechnik MOX10/22 | 22 Ω | 10 W | 2%,22.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-22.html,2.47
+Mundorf MR10-22,Mundorf MR10-22 | 22 Ω | 10 W | 2%,22.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-22.html,2.88
+Intertechnik ME2200,Intertechnik ME2200 | 22 Ω | 6 W | 1%,22.0,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me2200.html,4.34
+Jantzen Audio 002-0235,Jantzen Audio 002-0235 | 22 Ω | 10 W | 1%,22.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0235.html,5.33
+Mundorf MRES20-22,Mundorf MRES20-22 | 22 Ω | 20 W | 2%,22.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-22.html,20.62
+Mundorf MREU30-22T1C,Mundorf MREU30-22T1C | 22 Ω | 3/30 W | 1%,22.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-22t1c.html,31.36
+Dayton Audio DNR-25,Dayton Audio DNR-25| 25 Ω | 10 W | 2%,25.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-25.html,1.64
+Dayton Audio DPR10-25,Dayton Audio DPR10-25 | 25 Ω | 10 W | 1%,25.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-25.html,2.47
+Dayton Audio DPR20-25,Dayton Audio DPR20-25 | 25 Ω | 20 W | 1%,25.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-25.html,5.74
+Jantzen Audio 002-0817,Jantzen Audio 002-0817 | 27 Ω | 10 W | 5%,27.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0817.html,0.82
+Jantzen Audio 002-0355,Jantzen Audio 002-0355 | 27 Ω | 5 W | 5%,27.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0355.html,0.82
+Jantzen Audio 002-0646,Jantzen Audio 002-0646 | 27 Ω | 5 W | 5%,27.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0646.html,0.82
+Intertechnik WAX5/27.0/5,Intertechnik WAX5/27.0/5 | 27 Ω | 5 W | 5%,27.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-27-0-5.html,0.82
+Intertechnik MOX04/27,Intertechnik MOX04/27 | 27 Ω | 4 W | 2%,27.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-27.html,0.98
+Jantzen Audio 002-0490,Jantzen Audio 002-0490 | 27 Ω | 10 W | 5%,27.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0490.html,1.23
+Jantzen Audio 002-0961,Jantzen Audio 002-0961 | 27 Ω | 20 W | 5%,27.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0961.html,1.23
+Intertechnik WAX10/27.0/5,Intertechnik WAX10/27.0/5 | 27 Ω | 10 W | 5%,27.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-27-0-5.html,1.23
+Jantzen Audio 002-0121,Jantzen Audio 002-0121 | 27 Ω | 5 W | 1%,27.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0121.html,1.64
+Mundorf MR5-27,Mundorf MR5-27 | 27 Ω | 5 W | 2%,27.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-27.html,1.64
+Intertechnik MOX10/27,Intertechnik MOX10/27 | 27 Ω | 10 W | 2%,27.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-27.html,2.47
+Monacor LSR-270/20,Monacor LSR-270/20 | 27 Ω | 20 W | 5%,27.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-270-20.html,2.69
+Mundorf MR10-27,Mundorf MR10-27 | 27 Ω | 10 W | 2%,27.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-27.html,2.88
+Jantzen Audio 002-0238,Jantzen Audio 002-0238 | 27 Ω | 10 W | 1%,27.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0238.html,5.33
+Mundorf MRES20-27,Mundorf MRES20-27 | 27 Ω | 20 W | 2%,27.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-27.html,20.62
+Mundorf MREU30-27T1C,Mundorf MREU30-27T1C | 27 Ω | 3/30 W | 1%,27.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-27t1c.html,31.36
+Dayton Audio DNR-30,Dayton Audio DNR-30 | 30 Ω | 10 W | 2%,30.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-3-0.html,1.86
+Dayton Audio DPR10-30,Dayton Audio DPR10-30 | 30 Ω | 10 W | 1%,30.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-30.html,2.47
+Dayton Audio DPR20-30,Dayton Audio DPR20-30 | 30 Ω | 20 W | 1%,30.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-30.html,5.74
+Intertechnik WAX5/33.0/5,Intertechnik WAX5/33.0/5 | 33 Ω | 5 W | 5%,33.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-33-0-5.html,0.82
+Jantzen Audio 002-0820,Jantzen Audio 002-0820 | 33 Ω | 10 W | 5%,33.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0820.html,0.82
+Intertechnik M200/3300,Intertechnik M200/3300 | 33 Ω | 2 W | 1%,33.0,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-3300.html,0.82
+Jantzen Audio 002-0649,Jantzen Audio 002-0649 | 33 Ω | 5 W | 5%,33.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0649.html,0.82
+Jantzen Audio 002-0358,Jantzen Audio 002-0358 | 33 Ω | 5 W | 5%,33.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0358.html,0.82
+Intertechnik MOX04/33,Intertechnik MOX04/33 | 33 Ω | 4 W | 2%,33.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-33.html,0.98
+Intertechnik WAX10/33.0/5,Intertechnik WAX10/33.0/5 | 33 Ω | 10 W | 5%,33.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-33-0-5.html,1.23
+Jantzen Audio 002-0493,Jantzen Audio 002-0493 | 33 Ω | 10 W | 5%,33.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0493.html,1.23
+Jantzen Audio 002-0964,Jantzen Audio 002-0964 | 33 Ω | 20 W | 5%,33.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0964.html,1.23
+Jantzen Audio 002-0124,Jantzen Audio 002-0124 | 33 Ω | 5 W | 1%,33.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0124.html,1.64
+Mundorf MR5-33,Mundorf MR5-33 | 33 Ω | 5 W | 2%,33.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-33.html,1.64
+Intertechnik MOX10/33,Intertechnik MOX10/33 | 33 Ω | 10 W | 2%,33.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-33.html,2.47
+Monacor LSR-330/20,Monacor LSR-330/20 | 33 Ω | 20 W | 5%,33.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-330-20.html,2.69
+Mundorf MR10-33,Mundorf MR10-33 | 33 Ω | 10 W | 2%,33.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-33.html,2.88
+Intertechnik ME3300,Intertechnik ME3300 | 33 Ω | 6 W | 1%,33.0,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me3300.html,4.34
+Jantzen Audio 002-0241,Jantzen Audio 002-0241 | 33 Ω | 10 W | 1%,33.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0241.html,5.33
+Mundorf MRES20-33,Mundorf MRES20-33 | 33 Ω | 20 W | 2%,33.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-33.html,20.62
+Mundorf MREU30-33T1C,Mundorf MREU30-33T1C | 33 Ω | 3/30 W | 1%,33.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-33t1c.html,31.36
+Intertechnik MEF3/33.0,Intertechnik MEF3/33.0 | 33 Ω | 3 W | 1%,33.0,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-33-0.html,41.28
+Jantzen Audio 002-0823,Jantzen Audio 002-0823 | 36 Ω | 10 W | 5%,36.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0823.html,0.82
+Jantzen Audio 002-0495,Jantzen Audio 002-0495 | 36 Ω | 10 W | 5%,36.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0495.html,1.23
+Jantzen Audio 002-0967,Jantzen Audio 002-0967 | 36 Ω | 20 W | 5%,36.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0967.html,1.23
+Jantzen Audio 002-0125036,Jantzen Audio 002-0125036 | 36 Ω | 5 W | 1%,36.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125036.html,1.64
+Jantzen Audio 002-0242036,Jantzen Audio 002-0242036 | 36 Ω | 10 W | 1%,36.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242036.html,5.33
+Intertechnik WAX5/39.0/5,Intertechnik WAX5/39.0/5 | 39 Ω | 5 W | 5%,39.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-39-0-5.html,0.82
+Jantzen Audio 002-0361,Jantzen Audio 002-0361 | 39 Ω | 5 W | 5%,39.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0361.html,0.82
+Jantzen Audio 002-0655,Jantzen Audio 002-0655 | 39 Ω | 5 W | 5%,39.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0655.html,0.82
+Jantzen Audio 002-0826,Jantzen Audio 002-0826 | 39 Ω | 10 W | 5%,39.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0826.html,0.82
+Intertechnik MOX04/39,Intertechnik MOX04/39 | 39 Ω | 4 W | 2%,39.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-39.html,0.98
+Jantzen Audio 002-0970,Jantzen Audio 002-0970 | 39 Ω | 20 W | 5%,39.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0970.html,1.23
+Intertechnik WAX10/39.0/5,Intertechnik WAX10/39.0/5 | 39 Ω | 10 W | 5%,39.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-39-0-5.html,1.23
+Jantzen Audio 002-0496,Jantzen Audio 002-0496 | 39 Ω | 10 W | 5%,39.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0496.html,1.23
+Jantzen Audio 002-0125039,Jantzen Audio 002-0125039 | 39 Ω | 5 W | 1%,39.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125039.html,1.64
+Mundorf MR5-39,Mundorf MR5-39 | 39 Ω | 5 W | 2%,39.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-39.html,1.64
+Intertechnik MOX10/39,Intertechnik MOX10/39 | 39 Ω | 10 W | 2%,39.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-39.html,2.47
+Monacor LSR-390/20,Monacor LSR-390/20 | 39 Ω | 20 W | 5%,39.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-390-20.html,2.69
+Mundorf MR10-39,Mundorf MR10-39 | 39 Ω | 10 W | 2%,39.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-39.html,2.88
+Jantzen Audio 002-0242039,Jantzen Audio 002-0242039 | 39 Ω | 10 W | 1%,39.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242039.html,5.33
+Mundorf MRES20-39,Mundorf MRES20-39 | 39 Ω | 20 W | 2%,39.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-39.html,20.62
+Mundorf MREU30-39T1C,Mundorf MREU30-39T1C | 39 Ω | 3/30 W | 1%,39.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-39t1c.html,31.36
+Dayton Audio DNR-40,Dayton Audio DNR-40 | 40 Ω | 10 W | 2%,40.0,10.0,2.0,https://www.soundimports.eu/en/dayton-audio-dnr-4-0.html,1.64
+Dayton Audio DPR10-40,Dayton Audio DPR10-40 | 40 Ω | 10 W | 1%,40.0,10.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr10-40.html,2.47
+Dayton Audio DPR20-40,Dayton Audio DPR20-40 | 40 Ω | 20 W | 1%,40.0,20.0,1.0,https://www.soundimports.eu/en/dayton-audio-dpr20-40.html,5.74
+Jantzen Audio 002-0363,Jantzen Audio 002-0363 | 43 Ω | 5 W | 5%,43.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0363.html,0.82
+Jantzen Audio 002-0498,Jantzen Audio 002-0498 | 43 Ω | 10 W | 5%,43.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0498.html,1.23
+Jantzen Audio 002-0125043,Jantzen Audio 002-0125043 | 43 Ω | 5 W | 1%,43.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125043.html,1.64
+Jantzen Audio 002-0242043,Jantzen Audio 002-0242043 | 43 Ω | 10 W | 1%,43.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242043.html,5.33
+Jantzen Audio 002-0832,Jantzen Audio 002-0832 | 47 Ω | 10 W | 5%,47.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0832.html,0.82
+Jantzen Audio 002-0364,Jantzen Audio 002-0364 | 47 Ω | 5 W | 5%,47.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0364.html,0.82
+Intertechnik WAX5/47/5,Intertechnik WAX5/47/5 | 47 Ω | 5 W | 5%,47.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-47-5.html,0.82
+Jantzen Audio 002-0661,Jantzen Audio 002-0661 | 47 Ω | 5 W | 5%,47.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0661.html,0.82
+Intertechnik M200/4700,Intertechnik M200/4700 | 47 Ω | 2 W | 1%,47.0,2.0,1.0,https://www.soundimports.eu/en/it-intertechnik-m200-4700.html,0.82
+Intertechnik MOX04/47,Intertechnik MOX04/47 | 47 Ω | 4 W | 2%,47.0,4.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox04-47.html,0.98
+Jantzen Audio 002-0499,Jantzen Audio 002-0499 | 47 Ω | 10 W | 5%,47.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0499.html,1.23
+Intertechnik WAX10/47.0/5,Intertechnik WAX10/47.0/5 | 47 Ω | 10 W | 5%,47.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-47-0-5.html,1.23
+Jantzen Audio 002-0976,Jantzen Audio 002-0976 | 47 Ω | 20 W | 5%,47.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0976.html,1.23
+Jantzen Audio 002-0125047,Jantzen Audio 002-0125047 | 47 Ω | 5 W | 1%,47.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125047.html,1.64
+Mundorf MR5-47,Mundorf MR5-47 | 47 Ω | 5 W | 2%,47.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-47.html,1.64
+Intertechnik MOX10/47,Intertechnik MOX10/47 | 47 Ω | 10 W | 2%,47.0,10.0,2.0,https://www.soundimports.eu/en/it-intertechnik-mox10-47.html,2.47
+Monacor LSR-470/20,Monacor LSR-470/20 | 47 Ω | 20 W | 5%,47.0,20.0,5.0,https://www.soundimports.eu/en/monacor-lsr-470-20.html,2.69
+Mundorf MR10-47,Mundorf MR10-47 | 47 Ω | 10 W | 2%,47.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-47.html,2.88
+Intertechnik ME4700,Intertechnik ME4700 | 47 Ω | 6 W | 1%,47.0,6.0,1.0,https://www.soundimports.eu/en/it-intertechnik-me4700.html,4.34
+Jantzen Audio 002-0242047,Jantzen Audio 002-0242047 | 47 Ω | 10 W | 1%,47.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242047.html,5.33
+Mundorf MRES20-47,Mundorf MRES20-47 | 47 Ω | 20 W | 2%,47.0,20.0,2.0,https://www.soundimports.eu/en/mundorf-mres20-47.html,20.62
+Mundorf MREU30-47T1C,Mundorf MREU30-47T1C | 47 Ω | 3/30 W | 1%,47.0,3.0,1.0,https://www.soundimports.eu/en/mundorf-mreu30-47t1c.html,31.36
+Intertechnik MEF3/47.0,Intertechnik MEF3/47.0 | 47 Ω | 3 W | 1%,47.0,3.0,1.0,https://www.soundimports.eu/en/it-intertechnik-mef3-47-0.html,41.28
+Jantzen Audio 002-0835,Jantzen Audio 002-0835 | 51 Ω | 10 W | 5%,51.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0835.html,0.82
+Jantzen Audio 002-0501,Jantzen Audio 002-0501 | 51 Ω | 10 W | 5%,51.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0501.html,1.23
+Jantzen Audio 002-0979,Jantzen Audio 002-0979 | 51 Ω | 20 W | 5%,51.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0979.html,1.23
+Jantzen Audio 002-0242051,Jantzen Audio 002-0242051 | 51 Ω | 10 W | 1%,51.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242051.html,5.33
+Jantzen Audio 002-0667,Jantzen Audio 002-0667 | 56 Ω | 5 W | 5%,56.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0667.html,0.82
+Jantzen Audio 002-0838,Jantzen Audio 002-0838 | 56 Ω | 10 W | 5%,56.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0838.html,0.82
+Jantzen Audio 002-0367,Jantzen Audio 002-0367 | 56 Ω | 5 W | 5%,56.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0367.html,0.82
+Jantzen Audio 002-0502,Jantzen Audio 002-0502 | 56 Ω | 10 W | 5%,56.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0502.html,1.23
+Jantzen Audio 002-0982,Jantzen Audio 002-0982 | 56 Ω | 20 W | 5%,56.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0982.html,1.23
+Mundorf MR5-56,Mundorf MR5-56 | 56 Ω | 5 W | 2%,56.0,5.0,2.0,https://www.soundimports.eu/en/mundorf-mr5-56.html,1.64
+Jantzen Audio 002-0125056,Jantzen Audio 002-0125056  | 56 Ω | 5 W | 1%,56.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125056.html,1.64
+Mundorf MR10-56,Mundorf MR10-56 | 56 Ω | 10 W | 2%,56.0,10.0,2.0,https://www.soundimports.eu/en/mundorf-mr10-56.html,2.88
+Jantzen Audio 002-0242056,Jantzen Audio 002-0242056 | 56 Ω | 10 W | 1%,56.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242056.html,5.33
+Jantzen Audio 002-0369,Jantzen Audio 002-0369 | 62 Ω | 5 W | 5%,62.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0369.html,0.82
+Jantzen Audio 002-0504,Jantzen Audio 002-0504 | 62 Ω | 10 W | 5%,62.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0504.html,1.23
+Jantzen Audio 002-0125062,Jantzen Audio 002-0125062 | 62 Ω | 5 W | 1%,62.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125062.html,1.64
+Jantzen Audio 002-0242062,Jantzen Audio 002-0242062 | 62 Ω | 10 W | 1%,62.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242062.html,5.33
+Jantzen Audio 002-0844,Jantzen Audio 002-0844 | 68 Ω | 10 W | 5%,68.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0844.html,0.82
+Intertechnik WAX5/68.0/5,Intertechnik WAX5/68.0/5 | 68 Ω | 5 W | 5%,68.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-68-0-5.html,0.82
+Jantzen Audio 002-0673,Jantzen Audio 002-0673 | 68 Ω | 5 W | 5%,68.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0673.html,0.82
+Jantzen Audio 002-0370,Jantzen Audio 002-0370 | 68 Ω | 5 W | 5%,68.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0370.html,0.82
+Jantzen Audio 002-0505,Jantzen Audio 002-0505 | 68 Ω | 10 W | 5%,68.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0505.html,1.23
+Intertechnik WAX10/68.0/5,Intertechnik WAX10/68.0/5 | 68 Ω | 10 W | 5%,68.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-68-0-5.html,1.23
+Jantzen Audio 002-0125068,Jantzen Audio 002-0125068 | 68 Ω | 5 W | 1%,68.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125068.html,1.64
+Jantzen Audio 002-0242068,Jantzen Audio 002-0242068 | 68 Ω | 10 W | 1%,68.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242068.html,5.33
+Jantzen Audio 002-0372,Jantzen Audio 002-0372 | 75 Ω | 5 W | 5%,75.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0372.html,0.82
+Jantzen Audio 002-0507,Jantzen Audio 002-0507 | 75 Ω | 10 W | 5%,75.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0507.html,1.23
+Jantzen Audio 002-0242075,Jantzen Audio 002-0242075 | 75 Ω | 10 W | 1%,75.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242075.html,5.33
+Jantzen Audio 002-0850,Jantzen Audio 002-0850 | 82 Ω | 10 W | 5%,82.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0850.html,0.82
+Jantzen Audio 002-0373,Jantzen Audio 002-0373 | 82 Ω | 5 W | 5%,82.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0373.html,0.82
+Intertechnik WAX5/82.0/5,Intertechnik WAX5/82.0/5 | 82 Ω | 5 W | 5%,82.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-82-0-5.html,0.82
+Intertechnik WAX10/82.0/5,Intertechnik WAX10/82.0/5 | 82 Ω | 10 W | 5%,82.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-82-0-5.html,1.23
+Jantzen Audio 002-0508,Jantzen Audio 002-0508 | 82 Ω | 10 W | 5%,82.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0508.html,1.23
+Jantzen Audio 002-0125082,Jantzen Audio 002-0125082 | 82 Ω | 5 W | 1%,82.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125082.html,1.64
+Jantzen Audio 002-0242082,Jantzen Audio 002-0242082 | 82 Ω | 10 W | 1%,82.0,10.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0242082.html,5.33
+Jantzen Audio 002-0510,Jantzen Audio 002-0510 | 99 Ω | 10 W | 5%,99.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0510.html,1.23
+Jantzen Audio 002-0856,Jantzen Audio 002-0856 | 100 Ω | 10 W | 5%,100.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0856.html,0.82
+Intertechnik WAX5/100/5,Intertechnik WAX5/100/5 | 100 Ω | 5 W | 5%,100.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-100-5.html,0.82
+Jantzen Audio 002-0376,Jantzen Audio 002-0376 | 100 Ω | 5 W | 5%,100.0,5.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0376.html,0.82
+Jantzen Audio 002-0511,Jantzen Audio 002-0511 | 100 Ω | 10 W | 5%,100.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0511.html,1.23
+Intertechnik WAX10/100/5,Intertechnik WAX10/100/5 | 100 Ω | 10 W | 5%,100.0,10.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax10-100-5.html,1.23
+Jantzen Audio 002-0125100,Jantzen Audio 002-0125100 | 100 Ω | 5 W | 1%,100.0,5.0,1.0,https://www.soundimports.eu/en/jantzen-audio-002-0125100.html,1.64
+Intertechnik WAX5/120/5,Intertechnik WAX5/120/5 | 120 Ω | 5 W | 5%,120.0,5.0,5.0,https://www.soundimports.eu/en/it-intertechnik-wax5-120-5.html,0.82
+Jantzen Audio 002-1003,Jantzen Audio 002-1003 | 150 Ω | 20 W | 5%,150.0,20.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-1003.html,1.23
+Jantzen Audio 002-0513,Jantzen Audio 002-0513 | 220 Ω | 10 W | 5%,220.0,10.0,5.0,https://www.soundimports.eu/en/jantzen-audio-002-0513.html,1.23
+255-937,Jantzen 0.18 Ohm 10 Watt Audio-Grade Superes Resisto,0.18,10.0,1.0,https://www.parts-express.com/Jantzen-0.18-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-937,6.23
+255-939,Jantzen 0.22 Ohm 10 Watt Audio-Grade Superes,0.22,10.0,1.0,https://www.parts-express.com/Jantzen-0.22-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-939,6.23
+255-940,Jantzen 0.33 Ohm 10 Watt Audio-Grade Superes,0.33,10.0,1.0,https://www.parts-express.com/Jantzen-0.33-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-940,6.23
+006-.33,Dayton Audio DPR10-0.33 0.33 Ohm 10 Watt Precision 1%,0.33,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-0.33-0.33-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-.33,
+004-.33,Dayton Audio DNR-0.33 0.33 Ohm 10W Precision Audio G,0.33,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-0.33-0.33-Ohm-10W-Precision-Audio-Grade-Res-004-.33,
+007-.33,Dayton Audio DPR20-0.33 0.33 Ohm 20 Watt Precision 1%,0.33,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-0.33-0.33-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-.33,6.25
+255-941,Jantzen 0.51 Ohm 10 Watt Audio-Grade Superes,0.51,10.0,1.0,https://www.parts-express.com/Jantzen-0.51-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-941,6.23
+006-.51,Dayton Audio DPR10-0.51 0.51 Ohm 10 Watt Precision 1%,0.51,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-0.51-0.51-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-.51,
+004-.51,Dayton Audio DNR-0.51 0.51 Ohm 10W Precision Audio G,0.51,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-0.51-0.51-Ohm-10W-Precision-Audio-Grade-Res-004-.51,
+007-.51,Dayton Audio DPR20-0.51 0.51 Ohm 20 Watt Precision 1%,0.51,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-0.51-0.51-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-.51,
+255-942,Jantzen 0.68 Ohm 10 Watt Audio-Grade Superes,0.68,10.0,1.0,https://www.parts-express.com/Jantzen-0.68-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-942,6.23
+255-943,Jantzen 0.75 Ohm 10 Watt Audio-Grade Superes,0.75,10.0,1.0,https://www.parts-express.com/Jantzen-0.75-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-943,6.23
+006-.82,Dayton Audio DPR10-0.82 0.82 Ohm 10 Watt Precision 1%,0.82,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-0.82-0.82-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-.82,2.7
+004-.82,Dayton Audio DNR-0.82 0.82 Ohm 10W Precision Audio G,0.82,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-0.82-0.82-Ohm-10W-Precision-Audio-Grade-Res-004-.82,1.25
+007-.82,Dayton Audio DPR20-0.82 0.82 Ohm 20 Watt Precision 1%,0.82,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-0.82-0.82-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-.82,
+006-1,Dayton Audio DPR10-1.0 1 Ohm 10 Watt Precision 1% Audio,1.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-1.0-1-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-1,2.7
+255-944,Jantzen 1.00 Ohm 10 Watt Audio-Grade Superes,1.0,10.0,1.0,https://www.parts-express.com/Jantzen-1.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-944,6.23
+004-1,Dayton Audio DNR-1.0 1 Ohm 10W Precision Audio Grade R,1.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-1.0-1-Ohm-10W-Precision-Audio-Grade-Resisto-004-1,1.25
+007-1,Dayton Audio DPR20-1.0 1 Ohm 20 Watt Precision 1% Audio,1.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-1.0-1-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-1,6.25
+006-1.2,Dayton Audio DPR10-1.2 1.2 Ohm 10 Watt Precision 1% A,1.2,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-1.2-1.2-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-1.2,2.7
+004-1.2,Dayton Audio DNR-1.2 1.2 Ohm 10W Precision Audio Gra,1.2,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-1.2-1.2-Ohm-10W-Precision-Audio-Grade-Resis-004-1.2,1.25
+007-1.2,Dayton Audio DPR20-1.2 1.2 Ohm 20 Watt Precision 1% Au,1.2,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-1.2-1.2-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-1.2,6.25
+255-945,Jantzen 1.50 Ohm 10 Watt Audio-Grade Superes,1.5,10.0,1.0,https://www.parts-express.com/Jantzen-1.50-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-945,6.23
+006-1.5,Dayton Audio DPR10-1.5 1.5 Ohm 10 Watt Precision 1% A,1.5,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-1.5-1.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-1.5,2.7
+004-1.5,Dayton Audio DNR-1.5 1.5 Ohm 10W Precision Audio Gra,1.5,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-1.5-1.5-Ohm-10W-Precision-Audio-Grade-Resis-004-1.5,1.25
+005-1.5,Mills 1.5 Ohm 12W Non-Inductive Resistor,1.5,12.0,1.0,https://www.parts-express.com/Mills-1.5-Ohm-12W-Non-Inductive-Resistor-005-1.5,1.25
+007-1.5,Dayton Audio DPR20-1.5 1.5 Ohm 20 Watt Precision 1% A,1.5,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-1.5-1.5-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-1.5,6.25
+006-2,Dayton Audio DPR10-2.0 2 Ohm 10 Watt Precision 1% Audio,2.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-2.0-2-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-2,2.7
+004-2,Dayton Audio DNR-2.0 2 Ohm 10W Precision Audio Grade R,2.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-2.0-2-Ohm-10W-Precision-Audio-Grade-Resisto-004-2,1.25
+005-2,Mills 2 Ohm 12W Non-Inductive Resistor,2.0,12.0,1.0,https://www.parts-express.com/Mills-2-Ohm-12W-Non-Inductive-Resistor-005-2,
+007-2,Dayton Audio DPR20-2.0 2 Ohm 20 Watt Precision 1% Audio,2.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-2.0-2-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-2,6.25
+255-946,Jantzen 2.20 Ohm 10 Watt Audio-Grade Superes,2.2,10.0,1.0,https://www.parts-express.com/Jantzen-2.20-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-946,6.23
+006-2.4,Dayton Audio DPR10-2.4 2.4 Ohm 10 Watt Precision 1% A,2.4,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-2.4-2.4-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-2.4,2.7
+004-2.4,Dayton Audio DNR-2.4 2.4 Ohm 10W Precision Audio Gr,2.4,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-2.4-2.4-Ohm-10W-Precision-Audio-Grade-Resi-004-2.4,1.25
+007-2.4,Dayton Audio DPR20-2.4 2.4 Ohm 20 Watt Precision 1% A,2.4,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-2.4-2.4-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-2.4,6.25
+255-947,Jantzen 2.70 Ohm 10 Watt Audio-Grade Superes,2.7,10.0,1.0,https://www.parts-express.com/Jantzen-2.70-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-947,6.23
+006-2.7,Dayton Audio DPR10-2.7 2.7 Ohm 10 Watt Precision 1% A,2.7,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-2.7-2.7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-2.7,2.7
+004-2.7,Dayton Audio DNR-2.7 2.7 Ohm 10W Precision Audio Gra,2.7,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-2.7-2.7-Ohm-10W-Precision-Audio-Grade-Resis-004-2.7,1.25
+007-2.7,Dayton Audio DPR20-2.7 2.7 Ohm 20 Watt Precision 1% A,2.7,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-2.7-2.7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-2.7,6.25
+006-3,Dayton Audio DPR10-3.0 3 Ohm 10 Watt Precision 1% Audio,3.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-3.0-3-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-3,2.7
+004-3,Dayton Audio DNR-3.0 3 Ohm 10W Precision Audio Grade R,3.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-3.0-3-Ohm-10W-Precision-Audio-Grade-Resisto-004-3,2.7
+007-3,Dayton Audio DPR20-3.0 3 Ohm 20 Watt Precision 1% Audio,3.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-3.0-3-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-3,6.25
+006-3.3,Dayton Audio DPR10-3.3 3.3 Ohm 10 Watt Precision 1% A,3.3,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-3.3-3.3-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-3.3,2.7
+004-3.3,Dayton Audio DNR-3.3 3.3 Ohm 10W Precision Audio Gra,3.3,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-3.3-3.3-Ohm-10W-Precision-Audio-Grade-Resis-004-3.3,1.25
+007-3.3,Dayton Audio DPR20-3.3 3.3 Ohm 20 Watt Precision 1% A,3.3,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-3.3-3.3-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-3.3,6.25
+005-3.5,Mills 3.5 Ohm 12W Non-Inductive Resistor,3.5,12.0,1.0,https://www.parts-express.com/Mills-3.5-Ohm-12W-Non-Inductive-Resistor-005-3.5,36.99
+006-3.7,Dayton Audio DPR10-3.7 3.7 Ohm 10 Watt Precision 1% A,3.7,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-3.7-3.7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-3.7,2.7
+004-3.7,Dayton Audio DNR-3.7 3.7 Ohm 10W Precision Audio Gra,3.7,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-3.7-3.7-Ohm-10W-Precision-Audio-Grade-Resis-004-3.7,1.25
+007-3.7,Dayton Audio DPR20-3.7 3.7 Ohm 20 Watt Precision 1% A,3.7,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-3.7-3.7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-3.7,6.25
+255-948,Jantzen 3.90 Ohm 10 Watt Audio-Grade Superes,3.9,10.0,1.0,https://www.parts-express.com/Jantzen-3.90-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-948,6.23
+006-4,Dayton Audio DPR10-4.0 4 Ohm 10 Watt Precision 1% Audio,4.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-4.0-4-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-4,2.7
+004-4,Dayton Audio DNR-4.0 4 Ohm 10W Precision Audio Grade R,4.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-4.0-4-Ohm-10W-Precision-Audio-Grade-Resisto-004-4,1.25
+007-4,Dayton Audio DPR20-4.0 4 Ohm 20 Watt Precision 1% Audio,4.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-4.0-4-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-4,6.25
+006-4.3,Dayton Audio DPR10-4.3 4.3 Ohm 10 Watt Precision 1% A,4.3,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-4.3-4.3-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-4.3,2.7
+004-4.3,Dayton Audio DNR-4.3 4.3 Ohm 10W Precision Audio Gra,4.3,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-4.3-4.3-Ohm-10W-Precision-Audio-Grade-Resis-004-4.3,1.25
+007-4.3,Dayton Audio DPR20-4.3 4.3 Ohm 20 Watt Precision 1% A,4.3,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-4.3-4.3-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-4.3,6.25
+006-4.7,Dayton Audio DPR10-4.7 4.7 Ohm 10 Watt Precision 1% A,4.7,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-4.7-4.7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-4.7,2.7
+255-949,Jantzen 4.70 Ohm 10 Watt Audio-Grade Superes,4.7,10.0,1.0,https://www.parts-express.com/Jantzen-4.70-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-949,6.23
+004-4.7,Dayton Audio DNR-4.7 4.7 Ohm 10W Precision Audio Gra,4.7,10.0,5.0,https://www.parts-express.com/Dayton-Audio-DNR-4.7-4.7-Ohm-10W-Precision-Audio-Grade-Resis-004-4.7,
+007-4.7,Dayton Audio DPR20-4.7 4.7 Ohm 20 Watt Precision 1% A,4.7,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-4.7-4.7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-4.7,6.25
+005-5,Mills 5 Ohm 12W Non-Inductive Resistor,5.0,12.0,1.0,https://www.parts-express.com/Mills-5-Ohm-12W-Non-Inductive-Resistor-005-5,
+006-5.1,Dayton Audio DPR10-5.1 5.1 Ohm 10 Watt Precision 1% A,5.1,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-5.1-5.1-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-5.1,2.7
+255-950,Jantzen 5.10 Ohm 10 Watt Audio-Grade Superes,5.1,10.0,1.0,https://www.parts-express.com/Jantzen-5.10-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-950,6.23
+004-5.1,Dayton Audio DNR-5.1 5.1 Ohm 10W Precision Audio Gra,5.1,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-5.1-5.1-Ohm-10W-Precision-Audio-Grade-Resis-004-5.1,2.7
+007-5.1,Dayton Audio DPR20-5.1 5.1 Ohm 20 Watt Precision 1% A,5.1,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-5.1-5.1-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-5.1,6.25
+006-5.6,Dayton Audio DPR10-5.6 5.6 Ohm 10 Watt Precision 1% A,5.6,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-5.6-5.6-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-5.6,2.7
+004-5.6,Dayton Audio DNR-5.6 5.6 Ohm 10W Precision Audio Gra,5.6,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-5.6-5.6-Ohm-10W-Precision-Audio-Grade-Resis-004-5.6,2.7
+007-5.6,Dayton Audio DPR20-5.6 5.6 Ohm 20 Watt Precision 1% A,5.6,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-5.6-5.6-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-5.6,6.25
+006-6,Dayton Audio DPR10-6.0 6 Ohm 10 Watt Precision 1% Audio,6.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-6.0-6-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-6,2.7
+004-6,Dayton Audio DNR-6.0 6 Ohm 10W Precision Audio Grade R,6.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-6.0-6-Ohm-10W-Precision-Audio-Grade-Resisto-004-6,1.25
+007-6,Dayton Audio DPR20-6.0 6 Ohm 20 Watt Precision 1% Audio,6.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-6.0-6-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-6,6.25
+255-951,Jantzen 6.20 Ohm 10 Watt Audio-Grade Superes,6.2,10.0,1.0,https://www.parts-express.com/Jantzen-6.20-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-951,6.23
+006-6.5,Dayton Audio DPR10-6.5 6.5 Ohm 10 Watt Precision 1% A,6.5,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-6.5-6.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-6.5,2.7
+004-6.5,Dayton Audio DNR-6.5 6.5 Ohm 10W Precision Audio Gra,6.5,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-6.5-6.5-Ohm-10W-Precision-Audio-Grade-Resis-004-6.5,1.25
+007-6.5,Dayton Audio DPR20-6.5 6.5 Ohm 20 Watt Precision 1% A,6.5,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-6.5-6.5-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-6.5,6.25
+006-7,Dayton Audio DPR10-7.0 7 Ohm 10 Watt Precision 1% Audio,7.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-7.0-7-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-7,2.7
+004-7,Dayton Audio DNR-7.0 7 Ohm 10W Precision Audio Grade R,7.0,10.0,5.0,https://www.parts-express.com/Dayton-Audio-DNR-7.0-7-Ohm-10W-Precision-Audio-Grade-Resisto-004-7,1.25
+005-7,Mills 7 Ohm 12W Non-Inductive Resistor,7.0,12.0,1.0,https://www.parts-express.com/Mills-7-Ohm-12W-Non-Inductive-Resistor-005-7,
+007-7,Dayton Audio DPR20-7.0 7 Ohm 20 Watt Precision 1% Audio,7.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-7.0-7-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-7,6.25
+006-7.5,Dayton Audio DPR10-7.5 7.5 Ohm 10 Watt Precision 1% A,7.5,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-7.5-7.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-7.5,2.7
+255-952,Jantzen 7.50 Ohm 10 Watt Audio-Grade Superes,7.5,10.0,1.0,https://www.parts-express.com/Jantzen-7.50-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-952,
+004-7.5,Dayton Audio DNR-7.5 7.5 Ohm 10W Precision Audio Gra,7.5,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-7.5-7.5-Ohm-10W-Precision-Audio-Grade-Resis-004-7.5,1.25
+007-7.5,Dayton Audio DPR20-7.5 7.5 Ohm 20 Watt Precision 1% A,7.5,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-7.5-7.5-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-7.5,6.25
+006-8,Dayton Audio DPR10-8.0 8 Ohm 10 Watt Precision 1% Audio,8.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-8.0-8-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-8,2.7
+004-8,Dayton Audio DNR-8.0 8 Ohm 10W Precision Audio Grade R,8.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-8.0-8-Ohm-10W-Precision-Audio-Grade-Resisto-004-8,2.7
+007-8,Dayton Audio DPR20-8.0 8 Ohm 20 Watt Precision 1% Audio,8.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-8.0-8-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-8,6.25
+255-953,Jantzen 9.10 Ohm 10 Watt Audio-Grade Superes,9.1,10.0,1.0,https://www.parts-express.com/Jantzen-9.10-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-953,6.23
+006-9.1,Dayton Audio DPR10-9.1 9.1 Ohm 10 Watt Precision 1% A,9.1,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-9.1-9.1-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-9.1,2.7
+004-9.1,Dayton Audio DNR-9.1 9.1 Ohm 10W Precision Audio Gra,9.1,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-9.1-9.1-Ohm-10W-Precision-Audio-Grade-Resis-004-9.1,1.25
+007-9.1,Dayton Audio DPR20-9.1 9.1 Ohm 20 Watt Precision 1% A,9.1,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-9.1-9.1-Ohm-20-Watt-Precision-1-Audio-Grade-Resistor-007-9.1,6.25
+255-954,Jantzen 10.00 Ohm 10 Watt Audio-Grade Superes,10.0,10.0,1.0,https://www.parts-express.com/Jantzen-10.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-954,6.23
+006-10,Dayton Audio DPR10-10.0 10 Ohm 10 Watt Precision 1% Au,10.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-10.0-10-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-10,2.7
+004-10,Dayton Audio DNR-10 10 Ohm 10W Precision Audio Grade,10.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-10-10-Ohm-10W-Precision-Audio-Grade-Resisto-004-10,1.25
+007-10,Dayton Audio DPR20-10.0 10 Ohm 20 Watt Precision 1% Au,10.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-10.0-10-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-10,6.25
+006-12.5,Dayton Audio DPR10-12.5 12.5 Ohm 10 Watt Precision 1,12.5,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-12.5-12.5-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-12.5,2.7
+004-12.5,Dayton Audio DNR-12.5 12.5 Ohm 10W Precision Audio,12.5,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-12.5-12.5-Ohm-10W-Precision-Audio-Grade-Res-004-12.5,1.25
+007-12.5,Dayton Audio DPR20-12.5 12.5 Ohm 20 Watt Precision 1,12.5,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-12.5-12.5-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-12.5,6.25
+255-955,Jantzen 15.00 Ohm 10 Watt Audio-Grade Superes,15.0,10.0,1.0,https://www.parts-express.com/Jantzen-15.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-955,
+006-16,Dayton Audio DPR10-16.0 16 Ohm 10 Watt Precision 1% Au,16.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-16.0-16-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-16,2.7
+004-16,Dayton Audio DNR-16 16 Ohm 10W Precision Audio Grade,16.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-16-16-Ohm-10W-Precision-Audio-Grade-Resisto-004-16,2.7
+007-16,Dayton Audio DPR20-16.0 16 Ohm 20 Watt Precision 1% Au,16.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-16.0-16-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-16,6.25
+006-20,Dayton Audio DPR10-20.0 20 Ohm 10 Watt Precision 1% Au,20.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-20.0-20-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-20,
+004-20,Dayton Audio DNR-20 20 Ohm 10W Precision Audio Grade,20.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-20-20-Ohm-10W-Precision-Audio-Grade-Resisto-004-20,2.7
+007-20,Dayton Audio DPR20-20.0 20 Ohm 20 Watt Precision 1% Au,20.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-20.0-20-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-20,6.25
+255-956,Jantzen 22.00 Ohm 10 Watt Audio-Grade Superes,22.0,10.0,1.0,https://www.parts-express.com/Jantzen-22.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-956,6.23
+006-25,Dayton Audio DPR10-25.0 25 Ohm 10 Watt Precision 1% Au,25.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-25.0-25-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-25,2.7
+004-25,Dayton Audio DNR-25 25 Ohm 10W Precision Audio Grade,25.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-25-25-Ohm-10W-Precision-Audio-Grade-Resisto-004-25,
+007-25,Dayton Audio DPR20-25.0 25 Ohm 20 Watt Precision 1% Au,25.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-25.0-25-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-25,6.25
+006-30,Dayton Audio DPR10-30.0 30 Ohm 10 Watt Precision 1% Au,30.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-30.0-30-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-30,2.7
+004-30,Dayton Audio DNR-30 30 Ohm 10W Precision Audio Grade,30.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-30-30-Ohm-10W-Precision-Audio-Grade-Resist-004-30,1.25
+007-30,Dayton Audio DPR20-30.0 30 Ohm 20 Watt Precision 1% Au,30.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-30.0-30-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-30,
+255-957,Jantzen 33.00 Ohm 10 Watt Audio-Grade Superes,33.0,10.0,1.0,https://www.parts-express.com/Jantzen-33.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-957,6.23
+006-40,Dayton Audio DPR10-40.0 40 Ohm 10 Watt Precision 1% Au,40.0,10.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR10-40.0-40-Ohm-10-Watt-Precision-1-Audio-Grade-Resistor-006-40,2.7
+004-40,Dayton Audio DNR-40 40 Ohm 10W Precision Audio Grade,40.0,10.0,2.0,https://www.parts-express.com/Dayton-Audio-DNR-40-40-Ohm-10W-Precision-Audio-Grade-Resisto-004-40,
+007-40,Dayton Audio DPR20-40.0 40 Ohm 20 Watt Precision 1% Au,40.0,20.0,1.0,https://www.parts-express.com/Dayton-Audio-DPR20-40.0-40-Ohm-20-Watt-Precision-1-Audio-Grade-Bifilar-Resistor-007-40,6.25
+005-47,Mills 47 Ohm 12W Non-Inductive Resistor,47.0,12.0,1.0,https://www.parts-express.com/Mills-47-Ohm-12W-Non-Inductive-Resistor-005-47,
+255-958,Jantzen 56.00 Ohm 10 Watt Audio-Grade Superes,56.0,10.0,1.0,https://www.parts-express.com/Jantzen-56.00-Ohm-10-Watt-Audio-Grade-Superes-Resistor-255-958,

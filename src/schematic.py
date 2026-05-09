@@ -28,6 +28,7 @@ class SchematicRenderer:
     def _draw_component(self, d, node, direction):
         # 1. Haut-Parleurs
         if isinstance(node, DriverNode):
+            d += elm.Line().right().length(0.5)  # Augmente le 2.5 si tu veux encore plus d'espace
             SpeakerType = elm.Speaker if hasattr(elm, 'Speaker') else elm.Resistor
             label_text = getattr(node, 'model_name', node.label)
             
@@ -179,7 +180,7 @@ class SchematicRenderer:
                 
                 # Le composant descend, son texte prend environ 1.8 unités à droite.
                 # Si le shunt s'est étendu (sous-circuit), on prend sa vraie largeur + 0.5.
-                safe_x = max(pre_shunt_x + 2.2, shunt_max_x + 1.4)
+                safe_x = max(pre_shunt_x + 1.5, shunt_max_x + 1)
                 advance = safe_x - pre_shunt_x
                 
                 if advance > 0:
@@ -220,7 +221,7 @@ class SchematicRenderer:
                     d += elm.Line().at(top_final).to(bot_final)
                     
                     mid_y = (top_final.y + bot_final.y) / 2
-                    d += elm.Line().at((max_x, mid_y)).right().length(0.2)
+                    d += elm.Line().at((max_x, mid_y)).right().length(1)
                     self._track_x(d)
                     
                 elif direction == 'down':

@@ -30,11 +30,24 @@ class CatalogManager:
         return arr[idx]
 
     def get_part_info(self, val, comp_type):
-        """Récupère toutes les infos du composant pour la Parts List"""
+        """Récupère la pièce LA MOINS CHÈRE pour une valeur donnée dans le catalogue"""
         if comp_type == 'C':
-            match = self.df_c.iloc[np.abs(self.df_c['Value'] - val*1e6).argmin()]
+            df = self.df_c
+            target_val = val * 1e6
         elif comp_type == 'L':
-            match = self.df_l.iloc[np.abs(self.df_l['Value'] - val*1e3).argmin()]
+            df = self.df_l
+            target_val = val * 1e3
         else:
-            match = self.df_r.iloc[np.abs(self.df_r['Value'] - val).argmin()]
-        return match
+            df = self.df_r
+            target_val = val
+
+        # On trouve toutes les pièces qui ont cette valeur exacte
+        matches = df[np.isclose(df['Value'], target_val, atol=1e-5)]
+        
+        if not matches.empty:
+            # On trie par prix croissant et on prend la première (la moins chère dont le prix est connu)
+            return matches.sort_values(by='Price', ascending=True).iloc[0]
+        else:
+            # Sécurité (fallback standard)
+            idx = np.abs(df['Value'] - target_val).argmin()
+            return df.iloc[idx]

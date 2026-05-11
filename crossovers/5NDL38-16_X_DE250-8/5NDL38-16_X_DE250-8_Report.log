@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  11 MAY 2026 11:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  11 MAY 2026 15:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -961,18 +961,18 @@ been already used, duplicate ignored
 l.72 \clearpage
                 [1]
 Chapter 1.
-<5NDL38-16_X_DE250-8_Reponse_SPL.png, id=61, 867.24pt x 505.89pt>
+<5NDL38-16_X_DE250-8_Reponse_SPL.png, id=51, 867.24pt x 505.89pt>
 File: 5NDL38-16_X_DE250-8_Reponse_SPL.png Graphic file (type png)
 <use 5NDL38-16_X_DE250-8_Reponse_SPL.png>
 Package pdftex.def Info: 5NDL38-16_X_DE250-8_Reponse_SPL.png  used on input lin
 e 80.
 (pdftex.def)             Requested size: 455.24411pt x 265.55762pt.
-<5NDL38-16_X_DE250-8_Directivity.png, id=63, 867.24pt x 505.89pt>
-File: 5NDL38-16_X_DE250-8_Directivity.png Graphic file (type png)
-<use 5NDL38-16_X_DE250-8_Directivity.png>
-Package pdftex.def Info: 5NDL38-16_X_DE250-8_Directivity.png  used on input lin
-e 86.
-(pdftex.def)             Requested size: 455.24411pt x 265.55762pt.
+<5NDL38-16_X_DE250-8_Impedance.png, id=53, 867.24pt x 433.62pt>
+File: 5NDL38-16_X_DE250-8_Impedance.png Graphic file (type png)
+<use 5NDL38-16_X_DE250-8_Impedance.png>
+Package pdftex.def Info: 5NDL38-16_X_DE250-8_Impedance.png  used on input line 
+90.
+(pdftex.def)             Requested size: 455.24411pt x 227.62082pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -985,61 +985,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
  <./5NDL38-16_X_DE250-8_Reponse_SPL.png>]
 
-LaTeX Warning: File `5NDL38-16_X_DE250-8_Directivity_Heatmap.png' not found on 
-input line 92.
-
-
-! Package pdftex.def Error: File `5NDL38-16_X_DE250-8_Directivity_Heatmap.png' 
-not found: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.92 ...DL38-16_X_DE250-8_Directivity_Heatmap.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 9
-2.
-(C:\Users\romai\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
-File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-)
-
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
 (fancyhdr)                \setlength{\headheight}{13.59999pt}.
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[3 <./5NDL38-16_X_DE250-8_Directivity.png>]
-<5NDL38-16_X_DE250-8_Impedance.png, id=74, 867.24pt x 433.62pt>
-File: 5NDL38-16_X_DE250-8_Impedance.png Graphic file (type png)
-<use 5NDL38-16_X_DE250-8_Impedance.png>
-Package pdftex.def Info: 5NDL38-16_X_DE250-8_Impedance.png  used on input line 
-98.
-(pdftex.def)             Requested size: 455.24411pt x 227.62082pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[4]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[5 <./5NDL38-16_X_DE250-8_Impedance.png>]
+[3 <./5NDL38-16_X_DE250-8_Impedance.png>]
 Chapter 2.
 LaTeX Font Info:    Trying to load font information for TS1+phv on input line 1
-10.
+02.
 (C:\Users\romai\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1phv.fd
 File: ts1phv.fd 2020/03/25 scalable font definitions for TS1/phv.
 )
@@ -1050,33 +1005,32 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[6
+[4
 
 ]
 Chapter 3.
-<5NDL38-16_X_DE250-8_Schema.png, id=102, 451.9284pt x 629.9535pt>
+<5NDL38-16_X_DE250-8_Schema.png, id=79, 668.7384pt x 521.5485pt>
 File: 5NDL38-16_X_DE250-8_Schema.png Graphic file (type png)
 <use 5NDL38-16_X_DE250-8_Schema.png>
-Package pdftex.def Info: 5NDL38-16_X_DE250-8_Schema.png  used on input line 135
+Package pdftex.def Info: 5NDL38-16_X_DE250-8_Schema.png  used on input line 127
 .
-(pdftex.def)             Requested size: 432.48051pt x 602.86449pt.
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[7
-
-]
-<5NDL38-16_X_DE250-8_Geometry.png, id=107, 392.667pt x 521.7894pt>
+(pdftex.def)             Requested size: 432.48051pt x 337.29944pt.
+<5NDL38-16_X_DE250-8_Geometry.png, id=80, 392.667pt x 521.7894pt>
 File: 5NDL38-16_X_DE250-8_Geometry.png Graphic file (type png)
 <use 5NDL38-16_X_DE250-8_Geometry.png>
 Package pdftex.def Info: 5NDL38-16_X_DE250-8_Geometry.png  used on input line 1
-41.
+33.
 (pdftex.def)             Requested size: 432.48051pt x 574.70259pt.
 
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[5
+
+ <./5NDL38-16_X_DE250-8_Schema.png>]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1084,22 +1038,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[8 <./5NDL38-16_X_DE250-8_Schema.png>]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[9 <./5NDL38-16_X_DE250-8_Geometry.png>]
-<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=118, 501.875pt x 501.875pt>
+[6 <./5NDL38-16_X_DE250-8_Geometry.png>]
+<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=92, 501.875pt x 501.875pt>
 File: C:/Geekosphere/FindMyCrossover/utils/logo.png Graphic file (type png)
 <use C:/Geekosphere/FindMyCrossover/utils/logo.png>
 Package pdftex.def Info: C:/Geekosphere/FindMyCrossover/utils/logo.png  used on
- input line 159.
+ input line 151.
 (pdftex.def)             Requested size: 113.81102pt x 113.80533pt.
- [10
+ [7
 
  <C:/Geekosphere/FindMyCrossover/utils/logo.png>] (5NDL38-16_X_DE250-8_Report.a
 ux)
@@ -1107,31 +1053,25 @@ ux)
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `5NDL38-16_X_DE250-8_Report.out' has not chan
 ged.
-(rerunfilecheck)             Checksum: 90CF877316413471B4A6F49B4825C7DD;1419.
+(rerunfilecheck)             Checksum: 932B877850DE8326444D83D898129312;1046.
  ) 
 Here is how much of TeX's memory you used:
- 44200 strings out of 474486
- 1076909 string characters out of 5743755
+ 44118 strings out of 474486
+ 1073928 string characters out of 5743755
  1935542 words of memory out of 5000000
- 65997 multiletter control sequences out of 15000+600000
- 601553 words of font info for 75 fonts, out of 8000000 for 9000
+ 65924 multiletter control sequences out of 15000+600000
+ 601239 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  102i,17n,107p,439b,874s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\romai\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt
-1095.pk><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmmi10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmr10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/urw/helvetic/uhvb8a.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts
-/type1/urw/helvetic/uhvr8a.pfb>
-Output written on 5NDL38-16_X_DE250-8_Report.pdf (11 pages, 540173 bytes).
+<C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmmi10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvet
+ic/uhvb8a.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/urw/hel
+vetic/uhvr8a.pfb>
+Output written on 5NDL38-16_X_DE250-8_Report.pdf (8 pages, 497204 bytes).
 PDF statistics:
- 182 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 500000)
- 115 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 120 PDF objects out of 1000 (max. 8388607)
+ 15 named destinations out of 1000 (max. 500000)
+ 94 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,14 +1,12 @@
 Part Number;Quantity;Value;Unit;Component;Description;Unit Price ($);Line Total ($);URL
-257-668;1;5.0;mH;Inductor;Dayton Audio IC185 5.0mH 18 AWG I Core Inductor;12.19;12.19;https://www.parts-express.com/Dayton-Audio-IC185-5.0mH-18-AWG-Laminated-Iron-Core-Inductor-257-668
-Jantzen Audio 000-5224;1;2.2;mH;Inductor;Jantzen Audio 000-5224 | 2,2 mH | 0,26 Ω | 3% | 18 AWG;10.45;10.45;https://www.soundimports.eu/en/jantzen-audio-000-5224.html
-Jantzen Audio 001-0234;1;1.2;μF;Capacitor;Jantzen Audio 001-0234 | 1,20 µF | 5% | 400 V;1.49;1.49;https://www.soundimports.eu/en/jantzen-audio-001-0234.html
-257-666;1;4.7;mH;Inductor;Dayton Audio IC184-7 4.7mH 18 AWG I Core Inductor;11.39;11.39;https://www.parts-express.com/Dayton-Audio-IC184-7-4.7mH-18-AWG-Laminated-Iron-Core-Inductor-257-666
-Jantzen Audio 002-0372;1;75.0;Ω;Resistor;Jantzen Audio 002-0372 | 75 Ω | 5 W | 5%;0.99;0.99;https://www.soundimports.eu/en/jantzen-audio-002-0372.html
-Jantzen Audio 000-2113;1;0.95;mH;Inductor;Jantzen Audio 000-2113 | 0,95 mH | 0,24 Ω | 3% | 18 AWG;8.45;8.45;https://www.soundimports.eu/en/jantzen-audio-000-2113.html
-Jantzen Audio 001-0232;1;1.1;μF;Capacitor;Jantzen Audio 001-0232 | 1,10 µF | 5% | 400 V;1.49;1.49;https://www.soundimports.eu/en/jantzen-audio-001-0232.html
-Jantzen Audio 001-02366;1;1.6;μF;Capacitor;Jantzen Audio 001-02366 | 1,60 µF | 5% | 400 V;1.49;1.49;https://www.soundimports.eu/en/jantzen-audio-001-02366.html
-Intertechnik ELCR/8.2/100;1;8.2;μF;Capacitor;Intertechnik ELCR/8.2/100 | 8,2 µF | 10% | 100 V;0.99;0.99;https://www.soundimports.eu/en/it-intertechnik-elcr-8-2-100.html
-Jantzen Audio 002-0796;1;8.2;Ω;Resistor;Jantzen Audio 002-0796 | 8,2 Ω | 10 W | 5%;0.99;0.99;https://www.soundimports.eu/en/jantzen-audio-002-0796.html
+257-668;3;5.0;mH;Inductor;Dayton Audio IC185 5.0mH 18 AWG I Core Inductor;12.19;36.57;https://www.parts-express.com/Dayton-Audio-IC185-5.0mH-18-AWG-Laminated-Iron-Core-Inductor-257-668
+Jantzen Audio 001-0218;1;0.43;μF;Capacitor;Jantzen Audio 001-0218 | 0,43 µF | 5% | 400 V;1.49;1.49;https://www.soundimports.eu/en/jantzen-audio-001-0218.html
+257-824;1;0.9;mH;Inductor;Dayton Audio LW18-90 0.90mH 18 AWG Perfect Layer;8.29;8.29;https://www.parts-express.com/Dayton-Audio-LW18-90-0.90mH-18-AWG-Perfect-Layer-Inductor-257-824
+027-528;1;1.5;μF;Capacitor;Solen 1.5uF 400V Polypropylene Capacitor;0.79;0.79;https://www.parts-express.com/Solen-1.5uF-400V-Polypropylene-Capacitor-027-528
+Jantzen Audio 000-0990;1;2.9;mH;Inductor;Jantzen Audio 000-0990 | 2,9 mH | 0,95 Ω | 3% | 18 AWG;19.44;19.44;https://www.soundimports.eu/en/jantzen-audio-000-0990.html
+027-408;1;0.68;μF;Capacitor;Dayton Audio DMPC-0.68 0.68uF 250V Polypropylene C;0.59;0.59;https://www.parts-express.com/Dayton-Audio-DMPC-0.68-0.68uF-250V-Polypropylene-Capacitor-027-408
+Jantzen Audio 001-0249;1;4.5;μF;Capacitor;Jantzen Audio 001-0249 | 4,50 µF | 5% | 400 V;2.44;2.44;https://www.soundimports.eu/en/jantzen-audio-001-0249.html
+Jantzen Audio 000-0911;1;0.424;mH;Inductor;Jantzen Audio 000-0911 | 0,424 mH | 0,3 Ω | 3% | 18 AWG;8.45;8.45;https://www.soundimports.eu/en/jantzen-audio-000-0911.html
 
-;;;;;TOTAL (1 Speaker):;$49.92;;
-;;;;;TOTAL (Pair):;$99.84;;
+;;;;;TOTAL (1 Speaker):;$78.06;;
+;;;;;TOTAL (Pair):;$156.12;;

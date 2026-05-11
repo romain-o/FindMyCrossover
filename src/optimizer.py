@@ -37,7 +37,7 @@ def _pool_lamarckian(child):
     return _pool_optimizer._lamarckian_worker(child)
 
 
-BOUNDS_R = (0.1, 220.0)
+BOUNDS_R = (0.1, 33)
 BOUNDS_C = (0.1e-6, 300e-6)
 BOUNDS_L = (0.05e-3, 5e-3)
 
@@ -290,6 +290,19 @@ class CrossoverOptimizer:
             raw_mse = np.mean(np.where(diff > 0, (diff**2)*2, diff**2) * dynamic_weight)
             comps_track['MSE_SPL'] = (raw_mse * self.weights['mse_sum'])
             
+            # ==========================================
+            # NOUVEAU : ANTI-ANNULATION DE PHASE (Overshoot Acoustique)
+            # ==========================================
+            comps_track['Acoustic_Overshoot_Penalty'] = 0.0
+            for p_real in p_ways:
+                way_spl = 20 * np.log10(np.abs(p_real) + 1e-12)
+                # Aucun HP ne doit dépasser la cible globale de plus de 1.5 dB
+                excess = np.maximum(0, way_spl - (self.target_spl + 1.5))
+                if np.any(excess > 0):
+                    # Pénalité très agressive (coefficient x20) pour interdire ce comportement
+                    comps_track['Acoustic_Overshoot_Penalty'] += np.sum(excess ** 2) * self.weights.get('mse_sum', 1.0) * 10
+            # ==========================================
+            
             Z_in = self.evaluator.get_impedance(root)
             min_Z = np.min(np.abs(Z_in))
             if min_Z < 3: 
@@ -421,10 +434,37 @@ class CrossoverOptimizer:
 
 
             V_amp_test = np.full_like(self.freqs, 28.28, dtype=complex)
-            max_resistor_power = self._get_max_power_dissipation(root, V_amp_test)
             
-            if max_resistor_power > 20.0:
-                comps_track['Thermal_Penalty'] += ((max_resistor_power - 20.0) ** 2) * self.weights['thermal']
+            # ==========================================
+            # ÉVALUATION THERMIQUE ET EFFICACITÉ ÉNERGÉTIQUE
+            # ==========================================
+            if hasattr(self, '_get_power_dissipation_stats'):
+                # 1. Spectre de test réaliste (Inspiré de la norme IEC 268-5)
+                # 28.28V (~100W) dans les graves, puis atténuation de -6dB/octave au-delà de 500 Hz.
+                # Cela empêche de faussement pénaliser les L-Pads des tweeters.
+                V_amp_test = 28.28 * np.where(self.freqs < 500.0, 1.0, 500.0 / self.freqs)
+                
+                max_res_power, tot_res_power, tot_drv_power = self._get_power_dissipation_stats(root, V_amp_test)
+                
+                # Pénalité A : Thermique absolue (Protection contre l'incendie des composants)
+                if max_res_power > 20.0:
+                    comps_track['Thermal_Penalty'] += ((max_res_power - 20.0) ** 2) * self.weights['thermal']
+                    
+                # Pénalité B : Gaspillage énergétique (Interdit les résistances de by-pass massives)
+                # On se concentre sur les graves/médiums (< 1000 Hz) où l'énergie de l'ampli est critique.
+                mask_power = self.freqs < 1000.0
+                if np.any(mask_power):
+                    # Ratio = Puissance dissipée en chaleur / Puissance utile livrée aux HP
+                    res_waste_ratio = tot_res_power[mask_power] / (tot_drv_power[mask_power] + 1e-12)
+                    
+                    # On tolère jusqu'à 20% de perte (pour autoriser les réseaux Zobel légitimes)
+                    waste_excess = np.maximum(0, res_waste_ratio - 0.20)
+                    
+                    if np.any(waste_excess > 0):
+                        # On pondère la pénalité par les VRAIS Watts gaspillés. 
+                        # Ainsi, gâcher 50% de 0.1W est ignoré, mais gâcher 50% de 40W est lourdement puni.
+                        wasted_watts = waste_excess * tot_drv_power[mask_power]
+                        comps_track['Thermal_Penalty'] += np.sum(wasted_watts ** 2) * self.weights['thermal'] * 15.0
 
             all_nodes = root.get_all_nodes()
             comps = [n for n in all_nodes if isinstance(n, ComponentNode)]
@@ -438,6 +478,10 @@ class CrossoverOptimizer:
 
             n_resistors = sum(1 for c in comps if isinstance(c, Resistor))
             comps_track['Resistor_Count_Penalty'] = n_resistors * self.weights['resistors']
+            for c in comps:
+                if isinstance(c, Resistor) and c.value > 12.0:
+                    comps_track['Resistor_Count_Penalty'] += (c.value - 12.0) * self.weights.get('resistors', 0.4)
+
 
             final_score = sum(comps_track.values())
             
@@ -846,10 +890,10 @@ class CrossoverOptimizer:
         
         plt.figure(figsize=(12, 7))
         root = individual['tree']
-        angles = ['0deg', '15deg', '30deg', '45deg']
-        colors = ['red', 'orange', 'green', 'blue']
-        alphas = [1.0, 0.8, 0.6, 0.5]
-        labels = ['0° (On-Axis)', '15°', '30°', '45°']
+        angles = ['0deg', '15deg', '30deg', '45deg', '60deg']
+        colors = ['red', 'orange', 'green', 'blue', 'purple']
+        alphas = [1.0, 0.8, 0.6, 0.5, 0.4]
+        labels = ['0° (On-Axis)', '15°', '30°', '45°', '60°']
         
         original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
         
@@ -952,7 +996,7 @@ class CrossoverOptimizer:
         import numpy as np
         
         root = individual['tree']
-        test_angles = [0, 15, 30, 45]
+        test_angles = [0, 15, 30, 45, 60]
         valid_data = {}
         original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
         
@@ -1094,29 +1138,53 @@ class CrossoverOptimizer:
             return 1.0 / (1.0 / (z1 + 1e-15) + 1.0 / (z2 + 1e-15))
         return np.full_like(self.freqs, 1e6, dtype=complex)
     
-    def _get_max_power_dissipation(self, node, V_in):
+    def _get_power_dissipation_stats(self, node, V_in):
+        """
+        Calcule la répartition de la puissance active dans le circuit.
+        Retourne : (max_resistor_power, array_total_resistor_power, array_total_driver_power)
+        """
         name = node.__class__.__name__
+        
         if name == "Resistor":
-            power_array = (np.abs(V_in)**2) / node.value
-            return np.max(power_array)
-        elif name in ["Capacitor", "Inductor", "DriverNode"]:
-            return 0.0
+            # Puissance active d'une résistance : P = |V|^2 / R
+            p_array = (np.abs(V_in)**2) / node.value
+            return np.max(p_array), p_array, np.zeros_like(self.freqs)
+            
+        elif name == "DriverNode":
+            # Puissance active réelle livrée au HP : P = |V|^2 * Re(Y) où Y = 1/Z
+            for way in self.ways:
+                if way.label == node.label:
+                    Z = way.driver.Z_complex if hasattr(way.driver, 'Z_complex') else np.full_like(self.freqs, 8.0)
+                    p_array = (np.abs(V_in)**2) * np.real(1.0 / (Z + 1e-15))
+                    return 0.0, np.zeros_like(self.freqs), p_array
+            return 0.0, np.zeros_like(self.freqs), np.zeros_like(self.freqs)
+            
+        elif name in ["Capacitor", "Inductor"]:
+            # Les composants réactifs purs ne dissipent pas de puissance active (chaleur)
+            return 0.0, np.zeros_like(self.freqs), np.zeros_like(self.freqs)
+            
         elif name == "ParallelNode":
-            p_left = self._get_max_power_dissipation(node.left, V_in)
-            p_right = self._get_max_power_dissipation(node.right, V_in)
-            return max(p_left, p_right)
+            max_l, tot_r_l, tot_d_l = self._get_power_dissipation_stats(node.left, V_in)
+            max_r, tot_r_r, tot_d_r = self._get_power_dissipation_stats(node.right, V_in)
+            return max(max_l, max_r), tot_r_l + tot_r_r, tot_d_l + tot_d_r
+            
         elif name == "SeriesNode":
             z_left = self._calc_node_impedance(node.left)
             z_right = self._calc_node_impedance(node.right)
             z_tot = z_left + z_right + 1e-15
+            
+            # Diviseur de tension complexe
             v_left = V_in * (z_left / z_tot)
             v_right = V_in * (z_right / z_tot)
-            p_left = self._get_max_power_dissipation(node.left, v_left)
-            p_right = self._get_max_power_dissipation(node.right, v_right)
-            return max(p_left, p_right)
-        return 0.0
+            
+            max_l, tot_r_l, tot_d_l = self._get_power_dissipation_stats(node.left, v_left)
+            max_r, tot_r_r, tot_d_r = self._get_power_dissipation_stats(node.right, v_right)
+            return max(max_l, max_r), tot_r_l + tot_r_r, tot_d_l + tot_d_r
+            
+        return 0.0, np.zeros_like(self.freqs), np.zeros_like(self.freqs)
 
     def plot_impedance(self, individual, filename="impedance.png"):
+        # Plot impedance in log scale
         self.apply_wiring(individual.get('wiring', {})) # NOUVEAU
         
         import matplotlib.ticker as ticker
@@ -1133,7 +1201,9 @@ class CrossoverOptimizer:
         ax1.set_xlim(20, 20000)
         
         y_max = min(60, max(20, np.max(mag_Z) * 1.1))
-        ax1.set_ylim(0, y_max)
+        ax1.set_yscale('log')
+        # Horizontal line at 3ohm
+        ax1.axhline(3, color='red', linestyle='--', alpha=0.7, label="3Ω Reference")
         
         def format_freq(x, pos):
             if x == 100: return '100Hz'

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  10 MAY 2026 19:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  11 MAY 2026 15:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1034,11 +1034,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 ]
 Chapter 3.
-<RS225-8_X_RS52AN-8_X_RST28F-4_Schema.png, id=101, 594.7821pt x 720.291pt>
+<RS225-8_X_RS52AN-8_X_RST28F-4_Schema.png, id=102, 594.7821pt x 720.291pt>
 File: RS225-8_X_RS52AN-8_X_RST28F-4_Schema.png Graphic file (type png)
 <use RS225-8_X_RS52AN-8_X_RST28F-4_Schema.png>
 Package pdftex.def Info: RS225-8_X_RS52AN-8_X_RST28F-4_Schema.png  used on inpu
-t line 139.
+t line 140.
 (pdftex.def)             Requested size: 432.48051pt x 523.76378pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1050,11 +1050,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [6
 
 ]
-<RS225-8_X_RS52AN-8_X_RST28F-4_Geometry.png, id=107, 399.1713pt x 521.7894pt>
+<RS225-8_X_RS52AN-8_X_RST28F-4_Geometry.png, id=108, 399.1713pt x 521.7894pt>
 File: RS225-8_X_RS52AN-8_X_RST28F-4_Geometry.png Graphic file (type png)
 <use RS225-8_X_RS52AN-8_X_RST28F-4_Geometry.png>
 Package pdftex.def Info: RS225-8_X_RS52AN-8_X_RST28F-4_Geometry.png  used on in
-put line 145.
+put line 146.
 (pdftex.def)             Requested size: 432.48051pt x 565.34741pt.
 
 
@@ -1073,11 +1073,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [8 <./RS225-8_X_RS52AN-8_X_RST28F-4_Geometry.png>]
-<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=118, 501.875pt x 501.875pt>
+<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=119, 501.875pt x 501.875pt>
 File: C:/Geekosphere/FindMyCrossover/utils/logo.png Graphic file (type png)
 <use C:/Geekosphere/FindMyCrossover/utils/logo.png>
 Package pdftex.def Info: C:/Geekosphere/FindMyCrossover/utils/logo.png  used on
- input line 163.
+ input line 164.
 (pdftex.def)             Requested size: 113.81102pt x 113.80533pt.
  [9
 
@@ -1089,12 +1089,12 @@ L3 programming layer <2024-01-04>
  ***********
 Package rerunfilecheck Info: File `RS225-8_X_RS52AN-8_X_RST28F-4_Report.out' ha
 s not changed.
-(rerunfilecheck)             Checksum: 90CF877316413471B4A6F49B4825C7DD;1419.
+(rerunfilecheck)             Checksum: 3BAAB380DFA8D9A73E51D88D1005A96A;1340.
  ) 
 Here is how much of TeX's memory you used:
  44146 strings out of 474486
  1075540 string characters out of 5743755
- 1936542 words of memory out of 5000000
+ 1937542 words of memory out of 5000000
  65948 multiletter control sequences out of 15000+600000
  601239 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1103,10 +1103,10 @@ Here is how much of TeX's memory you used:
 cmmi10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvet
 ic/uhvb8a.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/urw/hel
 vetic/uhvr8a.pfb>
-Output written on RS225-8_X_RS52AN-8_X_RST28F-4_Report.pdf (10 pages, 1581454 b
+Output written on RS225-8_X_RS52AN-8_X_RST28F-4_Report.pdf (10 pages, 1573771 b
 ytes).
 PDF statistics:
- 147 PDF objects out of 1000 (max. 8388607)
+ 148 PDF objects out of 1000 (max. 8388607)
  19 named destinations out of 1000 (max. 500000)
  120 words of extra memory for PDF output out of 10000 (max. 10000000)
 

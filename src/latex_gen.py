@@ -1,6 +1,27 @@
 import os
 import subprocess
 
+def sanitize_latex(text):
+    """Échappe les caractères spéciaux pour éviter de faire planter LaTeX."""
+    if not isinstance(text, str):
+        return str(text)
+    
+    # Remplacements critiques
+    text = text.replace('%', '\\%')
+    text = text.replace('#', '\\#')
+    text = text.replace('&', '\\&')
+    text = text.replace('$', '\\$')
+    text = text.replace('_', '\\_')
+    
+    # Optionnel : Remplacement propre du symbole micro
+    text = text.replace('µ', '$\\mu$') 
+    
+    return text
+
+# Exemple d'utilisation dans votre boucle d'écriture :
+# safe_description = sanitize_latex(part_info['Description'])
+# f.write(f" ... & {safe_description} & ... \\\\\n")
+
 class LatexReportGenerator:
     def __init__(self, project_name, out_dir, woofer_name, tweeter_name, logo_path=None):
         self.project_name = project_name
@@ -29,8 +50,28 @@ class LatexReportGenerator:
 
         # Noms des fichiers d'images (relatifs au dossier du projet)
         img_onaxis = f"{self.project_name}_Reponse_SPL.png"
+        
         img_offaxis = f"{self.project_name}_Directivity.png"
         img_heatmap = f"{self.project_name}_Directivity_Heatmap.png"
+        heatmap_path = os.path.join(self.out_dir, img_heatmap)
+        offaxis_path = os.path.join(self.out_dir, img_offaxis)
+        # Vérification de l'existence des fichiers d'images
+        if not os.path.exists(heatmap_path):
+            heatmap_block = ""
+            offaxis_block = ""
+        else:
+            heatmap_block = fr"""\section{{Directivity Heatmap}}
+            \begin{{figure}}[H]
+                \centering
+                \includegraphics[width=1\linewidth]{{{img_heatmap}}}
+            \end{{figure}}"""
+
+            offaxis_block = fr"""\section{{Off-Axis Response}}
+            \begin{{figure}}[H]
+                \centering
+                \includegraphics[width=1\linewidth]{{{img_offaxis}}}
+            \end{{figure}}"""
+            
         img_impedance = f"{self.project_name}_Impedance.png"
         img_schema = f"{self.project_name}_Schema.png"
         img_geometry = f"{self.project_name}_Geometry.png"
@@ -120,17 +161,9 @@ Simulation graphs showing the frequency response of the drivers combined with th
     \includegraphics[width=1\linewidth]{__IMG_ONAXIS__}
 \end{figure}
 
-\section{Off-Axis Response (Directivity)}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{__IMG_OFFAXIS__}
-\end{figure}
+__OFFAXIS_BLOCK__
 
-\section{Directivity Heatmap}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{__IMG_HEATMAP__}
-\end{figure}
+__HEATMAP_BLOCK__
 
 \section{Impedance Response}
 \begin{figure}[H]
@@ -150,13 +183,15 @@ This section provides the electrical schematic required to build the crossover a
 \section{Electrical Schematic}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{__IMG_SCHEMA__}
+    \includegraphics[width=0.8\linewidth]{__IMG_SCHEMA__}
 \end{figure}
 
-\section{Baffle Schematic}
+\section{Baffle Geometry}
+All figures are computed using the following baffle layout. We recommend using this layout for optimal acoustic performance, but feel free to experiment with different placements if you have specific constraints or preferences. 
+Just keep in mind that drastically changing the geometry may affect the frequency response and directivity of your speakers due to phase shifts.  
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{__IMG_GEOMETRY__}
+    \includegraphics[width=0.80\linewidth]{__IMG_GEOMETRY__}
 \end{figure}
 
 \clearpage
@@ -185,7 +220,9 @@ This section provides the electrical schematic required to build the crossover a
         # ==========================================
         latex_code = latex_template.replace("__DRIVERS__", safe_drivers)
         latex_code = latex_code.replace("__IMG_ONAXIS__", img_onaxis)
+        latex_code = latex_code.replace("__OFFAXIS_BLOCK__", offaxis_block)
         latex_code = latex_code.replace("__IMG_OFFAXIS__", img_offaxis)
+        latex_code = latex_code.replace("__HEATMAP_BLOCK__", heatmap_block)
         latex_code = latex_code.replace("__IMG_HEATMAP__", img_heatmap)
         latex_code = latex_code.replace("__IMG_IMPEDANCE__", img_impedance)
         latex_code = latex_code.replace("__IMG_SCHEMA__", img_schema)

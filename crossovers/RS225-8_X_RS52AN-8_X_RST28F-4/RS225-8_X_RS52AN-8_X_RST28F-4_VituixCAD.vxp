@@ -42,7 +42,7 @@
   <AxialTarget>
     <FreqMin>20.0</FreqMin>
     <FreqMax>20000.0</FreqMax>
-    <SPL>88.08106967100049</SPL>
+    <SPL>88.7810696710005</SPL>
     <Tilt>0.0</Tilt>
     <DrvN>1</DrvN>
     <Invert>False</Invert>
@@ -52,7 +52,7 @@
   <PowerTarget>
     <FreqMin>20.0</FreqMin>
     <FreqMax>20000.0</FreqMax>
-    <SPL>88.08106967100049</SPL>
+    <SPL>88.7810696710005</SPL>
     <Tilt>0.0</Tilt>
     <DrvN>1</DrvN>
     <Invert>False</Invert>
@@ -74,7 +74,7 @@
     <ImpedanceFile>C:\Geekosphere\FindMyCrossover\data\Woofers\ZMA\RS225-8.zma</ImpedanceFile>
     <ImpedanceScale>1</ImpedanceScale>
     <X>0.0</X>
-    <Y>-350000.0</Y>
+    <Y>-320000.0</Y>
     <Z>0.0</Z>
     <R>0</R>
     <T>0</T>
@@ -129,7 +129,7 @@
     <ImpedanceFile>C:\Geekosphere\FindMyCrossover\data\Midranges\ZMA\RS52AN-8.zma</ImpedanceFile>
     <ImpedanceScale>1</ImpedanceScale>
     <X>0.0</X>
-    <Y>-120000.0</Y>
+    <Y>-130000.0</Y>
     <Z>0.0</Z>
     <R>0</R>
     <T>0</T>
@@ -330,7 +330,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>2.37</Value>
+        <Value>1.9</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -340,7 +340,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.9480000000000001</Value>
+        <Value>0.76</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -413,7 +413,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>0.35</Value>
+        <Value>0.41</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -423,7 +423,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.13999999999999999</Value>
+        <Value>0.164</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -481,7 +481,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>39.0</Value>
+        <Value>14.999999999999998</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -546,7 +546,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>0.56</Value>
+        <Value>0.82</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -556,7 +556,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.22400000000000003</Value>
+        <Value>0.328</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -604,8 +604,88 @@
       </WIRE>
     </PART>
     <PART xi="11">
-      <Type>Driver</Type>
+      <Type>Wire</Type>
       <CenX>24</CenX>
+      <CenY>6</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>23</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>25</X>
+        <Y>6</Y>
+      </WIRE>
+    </PART>
+    <PART xi="12">
+      <Type>Capacitor</Type>
+      <CenX>25</CenX>
+      <CenY>9</CenY>
+      <Open>False</Open>
+      <Shorted>False</Shorted>
+      <Rotated>True</Rotated>
+      <PartID>C2</PartID>
+      <GUID/>
+      <PARAM pi="0">
+        <Name>C</Name>
+        <Value>18.0</Value>
+        <Unit>uF</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <PARAM pi="1">
+        <Name>ESR</Name>
+        <Value>0.01</Value>
+        <Unit>Ω</Unit>
+        <Optimize>False</Optimize>
+        <Expression/>
+        <Min>0.001</Min>
+        <Max>100000</Max>
+        <OptiBlock>False</OptiBlock>
+      </PARAM>
+      <WIRE wi="0">
+        <X>25</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>25</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="13">
+      <Type>Ground</Type>
+      <CenX>25</CenX>
+      <CenY>13</CenY>
+      <Open>False</Open>
+      <Rotated>False</Rotated>
+      <GUID/>
+      <WIRE wi="0">
+        <X>25</X>
+        <Y>12</Y>
+      </WIRE>
+    </PART>
+    <PART xi="14">
+      <Type>Wire</Type>
+      <CenX>26</CenX>
+      <CenY>6</CenY>
+      <Open>False</Open>
+      <GUID/>
+      <WIRE wi="0">
+        <X>25</X>
+        <Y>6</Y>
+      </WIRE>
+      <WIRE wi="1">
+        <X>27</X>
+        <Y>6</Y>
+      </WIRE>
+    </PART>
+    <PART xi="15">
+      <Type>Driver</Type>
+      <CenX>28</CenX>
       <CenY>9</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
@@ -619,7 +699,7 @@
       <DriverTarget>
         <FreqMin>20.0</FreqMin>
         <FreqMax>20000.0</FreqMax>
-        <SPL>88.08106967100049</SPL>
+        <SPL>88.7810696710005</SPL>
         <Tilt>0.0</Tilt>
         <DrvN>1</DrvN>
         <Invert>False</Invert>
@@ -648,7 +728,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>Y</Name>
-        <Value>-350.0</Value>
+        <Value>-320.0</Value>
         <Unit>mm</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -687,27 +767,27 @@
         <OptiBlock>False</OptiBlock>
       </PARAM>
       <WIRE wi="0">
-        <X>23</X>
+        <X>27</X>
         <Y>6</Y>
       </WIRE>
       <WIRE wi="1">
-        <X>23</X>
+        <X>27</X>
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="12">
+    <PART xi="16">
       <Type>Ground</Type>
-      <CenX>23</CenX>
+      <CenX>27</CenX>
       <CenY>13</CenY>
       <Open>False</Open>
       <Rotated>False</Rotated>
       <GUID/>
       <WIRE wi="0">
-        <X>23</X>
+        <X>27</X>
         <Y>12</Y>
       </WIRE>
     </PART>
-    <PART xi="13">
+    <PART xi="17">
       <Type>Wire</Type>
       <CenX>5</CenX>
       <CenY>16</CenY>
@@ -722,7 +802,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="14">
+    <PART xi="18">
       <Type>Wire</Type>
       <CenX>6</CenX>
       <CenY>26</CenY>
@@ -737,7 +817,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="15">
+    <PART xi="19">
       <Type>Wire</Type>
       <CenX>8</CenX>
       <CenY>26</CenY>
@@ -752,7 +832,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="16">
+    <PART xi="20">
       <Type>Wire</Type>
       <CenX>10</CenX>
       <CenY>26</CenY>
@@ -767,7 +847,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="17">
+    <PART xi="21">
       <Type>Inductor</Type>
       <CenX>14</CenX>
       <CenY>26</CenY>
@@ -778,7 +858,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>1.0</Value>
+        <Value>0.82</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -788,7 +868,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.4</Value>
+        <Value>0.328</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -835,18 +915,18 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="18">
+    <PART xi="22">
       <Type>Capacitor</Type>
       <CenX>20</CenX>
       <CenY>26</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>C2</PartID>
+      <PartID>C3</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>10.0</Value>
+        <Value>5.4</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -873,7 +953,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="19">
+    <PART xi="23">
       <Type>Wire</Type>
       <CenX>24</CenX>
       <CenY>26</CenY>
@@ -888,7 +968,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="20">
+    <PART xi="24">
       <Type>Inductor</Type>
       <CenX>25</CenX>
       <CenY>29</CenY>
@@ -899,7 +979,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>0.75</Value>
+        <Value>0.7</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -909,7 +989,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.3</Value>
+        <Value>0.27999999999999997</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -956,7 +1036,7 @@
         <Y>32</Y>
       </WIRE>
     </PART>
-    <PART xi="21">
+    <PART xi="25">
       <Type>Ground</Type>
       <CenX>25</CenX>
       <CenY>33</CenY>
@@ -968,7 +1048,7 @@
         <Y>32</Y>
       </WIRE>
     </PART>
-    <PART xi="22">
+    <PART xi="26">
       <Type>Wire</Type>
       <CenX>26</CenX>
       <CenY>26</CenY>
@@ -983,18 +1063,18 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="23">
+    <PART xi="27">
       <Type>Capacitor</Type>
       <CenX>30</CenX>
       <CenY>26</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>C3</PartID>
+      <PartID>C4</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>56.0</Value>
+        <Value>160.0</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1021,7 +1101,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="24">
+    <PART xi="28">
       <Type>Wire</Type>
       <CenX>34</CenX>
       <CenY>26</CenY>
@@ -1036,18 +1116,18 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="25">
+    <PART xi="29">
       <Type>Capacitor</Type>
       <CenX>35</CenX>
       <CenY>29</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>True</Rotated>
-      <PartID>C4</PartID>
+      <PartID>C5</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>12.0</Value>
+        <Value>6.799999999999999</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1074,7 +1154,7 @@
         <Y>32</Y>
       </WIRE>
     </PART>
-    <PART xi="26">
+    <PART xi="30">
       <Type>Ground</Type>
       <CenX>35</CenX>
       <CenY>33</CenY>
@@ -1086,7 +1166,7 @@
         <Y>32</Y>
       </WIRE>
     </PART>
-    <PART xi="27">
+    <PART xi="31">
       <Type>Wire</Type>
       <CenX>36</CenX>
       <CenY>26</CenY>
@@ -1101,7 +1181,7 @@
         <Y>26</Y>
       </WIRE>
     </PART>
-    <PART xi="28">
+    <PART xi="32">
       <Type>Driver</Type>
       <CenX>38</CenX>
       <CenY>29</CenY>
@@ -1117,7 +1197,7 @@
       <DriverTarget>
         <FreqMin>20.0</FreqMin>
         <FreqMax>20000.0</FreqMax>
-        <SPL>88.08106967100049</SPL>
+        <SPL>88.7810696710005</SPL>
         <Tilt>0.0</Tilt>
         <DrvN>1</DrvN>
         <Invert>False</Invert>
@@ -1146,7 +1226,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>Y</Name>
-        <Value>-120.0</Value>
+        <Value>-130.0</Value>
         <Unit>mm</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1193,7 +1273,7 @@
         <Y>32</Y>
       </WIRE>
     </PART>
-    <PART xi="29">
+    <PART xi="33">
       <Type>Ground</Type>
       <CenX>37</CenX>
       <CenY>33</CenY>
@@ -1205,7 +1285,7 @@
         <Y>32</Y>
       </WIRE>
     </PART>
-    <PART xi="30">
+    <PART xi="34">
       <Type>Wire</Type>
       <CenX>9</CenX>
       <CenY>33</CenY>
@@ -1220,7 +1300,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="31">
+    <PART xi="35">
       <Type>Wire</Type>
       <CenX>10</CenX>
       <CenY>40</CenY>
@@ -1235,14 +1315,14 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="32">
+    <PART xi="36">
       <Type>Capacitor</Type>
       <CenX>14</CenX>
       <CenY>40</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>C5</PartID>
+      <PartID>C6</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
@@ -1273,7 +1353,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="33">
+    <PART xi="37">
       <Type>Wire</Type>
       <CenX>18</CenX>
       <CenY>40</CenY>
@@ -1288,7 +1368,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="34">
+    <PART xi="38">
       <Type>Inductor</Type>
       <CenX>19</CenX>
       <CenY>43</CenY>
@@ -1299,7 +1379,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>0.16</Value>
+        <Value>0.13</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1309,7 +1389,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.064</Value>
+        <Value>0.052000000000000005</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1356,7 +1436,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="35">
+    <PART xi="39">
       <Type>Ground</Type>
       <CenX>19</CenX>
       <CenY>47</CenY>
@@ -1368,7 +1448,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="36">
+    <PART xi="40">
       <Type>Wire</Type>
       <CenX>20</CenX>
       <CenY>40</CenY>
@@ -1383,7 +1463,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="37">
+    <PART xi="41">
       <Type>Wire</Type>
       <CenX>22</CenX>
       <CenY>40</CenY>
@@ -1398,7 +1478,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="38">
+    <PART xi="42">
       <Type>Wire</Type>
       <CenX>24</CenX>
       <CenY>40</CenY>
@@ -1413,18 +1493,18 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="39">
+    <PART xi="43">
       <Type>Capacitor</Type>
       <CenX>28</CenX>
       <CenY>40</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>False</Rotated>
-      <PartID>C6</PartID>
+      <PartID>C7</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>13.0</Value>
+        <Value>11.0</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1451,7 +1531,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="40">
+    <PART xi="44">
       <Type>Wire</Type>
       <CenX>23</CenX>
       <CenY>43</CenY>
@@ -1466,7 +1546,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="41">
+    <PART xi="45">
       <Type>Wire</Type>
       <CenX>24</CenX>
       <CenY>46</CenY>
@@ -1481,7 +1561,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="42">
+    <PART xi="46">
       <Type>Inductor</Type>
       <CenX>28</CenX>
       <CenY>46</CenY>
@@ -1492,7 +1572,7 @@
       <GUID/>
       <PARAM pi="0">
         <Name>L</Name>
-        <Value>0.41</Value>
+        <Value>0.44</Value>
         <Unit>mH</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1502,7 +1582,7 @@
       </PARAM>
       <PARAM pi="1">
         <Name>DCR</Name>
-        <Value>0.164</Value>
+        <Value>0.17600000000000002</Value>
         <Unit>Ω</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1549,7 +1629,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="43">
+    <PART xi="47">
       <Type>Wire</Type>
       <CenX>32</CenX>
       <CenY>40</CenY>
@@ -1564,7 +1644,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="44">
+    <PART xi="48">
       <Type>Wire</Type>
       <CenX>32</CenX>
       <CenY>46</CenY>
@@ -1579,7 +1659,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="45">
+    <PART xi="49">
       <Type>Wire</Type>
       <CenX>33</CenX>
       <CenY>43</CenY>
@@ -1594,7 +1674,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="46">
+    <PART xi="50">
       <Type>Wire</Type>
       <CenX>34</CenX>
       <CenY>40</CenY>
@@ -1609,7 +1689,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="47">
+    <PART xi="51">
       <Type>Wire</Type>
       <CenX>36</CenX>
       <CenY>40</CenY>
@@ -1624,18 +1704,18 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="48">
+    <PART xi="52">
       <Type>Capacitor</Type>
       <CenX>37</CenX>
       <CenY>43</CenY>
       <Open>False</Open>
       <Shorted>False</Shorted>
       <Rotated>True</Rotated>
-      <PartID>C7</PartID>
+      <PartID>C8</PartID>
       <GUID/>
       <PARAM pi="0">
         <Name>C</Name>
-        <Value>3.3</Value>
+        <Value>2.7</Value>
         <Unit>uF</Unit>
         <Optimize>False</Optimize>
         <Expression/>
@@ -1662,7 +1742,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="49">
+    <PART xi="53">
       <Type>Ground</Type>
       <CenX>37</CenX>
       <CenY>47</CenY>
@@ -1674,7 +1754,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="50">
+    <PART xi="54">
       <Type>Wire</Type>
       <CenX>38</CenX>
       <CenY>40</CenY>
@@ -1689,7 +1769,7 @@
         <Y>40</Y>
       </WIRE>
     </PART>
-    <PART xi="51">
+    <PART xi="55">
       <Type>Driver</Type>
       <CenX>40</CenX>
       <CenY>43</CenY>
@@ -1705,7 +1785,7 @@
       <DriverTarget>
         <FreqMin>20.0</FreqMin>
         <FreqMax>20000.0</FreqMax>
-        <SPL>88.08106967100049</SPL>
+        <SPL>88.7810696710005</SPL>
         <Tilt>0.0</Tilt>
         <DrvN>1</DrvN>
         <Invert>False</Invert>
@@ -1781,7 +1861,7 @@
         <Y>46</Y>
       </WIRE>
     </PART>
-    <PART xi="52">
+    <PART xi="56">
       <Type>Ground</Type>
       <CenX>39</CenX>
       <CenY>47</CenY>

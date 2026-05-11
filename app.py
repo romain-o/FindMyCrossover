@@ -1,7 +1,59 @@
 import os
 import subprocess
 import threading
+import json
 import customtkinter as ctk
+from src.optimizer import WEIGHTS as DEFAULT_WEIGHTS
+
+WEIGHT_DEFS = {
+    'crossover': 3.2549,
+    'fc_err': 20.0,
+    'impedance': 142.9232,
+    'tweeter_low': 48.4022,
+    'woofer_high': 10.0,
+    'woofer_attenuation': 218.2858,
+    'thermal': 0.1216,
+    #'components': 0.6808,
+    'components': 0.5,
+    'resistors': 0.4,
+    'mse_sum': 1.0000,
+    'n_comps': 9,
+    
+    'midrange_low': 25.0,
+    'midrange_high': 25.0,
+    'midrange_participation': 60.0,       
+    'midrange_attenuation': 200,
+}
+WEIGHT_DEFS = {
+    # Groupe : Objectif Principal
+    "mse_sum":                (DEFAULT_WEIGHTS['mse_sum'],    "Poids de l'erreur SPL globale",         "float"),
+    "n_comps":                (DEFAULT_WEIGHTS['n_comps'],     "Nb de composants idéal (seuil)",         "int"),
+    # Groupe : Zone de Croisement
+    "crossover":              (DEFAULT_WEIGHTS['crossover'],   "Multiplicateur zone de raccord",          "float"),
+    "fc_err":                 (DEFAULT_WEIGHTS['fc_err'],   "Pénalité écart fréq. coupure (octaves²)", "float"),
+    # Groupe : Sécurité Électrique
+    "impedance":              (DEFAULT_WEIGHTS['impedance'], "Pénalité impédance < 3.2 Ω",             "float"),
+    "woofer_attenuation":     (DEFAULT_WEIGHTS['woofer_attenuation'], "Pénalité atténuation woofer (Vtension)",  "float"),
+    'midrange_attenuation':   (DEFAULT_WEIGHTS['midrange_attenuation'],  "Pénalité atténuation médium (Vtension)",  "float"),
+    "thermal":                (DEFAULT_WEIGHTS['thermal'],   "Pénalité thermique résistances > 20 W",   "float"),
+    # Groupe : Sécurité Drivers
+    "tweeter_low":            (DEFAULT_WEIGHTS['tweeter_low'],  "Pénalité tweeter qui joue en grave",      "float"),
+    'woofer_high':            (DEFAULT_WEIGHTS['woofer_high'],  "Pénalité woofer qui joue en aigu",        "float"),
+    "midrange_low":           (DEFAULT_WEIGHTS['midrange_low'],   "Pénalité médium qui joue trop bas",       "float"),
+    "midrange_high":          (DEFAULT_WEIGHTS['midrange_high'],   "Pénalité médium qui joue trop haut",      "float"),
+    "midrange_participation": (DEFAULT_WEIGHTS['midrange_participation'],   "Pénalité médium inactif (bypassé)",       "float"),
+    # Groupe : Complexité
+    "components":             (DEFAULT_WEIGHTS['components'],   "Pénalité par composant au-delà du seuil", "float"),
+    "resistors":              (DEFAULT_WEIGHTS['resistors'],   "Pénalité linéaire par résistance",        "float"),
+}
+
+WEIGHT_GROUPS = [
+    ("🎯  Objectif Principal",   ["mse_sum", "n_comps"]),
+    ("✂️  Zone de Croisement",   ["crossover", "fc_err"]),
+    ("⚡  Sécurité Électrique",  ["impedance", "woofer_attenuation", "midrange_attenuation",  "thermal"]),
+    ("🔊  Sécurité Drivers",     ["tweeter_low", "woofer_high", "midrange_low", "midrange_high", "midrange_participation"]),
+    ("🧩  Complexité du Filtre", ["components", "resistors"]),
+]
 
 # --- CONFIGURATION VISUELLE ---
 ctk.set_appearance_mode("Dark")  # Mode sombre pro
@@ -13,12 +65,18 @@ class FindMyCrossoverApp(ctk.CTk):
 
         # Configuration de la fenêtre
         self.title("FindMyCrossover - Studio")
-        self.geometry("700x550")
+        self.geometry("1200x600")
         self.resizable(False, False)
 
         # Scan des haut-parleurs disponibles (On garde une liste "Master" intacte)
         self.all_woofers = self.scan_drivers("Woofers")
+        self.all_midranges = self.scan_drivers("Midranges")
         self.all_tweeters = self.scan_drivers("Tweeters")
+        
+        self.weight_vars = {
+            key: ctk.StringVar(value=str(WEIGHT_DEFS[key][0]))
+            for key in WEIGHT_DEFS
+        }
 
         self.build_ui()
 
@@ -26,61 +84,98 @@ class FindMyCrossoverApp(ctk.CTk):
         """Cherche les fichiers .zma pour lister les haut-parleurs existants."""
         path = os.path.join("data", category, "ZMA")
         if not os.path.exists(path):
-            return ["Dossier introuvable"]
+            return []
+        drivers = sorted(f.replace(".zma", "") for f in os.listdir(path) if f.endswith(".zma"))
+        return drivers
+    
+    def write_console(self, text):
+        self.console.configure(state="normal")
+        self.console.insert("end", text + "\n")
+        self.console.see("end")
+        self.console.configure(state="disabled")
         
-        drivers = [f.replace(".zma", "") for f in os.listdir(path) if f.endswith(".zma")]
-        return drivers if drivers else ["Aucun trouvé"]
+    def get_current_weights_json(self):
+        """Construit le JSON des poids depuis les StringVar."""
+        out = {}
+        for key, var in self.weight_vars.items():
+            raw = var.get().strip()
+            try:
+                typ = WEIGHT_DEFS[key][2]
+                out[key] = int(raw) if typ == "int" else float(raw)
+            except ValueError:
+                out[key] = WEIGHT_DEFS[key][0]  # fallback défaut
+        return json.dumps(out)
 
     def build_ui(self):
         # --- TITRE ---
-        title_label = ctk.CTkLabel(self, text="FindMyCrossover", font=ctk.CTkFont(size=24, weight="bold"))
-        title_label.pack(pady=(20, 10))
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.pack(fill="x", padx=20, pady=(10, 5)) # Espacement réduit
+
+        ctk.CTkLabel(
+            header, text="FindMyCrossover",
+            font=ctk.CTkFont(size=22, weight="bold")
+        ).pack(side="left")
+
+        ctk.CTkButton(
+            header, text="⚙️", width=36, height=36,
+            font=ctk.CTkFont(size=16),
+            fg_color="transparent", hover_color="#333333",
+            command=self.open_settings
+        ).pack(side="right")
 
         # --- CONTENEUR PRINCIPAL ---
         main_frame = ctk.CTkFrame(self, fg_color="transparent")
-        main_frame.pack(fill="x", padx=40)
+        main_frame.pack(fill="both", expand=True, padx=20)
 
         # == Colonne Gauche : Paramètres du projet ==
         left_frame = ctk.CTkFrame(main_frame)
         left_frame.pack(side="left", fill="both", expand=True, padx=(0, 10))
 
-        ctk.CTkLabel(left_frame, text="Haut-Parleurs", font=ctk.CTkFont(weight="bold")).pack(pady=(10, 5))
+        ctk.CTkLabel(left_frame, text="Haut-Parleurs", font=ctk.CTkFont(weight="bold")).pack(pady=(5, 2))
 
         # Variables de texte
         self.woofer_var = ctk.StringVar(value=self.all_woofers[0] if self.all_woofers else "")
         self.tweeter_var = ctk.StringVar(value=self.all_tweeters[0] if self.all_tweeters else "")
         self.w_qty_var = ctk.StringVar(value="1")
 
-        # --- WOOFER (Avec sélecteur de quantité) ---
+        # --- WOOFER ---
         ctk.CTkLabel(left_frame, text="Woofer", text_color="gray").pack(anchor="w", padx=20)
         w_row = ctk.CTkFrame(left_frame, fg_color="transparent")
-        w_row.pack(pady=(0, 5), padx=20, fill="x")
+        w_row.pack(pady=(0, 2), padx=20, fill="x")
         
         self.w_menu = ctk.CTkComboBox(w_row, variable=self.woofer_var, values=self.all_woofers, command=self.update_project_name)
         self.w_menu.pack(side="left", fill="x", expand=True, padx=(0, 5))
         
-        # NOUVEAU : Menu déroulant pour la quantité de woofers
         self.w_qty_menu = ctk.CTkComboBox(w_row, variable=self.w_qty_var, values=["1", "2"], width=60, command=self.update_project_name)
         self.w_qty_menu.pack(side="right")
 
+        # --- MEDIUM ---
+        ctk.CTkLabel(left_frame, text="Médium  (optionnel — 3 voies)", text_color="gray").pack(anchor="w", padx=14)
+        self.midrange_var = ctk.StringVar(value="(Aucun)")
+        self.m_menu = ctk.CTkComboBox(
+            left_frame, variable=self.midrange_var,
+            values=["(Aucun)"] + (self.all_midranges or []),
+            command=self._on_midrange_change
+        )
+        self.m_menu.pack(pady=(0, 2), padx=14, fill="x")
+        self.midrange_var.trace_add("write", self.filter_midranges)
+        
         # --- TWEETER ---
         ctk.CTkLabel(left_frame, text="Tweeter", text_color="gray").pack(anchor="w", padx=20)
         self.t_menu = ctk.CTkComboBox(left_frame, variable=self.tweeter_var, values=self.all_tweeters, command=self.update_project_name)
-        self.t_menu.pack(pady=(0, 5), padx=20, fill="x")
+        self.t_menu.pack(pady=(0, 2), padx=20, fill="x")
 
-        # "Triggers" de frappe. À chaque lettre tapée, on filtre la liste !
         self.woofer_var.trace_add("write", self.filter_woofers)
         self.tweeter_var.trace_add("write", self.filter_tweeters)
 
         # ==========================================
-        # NOUVEAU : POSITION PHYSIQUE DU WOOFER
+        # POSITION PHYSIQUE WOOFER
         # ==========================================
-        ctk.CTkLabel(left_frame, text="Position Woofer (mètres)", font=ctk.CTkFont(weight="bold")).pack(pady=(15, 0))
+        ctk.CTkLabel(left_frame, text="Position Woofer (mètres)", font=ctk.CTkFont(weight="bold")).pack(pady=(8, 0))
         
         geom_frame = ctk.CTkFrame(left_frame, fg_color="transparent")
-        geom_frame.pack(padx=20, pady=(0, 5), fill="x")
+        geom_frame.pack(padx=20, pady=(0, 2), fill="x")
         
-        # Axe X (Gauche / Droite)
         col_x = ctk.CTkFrame(geom_frame, fg_color="transparent")
         col_x.pack(side="left", expand=True, fill="x", padx=(0, 5))
         ctk.CTkLabel(col_x, text="X (Horizontal)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
@@ -88,59 +183,93 @@ class FindMyCrossoverApp(ctk.CTk):
         self.wx_entry.insert(0, "0.0")
         self.wx_entry.pack(fill="x")
 
-        # Axe Y (Haut / Bas)
         col_y = ctk.CTkFrame(geom_frame, fg_color="transparent")
         col_y.pack(side="left", expand=True, fill="x", padx=(0, 5))
         ctk.CTkLabel(col_y, text="Y (Vertical)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
         self.wy_entry = ctk.CTkEntry(col_y, height=25)
-        self.wy_entry.insert(0, "-0.100") # Valeur par défaut 10cm plus bas
+        self.wy_entry.insert(0, "-0.100") 
         self.wy_entry.pack(fill="x")
 
-        # Axe Z (Profondeur / Retrait)
         col_z = ctk.CTkFrame(geom_frame, fg_color="transparent")
         col_z.pack(side="left", expand=True, fill="x")
         ctk.CTkLabel(col_z, text="Z (Profondeur)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
         self.wz_entry = ctk.CTkEntry(col_z, height=25)
         self.wz_entry.insert(0, "0.0")
         self.wz_entry.pack(fill="x")
+
         # ==========================================
+        # POSITION PHYSIQUE MEDIUM (Cachée par défaut)
+        # ==========================================
+        self.mid_geom_frame = ctk.CTkFrame(left_frame, fg_color="transparent")
+        
+        ctk.CTkLabel(self.mid_geom_frame, text="Position Médium (mètres)", font=ctk.CTkFont(weight="bold")).pack(pady=(5, 0))
+        m_grid = ctk.CTkFrame(self.mid_geom_frame, fg_color="transparent")
+        m_grid.pack(fill="x")
+        
+        self.mx_entry = self._create_geo_field(m_grid, "X", "0.0")
+        self.my_entry = self._create_geo_field(m_grid, "Y", "-0.050")
+        self.mz_entry = self._create_geo_field(m_grid, "Z", "0.0")
 
-        ctk.CTkLabel(left_frame, text="Nom du Projet", font=ctk.CTkFont(weight="bold")).pack(pady=(15, 5))
+        # --- NOM DU PROJET ---
+        # CORRECTION : On assigne le label à self.name_label pour s'en servir de point de repère
+        self.name_label = ctk.CTkLabel(left_frame, text="Nom du Projet", font=ctk.CTkFont(weight="bold"))
+        self.name_label.pack(pady=(10, 2))
         self.name_entry = ctk.CTkEntry(left_frame)
-        self.name_entry.pack(pady=(0, 15), padx=20, fill="x")
-        self.update_project_name(None) # Initialisation auto
+        self.name_entry.pack(pady=(0, 10), padx=20, fill="x")
+        self.update_project_name(None) 
 
-        # == Colonne Droite : Moteur Génétique ==
-        right_frame = ctk.CTkFrame(main_frame)
-        right_frame.pack(side="right", fill="both", expand=True, padx=(10, 0))
+        # == Colonne Centrale : Moteur Génétique ==
+        center_frame = ctk.CTkFrame(main_frame)
+        center_frame.pack(side="left", fill="both", padx=(0, 10))
 
-        ctk.CTkLabel(right_frame, text="Moteur IA", font=ctk.CTkFont(weight="bold")).pack(pady=(10, 5))
+        ctk.CTkLabel(center_frame, text="Moteur IA", font=ctk.CTkFont(weight="bold")).pack(pady=(5, 2))
 
-        # --- FREQUENCE ---
-        ctk.CTkLabel(right_frame, text="Fréq. Croisement (Hz, 0=Auto) :").pack(anchor="w", padx=20)
-        self.fc_entry = ctk.CTkEntry(right_frame)
-        self.fc_entry.insert(0, "0") # Valeur classique par défaut
-        self.fc_entry.pack(pady=(0, 10), padx=20, fill="x")
+        self.auto_fc_var = ctk.BooleanVar(value=True) 
+        self.auto_fc_checkbox = ctk.CTkCheckBox(
+            center_frame, text="Fréq. coupure automatiques",
+            variable=self.auto_fc_var,
+            command=self._toggle_fc_state,
+            text_color="#00A86B" 
+        )
+        self.auto_fc_checkbox.pack(anchor="w", padx=14, pady=(0, 5))
 
-        ctk.CTkLabel(right_frame, text="Générations :").pack(anchor="w", padx=20)
-        self.gen_entry = ctk.CTkEntry(right_frame)
+        self.fc1_label = ctk.CTkLabel(center_frame, text="Fréq. coupure (Hz) :", text_color="gray")
+        self.fc1_label.pack(anchor="w", padx=14)
+        self.fc_entry = ctk.CTkEntry(center_frame)
+        self.fc_entry.insert(0, "2000") 
+        self.fc_entry.pack(pady=(0, 4), padx=14, fill="x")
+        self.fc_entry.configure(state="disabled") 
+
+        self.fc2_frame = ctk.CTkFrame(center_frame, fg_color="transparent")
+        ctk.CTkLabel(self.fc2_frame, text="Fréq. coupure Médium-Tweeter (Hz) :", text_color="gray").pack(anchor="w")
+        self.fc2_entry = ctk.CTkEntry(self.fc2_frame)
+        self.fc2_entry.insert(0, "4500") 
+        self.fc2_entry.pack(fill="x")
+        self.fc2_entry.configure(state="disabled") 
+
+        self.gen_label = ctk.CTkLabel(center_frame, text="Générations :", text_color="gray")
+        self.gen_label.pack(anchor="w", padx=14)
+        self.gen_entry = ctk.CTkEntry(center_frame)
         self.gen_entry.insert(0, "50")
-        self.gen_entry.pack(pady=(0, 10), padx=20, fill="x")
+        self.gen_entry.pack(pady=(0, 4), padx=14, fill="x")
 
-        ctk.CTkLabel(right_frame, text="Taille Population :").pack(anchor="w", padx=20)
-        self.pop_entry = ctk.CTkEntry(right_frame)
+        ctk.CTkLabel(center_frame, text="Taille Population :", text_color="gray").pack(anchor="w", padx=14)
+        self.pop_entry = ctk.CTkEntry(center_frame)
         self.pop_entry.insert(0, "500")
-        self.pop_entry.pack(pady=(0, 15), padx=20, fill="x")
+        self.pop_entry.pack(pady=(0, 10), padx=14, fill="x")
 
+        # == Colonne Droite : Console ==
+        right_frame = ctk.CTkFrame(main_frame)
+        right_frame.pack(side="left", fill="both", expand=True)
+        
+        ctk.CTkLabel(right_frame, text="Console de Sortie", font=ctk.CTkFont(weight="bold")).pack(pady=(5, 2))
+        self.console = ctk.CTkTextbox(right_frame, font=ctk.CTkFont(family="Consolas", size=12))
+        self.console.pack(padx=10, pady=(0, 10), fill="both", expand=True)
+        self.console.configure(state="disabled")
+        
         # --- BOUTON RUN ---
         self.run_btn = ctk.CTkButton(self, text="🚀 LANCER L'OPTIMISATION", height=40, font=ctk.CTkFont(weight="bold"), command=self.start_optimization)
-        self.run_btn.pack(pady=20, padx=40, fill="x")
-
-        # --- CONSOLE ---
-        self.console = ctk.CTkTextbox(self, height=150, font=ctk.CTkFont(family="Consolas", size=12))
-        self.console.pack(padx=40, fill="x", pady=(0, 20))
-        self.console.insert("0.0", "Prêt. Sélectionnez ou tapez le nom de vos haut-parleurs.\n")
-        self.console.configure(state="disabled")
+        self.run_btn.pack(pady=(5, 15), padx=40, fill="x")
 
     # --- MÉTHODES DE FILTRAGE DYNAMIQUE ---
     def filter_woofers(self, *args):
@@ -148,6 +277,15 @@ class FindMyCrossoverApp(ctk.CTk):
         typed_text = self.woofer_var.get().lower()
         filtered_list = [w for w in self.all_woofers if typed_text in w.lower()]
         self.w_menu.configure(values=filtered_list if filtered_list else ["Aucun résultat"])
+        self.update_project_name()
+        
+    def filter_midranges(self, *_):
+        typed = self.midrange_var.get().lower()
+        if typed == "" or typed == "(aucun)":
+            filtered = ["(Aucun)"] + self.all_midranges
+        else:
+            filtered = [m for m in self.all_midranges if typed in m.lower()]
+        self.m_menu.configure(values=filtered or ["(aucun résultat)"])
         self.update_project_name()
 
     def filter_tweeters(self, *args):
@@ -160,15 +298,20 @@ class FindMyCrossoverApp(ctk.CTk):
     def update_project_name(self, *args):
         """Génère automatiquement le nom du projet en fonction des choix."""
         w = self.woofer_var.get()
+        m = self.midrange_var.get().strip()
         t = self.tweeter_var.get()
         qty = self.w_qty_var.get()
         
-        # Ajout du préfixe "2x_" si l'utilisateur a choisi 2 woofers
-        prefix = f"2x_{w}" if str(qty) == "2" else w
-        suggested_name = f"{prefix}_X_{t}"
+        if m == "(Aucun)":
+            m = ""
         
+        # Ajout du préfixe "2x_" si l'utilisateur a choisi 2 woofers
+        prefix = f"2x_" if str(qty) == "2" else ""
+        parts = [p for p in [w, m, t] if p]
+        name = "_X_".join(parts)
+        name = prefix + name
         self.name_entry.delete(0, "end")
-        self.name_entry.insert(0, suggested_name)
+        self.name_entry.insert(0, name)
 
     def write_console(self, text):
         """Écrit dans la console graphique de manière sécurisée (Thread-safe)."""
@@ -176,19 +319,148 @@ class FindMyCrossoverApp(ctk.CTk):
         self.console.insert("end", text + "\n")
         self.console.see("end") # Autoscroll vers le bas
         self.console.configure(state="disabled")
+        
+    def _create_geo_field(self, parent, label, default):
+        """Utilitaire pour créer les petits champs X, Y, Z"""
+        col = ctk.CTkFrame(parent, fg_color="transparent")
+        col.pack(side="left", expand=True, fill="x", padx=2)
+        ctk.CTkLabel(col, text=label, text_color="gray", font=ctk.CTkFont(size=10)).pack()
+        entry = ctk.CTkEntry(col, height=25)
+        entry.insert(0, default)
+        entry.pack(fill="x")
+        return entry
+        
+    def _on_midrange_change(self, *_):
+        val = self.midrange_var.get().strip()
+        if val and val != "(Aucun)":
+            self.fc1_label.configure(text="Fréq. coupure Woofer-Médium (Hz) :")
+            self.fc2_frame.pack(padx=14, fill="x", pady=(0, 4), before=self.gen_label)
+            # CORRECTION : On se place bien au-dessus du label "Nom du Projet" !
+            self.mid_geom_frame.pack(padx=20, fill="x", before=self.name_label)
+        else:
+            self.fc1_label.configure(text="Fréq. coupure (Hz) :")
+            self.fc2_frame.pack_forget()
+            self.mid_geom_frame.pack_forget()
+        self.update_project_name()
+
+    def _toggle_fc_state(self):
+        """Active ou grise les champs de fréquence selon l'état de la Checkbox."""
+        if self.auto_fc_var.get():
+            self.fc_entry.configure(state="disabled")
+            self.fc2_entry.configure(state="disabled")
+        else:
+            self.fc_entry.configure(state="normal")
+            self.fc2_entry.configure(state="normal")
+        
+    def open_settings(self):
+        win = ctk.CTkToplevel(self)
+        win.title("⚙️  Paramètres Avancés — Poids Fitness")
+        win.geometry("500x580")
+        win.resizable(False, True)
+        win.grab_set()
+
+        ctk.CTkLabel(
+            win, text="Poids de la Fonction Fitness",
+            font=ctk.CTkFont(size=15, weight="bold")
+        ).pack(pady=(14, 6))
+        ctk.CTkLabel(
+            win, text="Modifiez uniquement si vous savez ce que vous faites.",
+            font=ctk.CTkFont(size=11), text_color="gray"
+        ).pack(pady=(0, 10))
+
+        scroll = ctk.CTkScrollableFrame(win, height=420)
+        scroll.pack(fill="both", expand=True, padx=16)
+
+        # NOUVEAU : Un dictionnaire temporaire pour stocker nos champs de texte
+        local_entries = {}
+
+        for group_name, keys in WEIGHT_GROUPS:
+            # En-tête de groupe
+            sep_frame = ctk.CTkFrame(scroll, height=2, fg_color="#444444")
+            sep_frame.pack(fill="x", pady=(10, 2))
+            ctk.CTkLabel(
+                scroll, text=group_name,
+                font=ctk.CTkFont(size=12, weight="bold"), text_color="#aaaaaa"
+            ).pack(anchor="w", pady=(2, 6))
+
+            for key in keys:
+                _, description, _ = WEIGHT_DEFS[key]
+                row = ctk.CTkFrame(scroll, fg_color="transparent")
+                row.pack(fill="x", pady=2)
+                row.columnconfigure(0, weight=1)
+                row.columnconfigure(1, weight=0)
+
+                ctk.CTkLabel(
+                    row, text=f"{description}",
+                    font=ctk.CTkFont(size=12), anchor="w"
+                ).grid(row=0, column=0, sticky="w", padx=(0, 10))
+
+                # CORRECTION : Plus de 'textvariable'. On injecte la valeur manuellement.
+                entry = ctk.CTkEntry(row, width=90)
+                entry.insert(0, self.weight_vars[key].get())
+                entry.grid(row=0, column=1, sticky="e")
+                
+                # On sauvegarde la référence du champ pour le lire plus tard
+                local_entries[key] = entry
+
+        # --- GESTION DES BOUTONS ET FERMETURE ---
+        btn_frame = ctk.CTkFrame(win, fg_color="transparent")
+        btn_frame.pack(fill="x", padx=16, pady=12)
+
+        def reset_defaults():
+            """Remet les valeurs par défaut dans les champs affichés."""
+            for k, e in local_entries.items():
+                e.delete(0, "end")
+                e.insert(0, str(WEIGHT_DEFS[k][0]))
+
+        def apply_and_close():
+            """Sauvegarde les valeurs saisies dans les variables principales puis ferme."""
+            for k, e in local_entries.items():
+                self.weight_vars[k].set(e.get())
+            win.destroy()
+
+        ctk.CTkButton(
+            btn_frame, text="↩ Réinitialiser",
+            fg_color="#555555", hover_color="#666666",
+            command=reset_defaults
+        ).pack(side="left", padx=(0, 8))
+
+        ctk.CTkButton(
+            btn_frame, text="✔ Appliquer & Fermer",
+            command=apply_and_close
+        ).pack(side="right")
+        
+        # Si l'utilisateur ferme violemment avec la croix rouge, on sauvegarde quand même !
+        win.protocol("WM_DELETE_WINDOW", apply_and_close)
 
     def start_optimization(self):
         """Désactive le bouton et lance le thread de calcul."""
         w = self.woofer_var.get()
         w_qty = self.w_qty_var.get() # NOUVEAU : Récupération de la quantité
+        m  = self.midrange_var.get().strip()
+        if m == "(Aucun)":
+            m = ""
         t = self.tweeter_var.get()
         name = self.name_entry.get()
         gen = self.gen_entry.get()
         pop = self.pop_entry.get()
-        fc = self.fc_entry.get()
         wx = self.wx_entry.get()
         wy = self.wy_entry.get()
         wz = self.wz_entry.get()
+        mx = self.mx_entry.get() 
+        my = self.my_entry.get()
+        mz = self.mz_entry.get() 
+        
+        weights_json = self.get_current_weights_json()
+            
+        # --- MODIFICATION ICI ---
+        if self.auto_fc_var.get():
+            fc1 = "None"
+            fc2 = "None"
+        else:
+            fc1 = self.fc_entry.get().strip()
+            fc2 = self.fc2_entry.get().strip() if m else ""
+        # ------------------------
             
         # Vérification si l'utilisateur a tapé n'importe quoi ou validé un champ vide
         if w not in self.all_woofers or t not in self.all_tweeters:
@@ -201,11 +473,25 @@ class FindMyCrossoverApp(ctk.CTk):
         self.console.configure(state="disabled")
         
         # Lancement dans un Thread séparé pour ne pas figer l'interface
-        threading.Thread(target=self._run_process, args=(w, w_qty, t, name, gen, pop, fc, wx, wy, wz), daemon=True).start()
+        threading.Thread(target=self._run_process, args=(w, w_qty,m , t, 
+                                                         name, gen, pop, 
+                                                         fc1, fc2, 
+                                                         wx, wy, wz, mx, my, mz,
+                                                         weights_json), 
+                         daemon=True).start()
 
-    def _run_process(self, w, w_qty, t, name, gen, pop, fc, wx, wy, wz):
+    def _run_process(self, w, w_qty, m, t, name, gen, pop, fc1, fc2, wx, wy, wz, mx, my, mz, weights_json):
         """Exécute run.py en interceptant ce qu'il affiche."""
         out_dir = os.path.join("crossovers", name)
+        
+        # --- MODIFICATION ICI : Omission intelligente de l'argument ---
+        fc_args = []
+        if fc1 != "None":
+            fc_args = ["--fc", fc1]
+            if m and fc2 and fc2 != "None":
+                fc_args += [fc2]
+        # --------------------------------------------------------------
+        
         cmd = [
             "python", "run.py",
             "--woofer", w,
@@ -215,8 +501,17 @@ class FindMyCrossoverApp(ctk.CTk):
             "--out_dir", out_dir,
             "--gen", gen,
             "--pop", pop,
-            "--fc", fc
+            "--wx", wx,
+            "--wy", wy,
+            "--wz", wz,
+            "--mx", mx,
+            "--my", my,
+            "--mz", mz,
+            "--weights", weights_json,
+            *fc_args, 
         ]
+        if m:
+            cmd += ["--midrange", m]
 
         # --- L'ASTUCE MAGIQUE ---
         # On force le script 'run.py' à parler en UTF-8 pur, ignorant le vieux standard Windows

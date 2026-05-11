@@ -1,6 +1,6 @@
 import json
 import time
-from src.optimizer import CrossoverOptimizer, WayConfig
+from src.optimizer import CrossoverOptimizer, WayConfig, WEIGHTS as DEFAULT_WEIGHTS
 from src.vituix_exporter import VituixAdapter
 from src.latex_gen import LatexReportGenerator 
 import argparse
@@ -9,7 +9,13 @@ import os
 
 def get_driver_paths(data_dir, driver_name, category):
     """Reconstruit le chemin vers le FRD (0deg) et le ZMA depuis le nom."""
-    cat_folder = "Woofers" if category == 'W' else "Tweeters"
+    if category == 'W':
+        cat_folder = "Woofers"
+    elif category == 'M':
+        cat_folder = "Midranges"
+    else:
+        cat_folder = "Tweeters"
+        
     frd_0deg = os.path.join(data_dir, cat_folder, "FRD", "0deg", f"{driver_name}_0deg.frd")
     zma = os.path.join(data_dir, cat_folder, "ZMA", f"{driver_name}.zma")
     return frd_0deg, zma
@@ -18,6 +24,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optimiseur de Crossover CLI")
     parser.add_argument("--woofer", required=True, help="Nom exact du Woofer (ex: RS150-8)")
     parser.add_argument("--woofer_count", type=int, default=1, help="Nombre de woofers (1 ou 2)")
+    parser.add_argument("--midrange", default="",    help="Nom du Médium (optionnel, active le mode 3-voies)")
     parser.add_argument("--tweeter", required=True, help="Nom exact du Tweeter (ex: RST28F-4)")
     parser.add_argument("--data_dir", default="data", help="Dossier racine des données")
     parser.add_argument("--out_dir", required=True)
@@ -25,28 +32,59 @@ if __name__ == "__main__":
     parser.add_argument("--gen", type=int, default=150, help="Nombre de générations pour l'optimisation")
     parser.add_argument("--pop", type=int, default=150, help="Taille de la population pour l'optimisation")
     
-    parser.add_argument("--fc", type=float, default=0.0, help="Fréquence de coupure cible (0 = Auto)")
-    
+    parser.add_argument("--fc", type=float, nargs="+", default=None,
+                            help="Fréquence(s) de coupure cible. 1 valeur (2-voies) ou 2 valeurs (3-voies). 0 = auto.")
+        
     parser.add_argument("--wx", type=float, default=0.0, help="Woofer X offset (gauche/droite en mètres)")
     parser.add_argument("--wy", type=float, default=-0.100, help="Woofer Y offset (haut/bas en mètres)")
     parser.add_argument("--wz", type=float, default=0.0, help="Woofer Z offset (profondeur en mètres)")
     
+    parser.add_argument("--mx", type=float, default=0.0, help="Midrange X offset")
+    parser.add_argument("--my", type=float, default=-0.050, help="Midrange Y offset")
+    parser.add_argument("--mz", type=float, default=0.0, help="Midrange Z offset")
+    
+    # --- Poids de la fitness (JSON) ---
+    parser.add_argument("--weights", type=str, default="",
+                        help='JSON des poids fitness (ex: \'{"n_comps": 10, "crossover": 4.0}\')')
+    
     args = parser.parse_args()
 
     start_time = time.time()
+    three_way = bool(args.midrange)
+    print(f"\n[{args.name}] Mode : {'3-voies' if three_way else '2-voies'}")
     print(f"\n[{args.name}] Début de la conception du filtre...")
 
     # Création du dossier de sortie s'il n'existe pas
     os.makedirs(args.out_dir, exist_ok=True)
 
+    # ── Construction de target_fc ────────────────────────────────────────────
+    if args.fc is None:
+        target_fc = None
+    elif len(args.fc) == 1:
+        target_fc = args.fc[0]               # float  → 2-voies (0.0 = auto)
+    else:
+        target_fc = tuple(args.fc[:2])       # tuple  → 3-voies (fc_bas, fc_haut)
+        
+    weights = dict(DEFAULT_WEIGHTS)
+    if args.weights:
+        try:
+            custom_w = json.loads(args.weights)
+            # n_comps doit rester un entier
+            if 'n_comps' in custom_w:
+                custom_w['n_comps'] = int(custom_w['n_comps'])
+            weights.update(custom_w)
+            print(f"[+] Poids personnalisés appliqués : {custom_w}")
+        except json.JSONDecodeError as e:
+            print(f"[-] Erreur parsing --weights JSON : {e}. Poids par défaut utilisés.")
+
     w_frd, w_zma = get_driver_paths(args.data_dir, args.woofer, 'W')
     t_frd, t_zma = get_driver_paths(args.data_dir, args.tweeter, 'T')
 
-    # Configuration des voies avec les chemins dynamiques
-    config = [
-        WayConfig("Woofer", w_frd, w_zma, count=args.woofer_count, z_offset=args.wz, y_offset=args.wy, x_offset=args.wx),
-        WayConfig("Tweeter", t_frd, t_zma, z_offset=0, y_offset=0, x_offset=0)
-    ]
+    config = [WayConfig("Woofer", w_frd, w_zma, x_offset=args.wx, y_offset=args.wy, z_offset=args.wz)]
+    if three_way:
+        m_frd, m_zma = get_driver_paths(args.data_dir, args.midrange, 'M')
+        config.append(WayConfig("Midrange", m_frd, m_zma, x_offset=args.mx, y_offset=args.my, z_offset=args.mz))
+    config.append(WayConfig("Tweeter", t_frd, t_zma, y_offset=0.0))
 
     # Construction des chemins de sauvegarde
     checkpoint_file = os.path.join(args.out_dir, "checkpoint_evolution.json")
@@ -59,10 +97,11 @@ if __name__ == "__main__":
     graph_impedance_file = os.path.join(args.out_dir, f"{args.name}_Impedance.png")
     loss_history_file = os.path.join(args.out_dir, f"{args.name}_Loss_History.png")
     part_list_file = os.path.join(args.out_dir, f"{args.name}_Parts_List.csv")
+    geometry_file = os.path.join(args.out_dir, f"{args.name}_Geometry.png")
     
     logo_abs_path = "C:/Geekosphere/FindMyCrossover/utils/logo.png"
     # Lancement de l'optimiseur (En passant le checkpoint file)
-    opt = CrossoverOptimizer(config, target_fc=args.fc)
+    opt = CrossoverOptimizer(config, target_fc=args.fc, weights=weights)
     best = opt.run(generations=args.gen, pop_size=args.pop, checkpoint_path=checkpoint_file)
 
     # ==========================================
@@ -79,6 +118,7 @@ if __name__ == "__main__":
     # 2. Schéma visuel (PNG)
     opt.draw_schematic(best, filename=schema_file)
     opt.generate_parts_list(best, filename=part_list_file)
+    opt.plot_geometry(filename=geometry_file)
     
     # Génération LATEX
     part_list_tex = part_list_file.replace(".csv", ".tex")
@@ -96,6 +136,9 @@ if __name__ == "__main__":
     metadata = {
         "Woofer": w_label,
         "Tweeter": args.tweeter,
+        "Midrange":     args.midrange if three_way else None,
+        "target_fc":    list(target_fc) if isinstance(target_fc, tuple) else target_fc,
+        "weights":      weights,
         "wx": args.wx, 
         "wy": args.wy, 
         "wz": args.wz

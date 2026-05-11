@@ -1,0 +1,118 @@
+{
+    "tree": {
+        "type": "ParallelNode",
+        "id": "fe34b17b",
+        "left": {
+            "type": "SeriesNode",
+            "id": "77990a64",
+            "left": {
+                "type": "Inductor",
+                "id": "50fd1e00",
+                "value": 0.005,
+                "unit": "H"
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "e33c9ce0",
+                "left": {
+                    "type": "SeriesNode",
+                    "id": "6e5bfccc",
+                    "left": {
+                        "type": "Inductor",
+                        "id": "df0707d6",
+                        "value": 0.0022,
+                        "unit": "H"
+                    },
+                    "right": {
+                        "type": "Capacitor",
+                        "id": "bd44457f",
+                        "value": 1.2e-06,
+                        "unit": "F"
+                    }
+                },
+                "right": {
+                    "type": "SeriesNode",
+                    "id": "8ef219c3",
+                    "left": {
+                        "type": "Inductor",
+                        "id": "91b1e285",
+                        "value": 0.0047,
+                        "unit": "H"
+                    },
+                    "right": {
+                        "type": "ParallelNode",
+                        "id": "002fe782",
+                        "left": {
+                            "type": "SeriesNode",
+                            "id": "abffce92",
+                            "left": {
+                                "type": "Resistor",
+                                "id": "9916880d",
+                                "value": 75.0,
+                                "unit": "Ohm"
+                            },
+                            "right": {
+                                "type": "SeriesNode",
+                                "id": "34672f64",
+                                "left": {
+                                    "type": "Inductor",
+                                    "id": "71438840",
+                                    "value": 0.00095,
+                                    "unit": "H"
+                                },
+                                "right": {
+                                    "type": "Capacitor",
+                                    "id": "12fa8063",
+                                    "value": 1.1e-06,
+                                    "unit": "F"
+                                }
+                            }
+                        },
+                        "right": {
+                            "type": "DriverNode",
+                            "id": "5049eca7",
+                            "label": "Woofer",
+                            "polarity_inverted": false
+                        }
+                    }
+                }
+            }
+        },
+        "right": {
+            "type": "SeriesNode",
+            "id": "99de908b",
+            "left": {
+                "type": "Capacitor",
+                "id": "5b3ce164",
+                "value": 1.6e-06,
+                "unit": "F"
+            },
+            "right": {
+                "type": "ParallelNode",
+                "id": "aa119c8d",
+                "left": {
+                    "type": "Capacitor",
+                    "id": "8460d669",
+                    "value": 8.2e-06,
+                    "unit": "F"
+                },
+                "right": {
+                    "type": "ParallelNode",
+                    "id": "030d4e3b",
+                    "left": {
+                        "type": "Resistor",
+                        "id": "e420c5f9",
+                        "value": 8.2,
+                        "unit": "Ohm"
+                    },
+                    "right": {
+                        "type": "DriverNode",
+                        "id": "a2ab1f0d",
+                        "label": "Tweeter",
+                        "polarity_inverted": false
+                    }
+                }
+            }
+        }
+    }
+}

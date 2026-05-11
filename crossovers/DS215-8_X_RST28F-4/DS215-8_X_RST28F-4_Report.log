@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  9 MAY 2026 13:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  10 MAY 2026 10:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1015,6 +1015,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [4 <./DS215-8_X_RST28F-4_Impedance.png>]
 Chapter 2.
+LaTeX Font Info:    Trying to load font information for TS1+phv on input line 1
+10.
+(C:\Users\romai\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1phv.fd
+File: ts1phv.fd 2020/03/25 scalable font definitions for TS1/phv.
+)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1026,12 +1031,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 ]
 Chapter 3.
-<DS215-8_X_RST28F-4_Schema.png, id=91, 666.0885pt x 377.0085pt>
+<DS215-8_X_RST28F-4_Schema.png, id=94, 720.291pt x 377.0085pt>
 File: DS215-8_X_RST28F-4_Schema.png Graphic file (type png)
 <use DS215-8_X_RST28F-4_Schema.png>
-Package pdftex.def Info: DS215-8_X_RST28F-4_Schema.png  used on input line 132.
+Package pdftex.def Info: DS215-8_X_RST28F-4_Schema.png  used on input line 137.
 
-(pdftex.def)             Requested size: 432.48051pt x 244.79375pt.
+(pdftex.def)             Requested size: 432.48051pt x 226.36215pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1042,11 +1047,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [6
 
  <./DS215-8_X_RST28F-4_Schema.png>]
-<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=98, 501.875pt x 501.875pt>
+<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=101, 501.875pt x 501.875pt>
 File: C:/Geekosphere/FindMyCrossover/utils/logo.png Graphic file (type png)
 <use C:/Geekosphere/FindMyCrossover/utils/logo.png>
 Package pdftex.def Info: C:/Geekosphere/FindMyCrossover/utils/logo.png  used on
- input line 150.
+ input line 155.
 (pdftex.def)             Requested size: 113.81102pt x 113.80533pt.
  [7
 
@@ -1061,20 +1066,20 @@ ed.
 (rerunfilecheck)             Checksum: 1AF0B9AE9B4E7F5546D31D3399DB8DF2;1282.
  ) 
 Here is how much of TeX's memory you used:
- 44093 strings out of 474486
- 1073738 string characters out of 5743755
- 1934542 words of memory out of 5000000
- 65902 multiletter control sequences out of 15000+600000
- 600927 words of font info for 73 fonts, out of 8000000 for 9000
+ 44127 strings out of 474486
+ 1074253 string characters out of 5743755
+ 1936542 words of memory out of 5000000
+ 65932 multiletter control sequences out of 15000+600000
+ 601239 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  102i,17n,107p,438b,874s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmmi10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvet
 ic/uhvb8a.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/urw/hel
 vetic/uhvr8a.pfb>
-Output written on DS215-8_X_RST28F-4_Report.pdf (8 pages, 1498019 bytes).
+Output written on DS215-8_X_RST28F-4_Report.pdf (8 pages, 1408897 bytes).
 PDF statistics:
- 126 PDF objects out of 1000 (max. 8388607)
+ 129 PDF objects out of 1000 (max. 8388607)
  16 named destinations out of 1000 (max. 500000)
  107 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -28,11 +28,10 @@ class SchematicRenderer:
     def _draw_component(self, d, node, direction):
         # 1. Haut-Parleurs
         if isinstance(node, DriverNode):
-            d += elm.Line().right().length(0.5)  # Augmente le 2.5 si tu veux encore plus d'espace
+            d += elm.Line().right().length(0.5)
             SpeakerType = elm.Speaker if hasattr(elm, 'Speaker') else elm.Resistor
             label_text = getattr(node, 'model_name', node.label)
             
-            # Récupération des informations d'architecture
             wiring = getattr(self.tree, 'wiring', {}).get(node.label, 'parallel')
             count = getattr(node, 'count', 1)
             
@@ -72,7 +71,6 @@ class SchematicRenderer:
                     d += elm.Line().right().length(0.5)
                     d += elm.Dot()
                     
-                    # Branche Supérieure
                     d.push()
                     d += elm.Line().up().length(1.5)
                     d += SpeakerType().right().label(f"{label_text} (A)", loc='top')
@@ -81,7 +79,6 @@ class SchematicRenderer:
                     d += elm.Ground()
                     d.pop()
                     
-                    # Branche Inférieure
                     d.push()
                     d += elm.Line().down().length(1.5)
                     d += SpeakerType().right().label(f"{label_text} (B)", loc='bottom')
@@ -91,13 +88,12 @@ class SchematicRenderer:
                     self._track_y(d)
                     d.pop()
                 else:
-                    # Cas d'un shunt avec driver (rare mais couvert par sécurité)
                     d += SpeakerType().down().label(f"2x {label_text} (Parallèle)", loc='bottom')
                     self._track_y(d)
                     self._track_x(d)
             return
 
-        # 2. Composants Passifs (Avec Nomenclature)
+        # 2. Composants Passifs
         if isinstance(node, Resistor):
             self.comp_counts['R'] += 1
             name = f"R{self.comp_counts['R']}"
@@ -119,8 +115,8 @@ class SchematicRenderer:
         if direction == 'right':
             d += comp.right().label(label_str, loc='top')
             self._track_x(d)
-        else: # direction == 'down'
-            d += comp.down().label(label_str, loc='bottom') # bottom force l'affichage à gauche
+        else: 
+            d += comp.down().label(label_str, loc='bottom')
             self._track_y(d)
             self._track_x(d)
 
@@ -136,19 +132,22 @@ class SchematicRenderer:
             has_drv_left = self._has_driver(node.left)
             has_drv_right = self._has_driver(node.right)
             
+            # --- SPLIT INTERNE DES VOIES (ex: Mid / Tweeter) ---
             if has_drv_left and has_drv_right:
                 d += elm.Line().right().length(0.5)
                 d += elm.Dot()
                 split_inner = d.here
                 
+                # Voie supérieure
                 d.push()
-                d += elm.Line().up().length(2.0)
+                d += elm.Line().up().length(1.0)
                 d += elm.Line().right().length(0.5)
                 self._draw_branch(d, node.left, 'right')
                 self._track_y(d)
                 d.pop()
                 
-                safe_y = min(split_inner.y - 2.5, self.current_min_y - 2.5)
+                # Descente dynamique vers la voie inférieure
+                safe_y = min(split_inner.y - 2.5, self.current_min_y - 3.5)
                 
                 d.push()
                 d += elm.Line().down().length(split_inner.y - safe_y)
@@ -156,7 +155,7 @@ class SchematicRenderer:
                 self._draw_branch(d, node.right, 'right')
                 d.pop()
 
-            # --- LE CALCUL MAGIQUE HORIZONTAL (Shunt) ---
+            # --- DÉRIVATION SHUNT (Un seul driver en aval) ---
             elif has_drv_left or has_drv_right:
                 main = node.left if has_drv_left else node.right
                 shunt = node.right if has_drv_left else node.left
@@ -165,7 +164,6 @@ class SchematicRenderer:
                 d.push()
                 d += elm.Dot()
                 
-                # On isole le tracking X pour mesurer la largeur exacte de la branche
                 prev_max_x = self.current_max_x
                 self.current_max_x = pre_shunt_x
                 
@@ -175,11 +173,9 @@ class SchematicRenderer:
                 self._track_x(d)
                 
                 shunt_max_x = self.current_max_x
-                self.current_max_x = max(prev_max_x, shunt_max_x) # Restauration du max global
+                self.current_max_x = max(prev_max_x, shunt_max_x)
                 d.pop()
                 
-                # Le composant descend, son texte prend environ 1.8 unités à droite.
-                # Si le shunt s'est étendu (sous-circuit), on prend sa vraie largeur + 0.5.
                 safe_x = max(pre_shunt_x + 1.5, shunt_max_x + 1)
                 advance = safe_x - pre_shunt_x
                 
@@ -188,77 +184,80 @@ class SchematicRenderer:
                     
                 self._draw_branch(d, main, direction)
                 
-            # --- Filtre Bouchon (Notch) : Rendu Compact ---
+            # --- COMPOSANTS EN DÉRIVATION (Filtre Bouchon / Parallèle) ---
             else:
                 if direction == 'right':
-                    d += elm.Line().right().length(0.2)
+                    left_pad = d.here
+                    d += elm.Line().at(left_pad).right().length(0.5)
+                    self._track_x(d)
+                    d += elm.Dot()
+                    start_dot = d.here
                     
-                    d.push()
-                    d += elm.Line().up().length(1.5)
+                    # Le premier composant reste sur la ligne de la branche principale
                     self._draw_branch(d, node.left, direction)
-                    top_end = d.here
-                    d.pop()
+                    end_dot = d.here
                     
+                    # Le second composant passe en dessous
                     d.push()
-                    d += elm.Line().down().length(1.5)
+                    d += elm.Line().at(start_dot).down().length(2.5)
                     self._draw_branch(d, node.right, direction)
                     bot_end = d.here
-                    self._track_y(d) 
-                    d.pop()
+                    self._track_y(d)
                     
-                    max_x = max(top_end.x, bot_end.x)
+                    max_x = max(end_dot.x, bot_end.x)
                     
-                    top_final = top_end
-                    if max_x > top_end.x:
-                        d += elm.Line().at(top_end).right().length(max_x - top_end.x)
-                        top_final = d.here
+                    main_final = end_dot
+                    if max_x > end_dot.x:
+                        d += elm.Line().at(end_dot).right().length(max_x - end_dot.x)
+                        main_final = d.here
                         
                     bot_final = bot_end
                     if max_x > bot_end.x:
                         d += elm.Line().at(bot_end).right().length(max_x - bot_end.x)
                         bot_final = d.here
                         
-                    d += elm.Line().at(top_final).to(bot_final)
+                    d += elm.Line().at(bot_final).to(main_final)
+                    d.pop()
                     
-                    mid_y = (top_final.y + bot_final.y) / 2
-                    d += elm.Line().at((max_x, mid_y)).right().length(1)
+                    # --- NOUVEAU : ESPACEMENT HORIZONTAL ---
+                    d += elm.Dot().at(main_final)
+                    d += elm.Line().at(main_final).right().length(1)
                     self._track_x(d)
                     
                 elif direction == 'down':
-                    d += elm.Line().down().length(0.2)
+                    d += elm.Dot()
+                    start_dot = d.here
                     
-                    d.push()
-                    d += elm.Line().left().length(1.5) # Rendu très compact horizontalement
+                    # Le premier composant reste sur la ligne de descente
                     self._draw_branch(d, node.left, direction)
-                    left_end = d.here
+                    end_dot = d.here
                     self._track_y(d)
-                    self._track_x(d)
-                    d.pop()
                     
+                    # Le second s'enroule par la droite
                     d.push()
-                    d += elm.Line().right().length(1.5)
+                    d += elm.Line().at(start_dot).right().length(2.0)
                     self._draw_branch(d, node.right, direction)
                     right_end = d.here
-                    self._track_y(d)
                     self._track_x(d)
-                    d.pop()
                     
-                    min_y = min(left_end.y, right_end.y)
+                    min_y = min(end_dot.y, right_end.y)
                     
-                    left_final = left_end
-                    if min_y < left_end.y:
-                        d += elm.Line().at(left_end).down().length(left_end.y - min_y)
-                        left_final = d.here
+                    main_final = end_dot
+                    if min_y < end_dot.y:
+                        d += elm.Line().at(end_dot).down().length(end_dot.y - min_y)
+                        main_final = d.here
                         
                     right_final = right_end
                     if min_y < right_end.y:
                         d += elm.Line().at(right_end).down().length(right_end.y - min_y)
                         right_final = d.here
                         
-                    d += elm.Line().at(left_final).to(right_final)
+                    d += elm.Line().at(right_final).to(main_final)
+                    d.pop()
                     
-                    mid_x = (left_final.x + right_final.x) / 2
-                    d += elm.Line().at((mid_x, min_y)).down().length(0.2)
+                    # --- NOUVEAU : ESPACEMENT VERTICAL ---
+                    d += elm.Dot().at(main_final)
+                    d += elm.Line().at(main_final).down().length(1.25)
                     self._track_y(d)
 
     def save(self, filename="crossover_schematic.png"):
@@ -267,7 +266,7 @@ class SchematicRenderer:
         self.current_max_x = float('-inf')
 
         with schemdraw.Drawing(file=filename, show=False, dpi=300) as d:
-            d.config(fontsize=10) # 10 est la police idéale pour les schémas compacts
+            d.config(fontsize=10)
             
             start_pos = d.here 
             d += elm.Dot().label('IN+', loc='left')
@@ -285,17 +284,17 @@ class SchematicRenderer:
                 
                 # VOIE 1 : WOOFER
                 d.push()
-                d += elm.Line().up().length(1.5) # Départ très serré
+                d += elm.Line().up().length(1.5)
                 d += elm.Line().right().length(0.5)
                 self._draw_branch(d, self.tree.left, 'right')
                 self._track_y(d) 
                 d.pop()
                 
-                # CALCUL DE LA MARGE VERTICALE SÉCURISÉE (2.5 unités d'air garanti)
-                safe_y = min(split_dot.y - 2.5, self.current_min_y - 2.5)
+                # CALCUL DE LA MARGE VERTICALE GLOBALE
+                safe_y = min(split_dot.y - 2.5, self.current_min_y - 3.5)
                 drop_length = split_dot.y - safe_y
                 
-                # VOIE 2 : TWEETER
+                # VOIES 2/3 : DESCENTE VERS MID ET TWEETER
                 d.push()
                 d += elm.Line().down().length(drop_length)
                 d += elm.Line().right().length(0.5)

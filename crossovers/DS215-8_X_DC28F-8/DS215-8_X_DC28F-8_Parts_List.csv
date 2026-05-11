@@ -1,42 +1,10 @@
-=== FINAL CROSSOVER PARTS LIST ===
+Part Number;Quantity;Value;Unit;Component;Description;Unit Price ($);Line Total ($);URL
+027-408;2;0.68;μF;Capacitor;Dayton Audio DMPC-0.68 0.68uF 250V Polypropylene C;0.59;1.18;https://www.parts-express.com/Dayton-Audio-DMPC-0.68-0.68uF-250V-Polypropylene-Capacitor-027-408
+Jantzen Audio 000-2171;1;1.5;mH;Inductor;Jantzen Audio 000-2171 | 1,5 mH | 0,33 Ω | 3% | 18 AWG;9.45;9.45;https://www.soundimports.eu/en/jantzen-audio-000-2171.html
+Jantzen Audio 001-6141;2;15.0;μF;Capacitor;Jantzen Audio 001-6141 | 15 µF | 5% | 100 V;1.49;2.98;https://www.soundimports.eu/en/jantzen-audio-001-6141.html
+027-236;1;6.2;μF;Capacitor;Dayton Audio PMPC-6.2 6.2uF 250V Precision Audio C;1.99;1.99;https://www.parts-express.com/Dayton-Audio-PMPC-6.2-6.2uF-250V-Precision-Audio-Capacitor-027-236
+Dayton Audio LW18-22;1;0.22;mH;Inductor;Dayton Audio LW18-22 | 0.22 mH | 0.22 Ω | 5% | 18 AWG;5.95;5.95;https://www.soundimports.eu/en/dayton-audio-lw18-22.html
+255-234;1;0.6;mH;Inductor;Jantzen 1951 0.60mH 18 AWG Air Core Inductor;7.29;7.29;https://www.parts-express.com/Jantzen-1951-0.60mH-18-AWG-Air-Core-Inductor-255-234
 
-[1x] 2.2mH - Jantzen 6085 2.2mH 14 AWG C-Coil Toroidal Inductor (Part #255-808)
-      Price: $0.00 each -> Total: $0.00
-      Link: https://www.parts-express.com/Jantzen-6085-2.2mH-14-AWG-C-Coil-Toroidal-Inductor-255-808
-
-[1x] 30.0μF - Dayton Audio DMPC-30 30uF 250V Polypropylene C (Part #027-440)
-      Price: $7.69 each -> Total: $7.69
-      Link: https://www.parts-express.com/Dayton-Audio-DMPC-30-30uF-250V-Polypropylene-Capacitor-027-440
-
-[1x] 1.7mH - Jantzen 1516 1.7mH 18 AWG Air Core Inductor (Part #255-262)
-      Price: $16.81 each -> Total: $16.81
-      Link: https://www.parts-express.com/Jantzen-1516-1.7mH-18-AWG-Air-Core-Inductor-255-262
-
-[1x] 27.0μF - Dayton Audio DMPC-27 27uF 250V Polypropylene C (Part #027-439)
-      Price: $6.99 each -> Total: $6.99
-      Link: https://www.parts-express.com/Dayton-Audio-DMPC-27-27uF-250V-Polypropylene-Capacitor-027-439
-
-[1x] 8.2μF - Dayton Audio PMPC-8.2 8.2uF 250V Precision Audio C (Part #027-242)
-      Price: $2.39 each -> Total: $2.39
-      Link: https://www.parts-express.com/Dayton-Audio-PMPC-8.2-8.2uF-250V-Precision-Audio-Capacitor-027-242
-
-[1x] 1.5μF - Dayton Audio PMPC-1.5 1.5uF 250V Precision Audio C (Part #027-212)
-      Price: $3.25 each -> Total: $3.25
-      Link: https://www.parts-express.com/Dayton-Audio-PMPC-1.5-1.5uF-250V-Precision-Audio-Capacitor-027-212
-
-[1x] 0.56mH - Jantzen L-0056 0.56mH 15 AWG Litz Wire Air Core (Part #255-916)
-      Price: $26.00 each -> Total: $26.00
-      Link: https://www.parts-express.com/Jantzen-L-0056-0.56mH-15-AWG-Litz-Wire-Air-Core-Inductor-255-916
-
-[1x] 90.0μF - Dayton Audio DMPC-90 90uF 250V Polypropylene C (Part #027-446)
-      Price: $28.19 each -> Total: $28.19
-      Link: https://www.parts-express.com/Dayton-Audio-DMPC-90-90uF-250V-Polypropylene-Capacitor-027-446
-
-[1x] 0.3mH - Dayton Audio LW14-30 0.30mH 14 AWG Perfect Layer (Part #257-306)
-      Price: $15.59 each -> Total: $15.59
-      Link: https://www.parts-express.com/Dayton-Audio-LW14-30-0.30mH-14-AWG-Perfect-Layer-Inductor-257-306
-
-========================================
-TOTAL ESTIMATED COST (1 Speaker): $106.91
-TOTAL ESTIMATED COST (Pair):      $213.82
-========================================
+;;;;;TOTAL (1 Speaker):;$28.84;;
+;;;;;TOTAL (Pair):;$57.68;;

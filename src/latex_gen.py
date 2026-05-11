@@ -33,6 +33,7 @@ class LatexReportGenerator:
         img_heatmap = f"{self.project_name}_Directivity_Heatmap.png"
         img_impedance = f"{self.project_name}_Impedance.png"
         img_schema = f"{self.project_name}_Schema.png"
+        img_geometry = f"{self.project_name}_Geometry.png"
 
         # ==========================================
         # 2. LE TEMPLATE LATEX BRUT
@@ -152,6 +153,12 @@ This section provides the electrical schematic required to build the crossover a
     \includegraphics[width=0.95\linewidth]{__IMG_SCHEMA__}
 \end{figure}
 
+\section{Baffle Schematic}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{__IMG_GEOMETRY__}
+\end{figure}
+
 \clearpage
 \thispagestyle{empty} 
 \begin{tikzpicture}[remember picture,overlay]
@@ -182,6 +189,7 @@ This section provides the electrical schematic required to build the crossover a
         latex_code = latex_code.replace("__IMG_HEATMAP__", img_heatmap)
         latex_code = latex_code.replace("__IMG_IMPEDANCE__", img_impedance)
         latex_code = latex_code.replace("__IMG_SCHEMA__", img_schema)
+        latex_code = latex_code.replace("__IMG_GEOMETRY__", img_geometry)
         latex_code = latex_code.replace("__BOM_TABLE__", bom_content)
         latex_code = latex_code.replace("__LOGO_PATH__", self.logo_path)
 

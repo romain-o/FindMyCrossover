@@ -1,15 +1,31 @@
 import pandas as pd
 
 def concat_catalogs(files, output_file):
+    '''Concatène plusieurs fichiers CSV de catalogue de composants en un seul, en supprimant les doublons et en filtrant les composants non pertinents (ex: AWG > 18).
+    Le CSV SoundImports doit être le premier élément de la liste'''
+    
     dfs = []
-    for f in files:
+    df_SI = pd.read_csv(files[0])
+    df_SI['Price'] = df_SI['Price'] * 1.21  # Application de la TVA à 21% sur les prix SoundImports
+    # Arrondis au centime
+    df_SI['Price'] = df_SI['Price'].round(2)
+    dfs.append(df_SI)
+    print(f"  ✅ {files[0]} chargé ({len(df_SI)} pièces)")
+
+    for f in files[1:]:
         df = pd.read_csv(f)
         dfs.append(df)
         print(f"  ✅ {f} chargé ({len(df)} pièces)")
-    
+
     combined_df = pd.concat(dfs, ignore_index=True)
+    if 'AWG' in combined_df.columns:
+        # Remove every row where AWG is superior to 18 (inclusive)
+        combined_df = combined_df[combined_df['AWG'] <= 18]
+    
     combined_df.to_csv(output_file, index=False, sep=',', encoding='utf-8')
     print(f"\n🎉 Catalogues combinés enregistrés dans {output_file} ({len(combined_df)} pièces au total)")
+
+    
 if __name__ == "__main__":
     print("\n" + "="*60)
     print("🔗 CONCATÉNATION DES CATALOGUES CSV")

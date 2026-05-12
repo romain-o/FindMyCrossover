@@ -5,24 +5,32 @@ import json
 import customtkinter as ctk
 from src.optimizer import WEIGHTS as DEFAULT_WEIGHTS
 
-WEIGHT_DEFS = {
-    'crossover': 3.2549,
-    'fc_err': 20.0,
-    'impedance': 142.9232,
-    'tweeter_low': 48.4022,
-    'woofer_high': 10.0,
-    'woofer_attenuation': 218.2858,
-    'thermal': 0.1216,
-    #'components': 0.6808,
-    'components': 0.5,
-    'resistors': 0.4,
-    'mse_sum': 1.0000,
-    'n_comps': 9,
-    
-    'midrange_low': 25.0,
-    'midrange_high': 25.0,
-    'midrange_participation': 60.0,       
-    'midrange_attenuation': 200,
+DEFAULT_CONFIG = {
+    "weights": {
+        "mse_sum": 1.0,
+        "n_comps": 12,
+        "crossover": 3.2549,
+        "fc_err": 20.0,
+        "impedance": 142.9232,
+        "woofer_attenuation": 218.2858,
+        "midrange_attenuation": 200.0,
+        "thermal": 20.0,
+        "tweeter_low": 48.4022,
+        "woofer_high": 10.0,
+        "midrange_low": 25.0,
+        "midrange_high": 25.0,
+        "midrange_participation": 60.0,
+        "components": 0.5,
+        "resistors": 0.4
+    },
+    "spl_settings": {
+        "target_offset_db": 0.0
+    },
+    "optimization_range": {
+        "mode": "auto", 
+        "manual_min_hz": 300,
+        "manual_max_hz": 15000
+    }
 }
 WEIGHT_DEFS = {
     # Groupe : Objectif Principal
@@ -72,11 +80,6 @@ class FindMyCrossoverApp(ctk.CTk):
         self.all_woofers = self.scan_drivers("Woofers")
         self.all_midranges = self.scan_drivers("Midranges")
         self.all_tweeters = self.scan_drivers("Tweeters")
-        
-        self.weight_vars = {
-            key: ctk.StringVar(value=str(WEIGHT_DEFS[key][0]))
-            for key in WEIGHT_DEFS
-        }
 
         self.build_ui()
 
@@ -93,18 +96,7 @@ class FindMyCrossoverApp(ctk.CTk):
         self.console.insert("end", text + "\n")
         self.console.see("end")
         self.console.configure(state="disabled")
-        
-    def get_current_weights_json(self):
-        """Construit le JSON des poids depuis les StringVar."""
-        out = {}
-        for key, var in self.weight_vars.items():
-            raw = var.get().strip()
-            try:
-                typ = WEIGHT_DEFS[key][2]
-                out[key] = int(raw) if typ == "int" else float(raw)
-            except ValueError:
-                out[key] = WEIGHT_DEFS[key][0]  # fallback défaut
-        return json.dumps(out)
+
 
     def build_ui(self):
         # --- TITRE ---
@@ -354,58 +346,85 @@ class FindMyCrossoverApp(ctk.CTk):
         
     def open_settings(self):
         win = ctk.CTkToplevel(self)
-        win.title("⚙️  Paramètres Avancés — Poids Fitness")
-        win.geometry("500x580")
+        win.title("⚙️ Configuration Globale (config.json)")
+        win.geometry("450x650")
         win.resizable(False, True)
         win.grab_set()
 
         ctk.CTkLabel(
-            win, text="Poids de la Fonction Fitness",
-            font=ctk.CTkFont(size=15, weight="bold")
-        ).pack(pady=(14, 6))
-        ctk.CTkLabel(
-            win, text="Modifiez uniquement si vous savez ce que vous faites.",
-            font=ctk.CTkFont(size=11), text_color="gray"
-        ).pack(pady=(0, 10))
+            win, text="Paramètres de l'Optimiseur",
+            font=ctk.CTkFont(size=16, weight="bold")
+        ).pack(pady=(15, 5))
 
-        scroll = ctk.CTkScrollableFrame(win, height=420)
-        scroll.pack(fill="both", expand=True, padx=16)
+        scroll = ctk.CTkScrollableFrame(win)
+        scroll.pack(fill="both", expand=True, padx=16, pady=(0, 10))
 
-        # NOUVEAU : Un dictionnaire temporaire pour stocker nos champs de texte
+        # 1. Chargement ou Création du fichier JSON
+        config_path = "config.json"
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config_data = json.load(f)
+        except FileNotFoundError:
+            self.write_console("[!] Fichier config.json introuvable. Création avec les paramètres par défaut.")
+            config_data = DEFAULT_CONFIG.copy()
+
+        # 2. Génération dynamique de l'interface
         local_entries = {}
+        row = 0
 
-        for group_name, keys in WEIGHT_GROUPS:
-            # En-tête de groupe
-            sep_frame = ctk.CTkFrame(scroll, height=2, fg_color="#444444")
-            sep_frame.pack(fill="x", pady=(10, 2))
+        for section, params in config_data.items():
+            # Titre de section stylisé
             ctk.CTkLabel(
-                scroll, text=group_name,
-                font=ctk.CTkFont(size=12, weight="bold"), text_color="#aaaaaa"
-            ).pack(anchor="w", pady=(2, 6))
+                scroll, text=section.replace('_', ' ').upper(),
+                font=ctk.CTkFont(size=13, weight="bold"), text_color="#00A86B"
+            ).grid(row=row, column=0, columnspan=2, pady=(15, 5), sticky="w")
+            row += 1
+            
+            if isinstance(params, dict):
+                local_entries[section] = {}
+                for key, value in params.items():
+                    # Nom du paramètre
+                    ctk.CTkLabel(
+                        scroll, text=key, font=ctk.CTkFont(size=12)
+                    ).grid(row=row, column=0, sticky="w", padx=(10, 20), pady=2)
+                    
+                    # Champ de saisie
+                    entry = ctk.CTkEntry(scroll, width=120)
+                    entry.insert(0, str(value))
+                    entry.grid(row=row, column=1, sticky="e", pady=2)
+                    
+                    local_entries[section][key] = entry
+                    row += 1
 
-            for key in keys:
-                _, description, _ = WEIGHT_DEFS[key]
-                row = ctk.CTkFrame(scroll, fg_color="transparent")
-                row.pack(fill="x", pady=2)
-                row.columnconfigure(0, weight=1)
-                row.columnconfigure(1, weight=0)
+        # 3. Fonction de Sauvegarde
+        def save_and_close():
+            for section, params in local_entries.items():
+                for key, entry in params.items():
+                    val_str = entry.get()
+                    # Typage intelligent
+                    if val_str.lower() in ['true', 'false']:
+                        config_data[section][key] = val_str.lower() == 'true'
+                    elif val_str.replace('.', '', 1).replace('-', '', 1).isdigit():
+                        config_data[section][key] = float(val_str) if "." in val_str else int(val_str)
+                    else:
+                        config_data[section][key] = val_str
 
-                ctk.CTkLabel(
-                    row, text=f"{description}",
-                    font=ctk.CTkFont(size=12), anchor="w"
-                ).grid(row=0, column=0, sticky="w", padx=(0, 10))
-
-                # CORRECTION : Plus de 'textvariable'. On injecte la valeur manuellement.
-                entry = ctk.CTkEntry(row, width=90)
-                entry.insert(0, self.weight_vars[key].get())
-                entry.grid(row=0, column=1, sticky="e")
+            # Écriture physique sur le disque
+            with open(config_path, 'w', encoding='utf-8') as f:
+                json.dump(config_data, f, indent=4)
                 
-                # On sauvegarde la référence du champ pour le lire plus tard
-                local_entries[key] = entry
+            self.write_console("[+] Configuration mise à jour et sauvegardée dans config.json.")
+            win.destroy()
 
-        # --- GESTION DES BOUTONS ET FERMETURE ---
+        # Bouton d'action
         btn_frame = ctk.CTkFrame(win, fg_color="transparent")
-        btn_frame.pack(fill="x", padx=16, pady=12)
+        btn_frame.pack(fill="x", padx=16, pady=(0, 15))
+        
+        ctk.CTkButton(
+            btn_frame, text="💾 Sauvegarder & Fermer",
+            font=ctk.CTkFont(weight="bold"),
+            command=save_and_close
+        ).pack(fill="x")
 
         def reset_defaults():
             """Remet les valeurs par défaut dans les champs affichés."""
@@ -450,8 +469,6 @@ class FindMyCrossoverApp(ctk.CTk):
         mx = self.mx_entry.get() 
         my = self.my_entry.get()
         mz = self.mz_entry.get() 
-        
-        weights_json = self.get_current_weights_json()
             
         # --- MODIFICATION ICI ---
         if self.auto_fc_var.get():
@@ -477,10 +494,10 @@ class FindMyCrossoverApp(ctk.CTk):
                                                          name, gen, pop, 
                                                          fc1, fc2, 
                                                          wx, wy, wz, mx, my, mz,
-                                                         weights_json), 
+                                                         ), 
                          daemon=True).start()
 
-    def _run_process(self, w, w_qty, m, t, name, gen, pop, fc1, fc2, wx, wy, wz, mx, my, mz, weights_json):
+    def _run_process(self, w, w_qty, m, t, name, gen, pop, fc1, fc2, wx, wy, wz, mx, my, mz):
         """Exécute run.py en interceptant ce qu'il affiche."""
         out_dir = os.path.join("crossovers", name)
         
@@ -507,7 +524,6 @@ class FindMyCrossoverApp(ctk.CTk):
             "--mx", mx,
             "--my", my,
             "--mz", mz,
-            "--weights", weights_json,
             *fc_args, 
         ]
         if m:

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  12 MAY 2026 12:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.20)  12 MAY 2026 11:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1034,17 +1034,17 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 ]
 Chapter 3.
-<SS-18W8531G00_X_SS-D3004-660000_Schema.png, id=101, 629.2308pt x 566.5968pt>
+<SS-18W8531G00_X_SS-D3004-660000_Schema.png, id=100, 629.2308pt x 521.5485pt>
 File: SS-18W8531G00_X_SS-D3004-660000_Schema.png Graphic file (type png)
 <use SS-18W8531G00_X_SS-D3004-660000_Schema.png>
 Package pdftex.def Info: SS-18W8531G00_X_SS-D3004-660000_Schema.png  used on in
-put line 138.
-(pdftex.def)             Requested size: 364.19667pt x 327.94337pt.
-<SS-18W8531G00_X_SS-D3004-660000_Geometry.png, id=102, 392.667pt x 521.7894pt>
+put line 137.
+(pdftex.def)             Requested size: 364.19667pt x 301.86963pt.
+<SS-18W8531G00_X_SS-D3004-660000_Geometry.png, id=101, 392.667pt x 521.7894pt>
 File: SS-18W8531G00_X_SS-D3004-660000_Geometry.png Graphic file (type png)
 <use SS-18W8531G00_X_SS-D3004-660000_Geometry.png>
 Package pdftex.def Info: SS-18W8531G00_X_SS-D3004-660000_Geometry.png  used on 
-input line 146.
+input line 145.
 (pdftex.def)             Requested size: 364.19667pt x 483.96133pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1064,11 +1064,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [7 <./SS-18W8531G00_X_SS-D3004-660000_Geometry.png>]
-<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=114, 501.875pt x 501.875pt>
+<C:/Geekosphere/FindMyCrossover/utils/logo.png, id=113, 501.875pt x 501.875pt>
 File: C:/Geekosphere/FindMyCrossover/utils/logo.png Graphic file (type png)
 <use C:/Geekosphere/FindMyCrossover/utils/logo.png>
 Package pdftex.def Info: C:/Geekosphere/FindMyCrossover/utils/logo.png  used on
- input line 164.
+ input line 163.
 (pdftex.def)             Requested size: 113.81102pt x 113.80533pt.
  [8
 
@@ -1095,10 +1095,10 @@ cmmi10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
 fonts/cm/cmr10.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1/ur
 w/helvetic/uhvb8a.pfb><C:/Users/romai/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/helvetic/uhvr8a.pfb>
-Output written on SS-18W8531G00_X_SS-D3004-660000_Report.pdf (9 pages, 1489534 
+Output written on SS-18W8531G00_X_SS-D3004-660000_Report.pdf (9 pages, 1469157 
 bytes).
 PDF statistics:
- 146 PDF objects out of 1000 (max. 8388607)
+ 145 PDF objects out of 1000 (max. 8388607)
  18 named destinations out of 1000 (max. 500000)
  120 words of extra memory for PDF output out of 10000 (max. 10000000)
 

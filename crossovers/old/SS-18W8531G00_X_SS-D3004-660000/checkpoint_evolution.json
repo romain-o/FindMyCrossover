@@ -118,20 +118,10 @@
                             "type": "ParallelNode",
                             "id": "0d72980c",
                             "left": {
-                                "type": "ParallelNode",
-                                "id": "0d72980c",
-                                "left": {
-                                    "type": "Resistor",
-                                    "id": "dd22c718",
-                                    "value": 10,
-                                    "unit": "Ohm"
-                                },
-                                "right": {
-                                    "type": "Resistor",
-                                    "id": "d1c8e5b7",
-                                    "value": 10,
-                                    "unit": "Ohm"
-                                }
+                                "type": "Resistor",
+                                "id": "dd22c718",
+                                "value": 5.1,
+                                "unit": "Ohm"
                             },
                             "right": {
                                 "type": "DriverNode",

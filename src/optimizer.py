@@ -4,6 +4,7 @@ import json
 import os
 import itertools # <-- NOUVEL IMPORT POUR LE BRUTE FORCE
 import csv
+
 import matplotlib.pyplot as plt
 from src.nodes import DriverNode, SeriesNode, ParallelNode, ShuntNode, Capacitor, Inductor, Resistor, Node, ComponentNode
 from src.evaluator import CircuitEvaluator
@@ -26,7 +27,6 @@ def _pool_init(opt):
     _pool_optimizer = opt
 
 def _pool_fitness(ind):
-    # NOUVEAU : On retourne aussi le wiring trouvé par le worker
     score = _pool_optimizer.fitness(ind)
     return score, ind.get('wiring', {})
 
@@ -77,82 +77,37 @@ class WayConfig:
         self.driver = DriverNode(label, frd_path, zma_path)
 
 class CrossoverOptimizer:
-    def __init__(self, ways_configs, target_fc=0.0, weights=None):
-        self.freqs = np.geomspace(20, 20000, 400)
+    def __init__(self, ways_configs, target_fc=0.0, app_config=None):
         self.ways = ways_configs
-        self.evaluator = CircuitEvaluator(self.freqs)
+        self.app_config = app_config if app_config else {}
         self.mutator = TreeMutator(
-            prob_value_mut=0.2, 
-            prob_type_mut=0.1, 
-            prob_topology_mut=0.3, 
-            prob_add_node=0.35,
-            prob_remove_node=0.05
+            prob_value_mut=0.2, prob_type_mut=0.1, prob_topology_mut=0.3, 
+            prob_add_node=0.35, prob_remove_node=0.05
         )
         
         global WEIGHTS
-        self.weights = weights if weights is not None else WEIGHTS
-                            
-        if len(self.ways) == 2:
-            self.mask_ref = [
-                (self.freqs > 200) & (self.freqs < 1000),
-                (self.freqs > 4000) & (self.freqs < 14000)
-            ]
-        elif len(self.ways) == 3:
-            self.mask_ref = [
-                            (self.freqs > 100) & (self.freqs < 700),
-                            (self.freqs > 1000) & (self.freqs < 4000),
-                            (self.freqs > 4000) & (self.freqs < 13000)
-                            ]
+        self.weights = self.app_config.get("weights", WEIGHTS)
+        self.spl_offset = self.app_config.get("spl_settings", {}).get("target_offset_db", 0.0)
+        self.range_config = self.app_config.get("optimization_range", {"mode": "auto"})
         
-        for way in self.ways:
-            self._prepare_driver(way)
-            
-        # On calcule le SPL de base en prenant en compte le count potentiel
-        self.apply_wiring({w.label: 'parallel' for w in self.ways if getattr(w, 'count', 1) > 1})
-        min_raw_avg = np.inf 
-        for j in range(len(self.ways) - 1):
-            raw_mag = np.abs(self.ways[j].driver.H_acoustic)
-            raw_spl = 20 * np.log10(raw_mag + 1e-12)
-            raw_avg = np.mean(raw_spl[self.mask_ref[j]]) if np.any(self.mask_ref[j]) else self.target_spl
-            if raw_avg <= min_raw_avg:
-                min_raw_avg = raw_avg
-                
-        self.target_spl = min_raw_avg
         self.target_fc = target_fc
-        self.apply_wiring({}) # On restaure à 1
-        
-        print(f"[+] Cible SPL verrouillée à {self.target_spl:.1f} dB (Woofer brut estimé: {raw_avg:.1f} dB)")
-        
-        max_raw_spl = np.zeros_like(self.freqs)
-        for way in self.ways:
-            raw_mag = np.abs(way.driver.H_base)
-            raw_spl = 20 * np.log10(raw_mag + 1e-12)
-            max_raw_spl = np.maximum(max_raw_spl, raw_spl)
-            
-        playable_mask = max_raw_spl >= (self.target_spl - 10.0)
-        valid_indices = np.where(playable_mask)[0]
-        
-        if len(valid_indices) > 0:
-            idx_min = valid_indices[0]
-            idx_max = valid_indices[-1]
-            f_min = self.freqs[min(idx_min + 5, len(self.freqs)-1)]
-            f_max = self.freqs[max(idx_max - 5, 0)]
-            f_min = max(f_min, 80.0)
-            f_max = min(f_max, 20000.0)
-        else:
-            f_min, f_max = 80, 20000
-        self.mask_flat = (self.freqs >= f_min) & (self.freqs <= f_max)
-        print(f"[+] Plage d'optimisation auto-détectée : {int(f_min)} Hz - {int(f_max)} Hz")
 
-        self._base_weight = np.zeros(len(self.freqs))
-        self._base_weight[self.mask_flat] = 1.0
+        # --- Démarrage en mode "Ultra-Rapide" (Exploration) ---
+        self._set_resolution(1000)
 
     def _prepare_driver(self, way):
         d = way.driver
+        # 1. Sauvegarde définitive des données brutes (Indispensable pour changer de résolution)
+        if not hasattr(d, 'H_raw'):
+            d.H_raw = d.H_acoustic.copy()
+            d.Z_raw = d.Z_complex.copy()
+
         raw_name = os.path.basename(way.frd_path).split('.')[0].split('@')[0]
         d.model_name = raw_name.replace('_0deg', '')
-        mag_db = 20 * np.log10(np.abs(d.H_acoustic) + 1e-10)
-        ph_unwrapped = np.unwrap(np.angle(d.H_acoustic))
+        
+        # 2. Interpolation basée STRICTEMENT sur le raw
+        mag_db = 20 * np.log10(np.abs(d.H_raw) + 1e-10)
+        ph_unwrapped = np.unwrap(np.angle(d.H_raw))
         
         mag_interp = np.interp(self.freqs, d.frd_freqs, mag_db)
         ph_interp = np.interp(self.freqs, d.frd_freqs, ph_unwrapped)
@@ -162,13 +117,69 @@ class CrossoverOptimizer:
         phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
         d.H_acoustic *= phase_delay
 
-        z_mag = np.abs(d.Z_complex)
-        z_ph = np.unwrap(np.angle(d.Z_complex))
+        z_mag = np.abs(d.Z_raw)
+        z_ph = np.unwrap(np.angle(d.Z_raw))
         d.Z_complex = np.interp(self.freqs, d.zma_freqs, z_mag) * np.exp(1j * np.interp(self.freqs, d.zma_freqs, z_ph))
 
-        # NOUVEAU : Sauvegarde des réponses de base pour les calculs Série/Parallèle
         d.H_base = d.H_acoustic.copy()
         d.Z_base = d.Z_complex.copy()
+
+    def _set_resolution(self, n_points):
+        """Reconstruit entièrement la grille de calcul avec 'n_points' fréquences."""
+        print(f"[*] Ajustement de la résolution d'optimisation : {n_points} points")
+        self.freqs = np.geomspace(20, 20000, n_points)
+        self.evaluator = CircuitEvaluator(self.freqs)
+
+        # Re-préparation de tous les HPs sur la nouvelle grille
+        for way in self.ways:
+            self._prepare_driver(way)
+
+        # Recalcul des constantes pour la fonction fitness
+        self._cache_1e12 = 1e-12
+        self._mask_power = self.freqs < 1000.0
+        self.V_amp_test = 28.28 * np.where(self.freqs < 500.0, 1.0, 500.0 / self.freqs).astype(complex)
+
+        # Configuration des masques
+        if len(self.ways) == 2:
+            self.mask_ref = [
+                (self.freqs > 200) & (self.freqs < 1000),
+                (self.freqs > 4000) & (self.freqs < 14000)
+            ]
+        elif len(self.ways) == 3:
+            self.mask_ref = [
+                (self.freqs > 100) & (self.freqs < 700),
+                (self.freqs > 1000) & (self.freqs < 4000),
+                (self.freqs > 4000) & (self.freqs < 13000)
+            ]
+
+        self.apply_wiring({w.label: 'parallel' for w in self.ways if getattr(w, 'count', 1) > 1})
+        min_raw_avg = np.inf 
+        for j in range(len(self.ways) - 1):
+            raw_mag = np.abs(self.ways[j].driver.H_acoustic)
+            raw_avg = np.mean(20 * np.log10(raw_mag[self.mask_ref[j]] + 1e-12)) if np.any(self.mask_ref[j]) else 85.0
+            if raw_avg <= min_raw_avg: min_raw_avg = raw_avg
+                
+        self.target_spl = min_raw_avg
+        self.apply_wiring({})
+
+        max_raw_spl = np.zeros_like(self.freqs)
+        for way in self.ways:
+            max_raw_spl = np.maximum(max_raw_spl, 20 * np.log10(np.abs(way.driver.H_base) + 1e-12))
+            
+        valid_indices = np.where(max_raw_spl >= (self.target_spl - 10.0))[0]
+        if len(valid_indices) > 0:
+            f_min = max(self.freqs[min(valid_indices[0] + 5, len(self.freqs)-1)], 80.0)
+            f_max = min(self.freqs[max(valid_indices[-1] - 5, 0)], 20000.0)
+        else:
+            f_min, f_max = 80, 20000
+            
+        if self.range_config.get("mode") == "manual":
+            f_min = self.range_config.get("manual_min_hz", 100)
+            f_max = self.range_config.get("manual_max_hz", 15000)
+  
+        self.mask_flat = (self.freqs >= f_min) & (self.freqs <= f_max)
+        self._base_weight = np.zeros(len(self.freqs))
+        self._base_weight[self.mask_flat] = 1.0
 
     def apply_wiring(self, wiring_dict):
         """Applique dynamiquement les modifications Z et H selon le câblage choisi."""
@@ -189,7 +200,10 @@ class CrossoverOptimizer:
                     d.H_acoustic = d.H_base
 
     def fitness(self, individual, return_components=False):
+        if not return_components and '_cached_score' in individual:
+            return individual['_cached_score']
         root = individual['tree']
+        
         
         # 1. Vérification des limites physiques
         for comp in root.get_all_nodes():
@@ -234,7 +248,7 @@ class CrossoverOptimizer:
                 p_sum_test += p_real
                 
             spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
-            dynamic_spl = self.target_spl
+            dynamic_spl = self.target_spl - self.spl_offset
             diff = spl_sum_test - dynamic_spl
             
             comps_track = {
@@ -433,40 +447,44 @@ class CrossoverOptimizer:
                             comps_track['Midrange_Participation'] += (shortfall ** 2) * self.weights.get('midrange_attenuation', 100.0)
 
 
-            V_amp_test = np.full_like(self.freqs, 28.28, dtype=complex)
-            
             # ==========================================
-            # ÉVALUATION THERMIQUE ET EFFICACITÉ ÉNERGÉTIQUE
+            # ÉVALUATION THERMIQUE ULTRA-RAPIDE (Sans récursion)
             # ==========================================
-            if hasattr(self, '_get_power_dissipation_stats'):
-                # 1. Spectre de test réaliste (Inspiré de la norme IEC 268-5)
-                # 28.28V (~100W) dans les graves, puis atténuation de -6dB/octave au-delà de 500 Hz.
-                # Cela empêche de faussement pénaliser les L-Pads des tweeters.
-                V_amp_test = 28.28 * np.where(self.freqs < 500.0, 1.0, 500.0 / self.freqs)
-                
-                max_res_power, tot_res_power, tot_drv_power = self._get_power_dissipation_stats(root, V_amp_test)
-                
-                # Pénalité A : Thermique absolue (Protection contre l'incendie des composants)
-                if max_res_power > 20.0:
-                    comps_track['Thermal_Penalty'] += ((max_res_power - 20.0) ** 2) * self.weights['thermal']
-                    
-                # Pénalité B : Gaspillage énergétique (Interdit les résistances de by-pass massives)
-                # On se concentre sur les graves/médiums (< 1000 Hz) où l'énergie de l'ampli est critique.
-                mask_power = self.freqs < 1000.0
-                if np.any(mask_power):
-                    # Ratio = Puissance dissipée en chaleur / Puissance utile livrée aux HP
-                    res_waste_ratio = tot_res_power[mask_power] / (tot_drv_power[mask_power] + 1e-12)
-                    
-                    # On tolère jusqu'à 20% de perte (pour autoriser les réseaux Zobel légitimes)
-                    waste_excess = np.maximum(0, res_waste_ratio - 0.20)
-                    
-                    if np.any(waste_excess > 0):
-                        # On pondère la pénalité par les VRAIS Watts gaspillés. 
-                        # Ainsi, gâcher 50% de 0.1W est ignoré, mais gâcher 50% de 40W est lourdement puni.
-                        wasted_watts = waste_excess * tot_drv_power[mask_power]
-                        comps_track['Thermal_Penalty'] += np.sum(wasted_watts ** 2) * self.weights['thermal'] * 15.0
-
+            max_res_power = 0.0
+            tot_res_power = np.zeros_like(self.freqs)
+            tot_drv_power = np.zeros_like(self.freqs)
             all_nodes = root.get_all_nodes()
+            
+            # On utilise le transfert électrique (node._V) calculé lors de l'évaluation acoustique
+            for c in all_nodes: # 'all_nodes' est déjà dispo via root.get_all_nodes()
+                t = type(c)
+                if t is Resistor:
+                    # Tension Réelle = Fonction de Transfert * Signal de Test de l'Ampli
+                    v_real = c._V * self.V_amp_test
+                    p_array = (np.abs(v_real)**2) / float(c.value)
+                    
+                    max_p = np.max(p_array)
+                    if max_p > max_res_power: max_res_power = max_p
+                    tot_res_power += p_array
+                    
+                elif t is DriverNode:
+                    way = next(w for w in self.ways if w.label == c.label)
+                    Z = way.driver.Z_complex if hasattr(way.driver, 'Z_complex') else np.full_like(self.freqs, 8.0)
+                    
+                    v_real = c._V * self.V_amp_test
+                    tot_drv_power += (np.abs(v_real)**2) * np.real(1.0 / (Z + 1e-15))
+            
+            # Application des pénalités exactement comme avant
+            if max_res_power > 20.0:
+                comps_track['Thermal_Penalty'] += ((max_res_power - 20.0) ** 2) * self.weights['thermal']
+                
+            if np.any(self._mask_power):
+                res_waste_ratio = tot_res_power[self._mask_power] / (tot_drv_power[self._mask_power] + self._cache_1e12)
+                waste_excess = np.maximum(0, res_waste_ratio - 0.20)
+                if np.any(waste_excess > 0):
+                    wasted_watts = waste_excess * tot_drv_power[self._mask_power]
+                    comps_track['Thermal_Penalty'] += np.sum(wasted_watts ** 2) * self.weights['thermal'] * 15.0
+                        
             comps = [n for n in all_nodes if isinstance(n, ComponentNode)]
             n_comps = len(comps)
 
@@ -498,6 +516,7 @@ class CrossoverOptimizer:
         else:
             self.apply_wiring({})
 
+        individual['_cached_score'] = best_final_score
         if return_components:
             return best_final_score, best_comps_track
             
@@ -722,13 +741,58 @@ class CrossoverOptimizer:
 
         best_score = float('inf')
         best_ind = population[0]
+        current_res = len(self.freqs)
 
         n_workers = cpu_count()
         chunksize = max(1, pop_size // (n_workers * 4))
 
         with Pool(processes=n_workers, initializer=_pool_init, initargs=(self,)) as pool:
             for gen in range(generations):
-                # NOUVEAU : Récupération du tuple (score, wiring) depuis _pool_fitness
+                
+                if gen < int(generations * 0.4):      
+                    max_opt_iter = 5
+                    target_res = 1000
+                    snap_to_standard = False
+                elif gen < int(generations * 0.8):    
+                    max_opt_iter = 12
+                    target_res = 1000
+                    snap_to_standard = False
+                else:                                 
+                    max_opt_iter = 20
+                    target_res = 1000
+                    snap_to_standard = True
+                    
+                if gen == int(generations * 0.8):
+                    print("Passage en PHASE 3 (Standardisation CATALOGUE)")
+                    best_score = float('inf') 
+                    
+                if target_res != current_res:
+                    print(f"\n[!] Transition de phase (Génération {gen}/{generations})")
+                    # 1. On ferme les anciens processus de calcul
+                    pool.close()
+                    pool.join()
+                    
+                    # 2. On met à jour le coeur de calcul principal
+                    self._set_resolution(target_res)
+                    current_res = target_res
+                    
+                    # 3. CRUCIAL: On efface les vieux scores en cache car l'échelle de notation a changé !
+                    for ind in population:
+                        ind.pop('_cached_score', None)
+                        # --- NOUVEAU : On met à jour la résolution des HP dans les arbres ---
+                        for node in ind['tree'].get_all_nodes():
+                            if isinstance(node, DriverNode):
+                                way = next((w for w in self.ways if w.label == node.label), None)
+                                if way:
+                                    node.H_acoustic = way.driver.H_acoustic.copy()
+                                    node.Z_complex = way.driver.Z_complex.copy()
+                        
+                    best_score = float('inf') # On reset le meilleur score pour la nouvelle échelle
+                    
+                    # 4. On relance des processus tout neufs
+                    pool = Pool(processes=n_workers, initializer=_pool_init, initargs=(self,))
+                # -------------------------------------------------------------
+                
                 fitness_results = pool.map(_pool_fitness, population, chunksize=chunksize)
                 
                 scores = []
@@ -753,19 +817,6 @@ class CrossoverOptimizer:
                 avg_comps = {k: np.mean([c[k] for c in gen_comps]) for k in gen_comps[0].keys()}
                 self.loss_history.append(avg_comps)
                 
-                if gen < int(generations * 0.4):      
-                    max_opt_iter = 5
-                    snap_to_standard = False
-                elif gen < int(generations * 0.8):    
-                    max_opt_iter = 12
-                    snap_to_standard = False
-                else:                                 
-                    max_opt_iter = 20
-                    snap_to_standard = True
-                    
-                if gen == int(generations * 0.8):
-                    print("Passage en PHASE 3 (Standardisation CATALOGUE)")
-                    best_score = float('inf') 
 
                 elite_count = max(2, pop_size // 10)
                 elite_args = [(scores[i][1], max_opt_iter, snap_to_standard) for i in range(elite_count)]
@@ -886,7 +937,7 @@ class CrossoverOptimizer:
         plt.close()
 
     def plot_directivity(self, individual, filename="directivity.png"):
-        self.apply_wiring(individual.get('wiring', {})) # NOUVEAU
+        self.apply_wiring(individual.get('wiring', {}))
         
         plt.figure(figsize=(12, 7))
         root = individual['tree']
@@ -900,16 +951,28 @@ class CrossoverOptimizer:
         for idx, angle in enumerate(angles):
             valid_angle = True
             
+            # Masque pour mémoriser les fréquences couvertes par au moins 1 fichier FRD
+            system_valid_mask = np.zeros_like(self.freqs, dtype=bool)
+            
             for way in self.ways:
-                new_H = original_H[way.label] if angle == '0deg' else self._get_off_axis_H(way, angle)
+                # CORRECTION 1 : On lit le fichier même pour 0deg (finit les courbes plates !)
+                new_H = self._get_off_axis_H(way, angle)
                 if new_H is None:
                     valid_angle = False
                     break
+                    
+                # On extrait les limites réelles du fichier pour notre masque visuel
+                path = way.frd_path.replace('0deg', angle)
+                frd_data = np.loadtxt(path)
+                f_min, f_max = frd_data[0, 0], frd_data[-1, 0]
+                system_valid_mask |= (self.freqs >= f_min) & (self.freqs <= f_max)
+
                 for node in root.get_all_nodes():
                     if isinstance(node, DriverNode) and node.label == way.label:
                         node.H_acoustic = new_H
                         
-            if not valid_angle: continue 
+            if not valid_angle: 
+                continue 
                 
             res = self.evaluator.evaluate(root)
             p_sum = np.zeros_like(self.freqs, dtype=complex)
@@ -918,6 +981,10 @@ class CrossoverOptimizer:
                 p_sum += p_real
                 
             spl_sum = 20 * np.log10(np.abs(p_sum) + 1e-12)
+            
+            # CORRECTION 2 : On cache les extrémités de la courbe juste avant de dessiner
+            spl_sum[~system_valid_mask] = np.nan
+            
             plt.semilogx(self.freqs, spl_sum, label=labels[idx], color=colors[idx], linewidth=3 if idx==0 else 2, alpha=alphas[idx])
             
         for way in self.ways:
@@ -961,8 +1028,10 @@ class CrossoverOptimizer:
             mag_db = frd_data[:, 1]
             ph_unwrapped = np.unwrap(np.deg2rad(frd_data[:, 2]))
             
-            mag_interp = np.interp(self.freqs, frd_freqs, mag_db)
-            ph_interp = np.interp(self.freqs, frd_freqs, ph_unwrapped)
+            # CORRECTION : On utilise -200 dB (silence absolu) aux extrémités !
+            # Cela permet aux autres haut-parleurs de continuer à jouer normalement.
+            mag_interp = np.interp(self.freqs, frd_freqs, mag_db, left=-200, right=-200)
+            ph_interp = np.interp(self.freqs, frd_freqs, ph_unwrapped, left=0, right=0)
             H_acoustic = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
             
             x_mm = getattr(way, 'x_offset', 0.0)
@@ -977,7 +1046,6 @@ class CrossoverOptimizer:
             phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
             H_acoustic *= phase_delay
             
-            # Application de l'effet wiring off-axis
             count = getattr(way, 'count', 1)
             w_type = getattr(way.driver, 'current_wiring', 'parallel')
             if count > 1 and w_type == 'parallel':
@@ -988,32 +1056,53 @@ class CrossoverOptimizer:
             return None
         
     def plot_sonogram(self, individual, filename="sonogram.png"):
-        self.apply_wiring(individual.get('wiring', {})) # NOUVEAU
+        self.apply_wiring(individual.get('wiring', {}))
         
         import matplotlib.ticker as ticker
         from matplotlib.colors import LinearSegmentedColormap
         from scipy.interpolate import RectBivariateSpline
         import numpy as np
+        import os
         
         root = individual['tree']
         test_angles = [0, 15, 30, 45, 60]
         valid_data = {}
         original_H = {way.label: way.driver.H_acoustic.copy() for way in self.ways}
         
+        # --- NOUVEAU : Traqueurs de zone valide globale ---
+        angle_f_mins = []
+        angle_f_maxs = []
+        
         for angle in test_angles:
             angle_str = f"{angle}deg"
             valid_angle = True
+            
+            sys_f_min = float('inf')
+            sys_f_max = 0.0
             
             for way in self.ways:
                 new_H = original_H[way.label] if angle == 0 else self._get_off_axis_H(way, angle_str)
                 if new_H is None:
                     valid_angle = False
                     break
+                
+                # Lecture des vraies limites du fichier FRD
+                path = way.frd_path if angle == 0 else way.frd_path.replace('0deg', angle_str)
+                try:
+                    frd_data = np.loadtxt(path)
+                    sys_f_min = min(sys_f_min, frd_data[0, 0])
+                    sys_f_max = max(sys_f_max, frd_data[-1, 0])
+                except:
+                    pass
+
                 for node in root.get_all_nodes():
                     if isinstance(node, DriverNode) and node.label == way.label:
                         node.H_acoustic = new_H
                         
             if valid_angle:
+                angle_f_mins.append(sys_f_min)
+                angle_f_maxs.append(sys_f_max)
+                
                 res = self.evaluator.evaluate(root)
                 p_sum = np.zeros_like(self.freqs, dtype=complex)
                 for way in self.ways:
@@ -1029,6 +1118,16 @@ class CrossoverOptimizer:
                     
         if len(valid_data) < 2: return
 
+        # === DÉTERMINATION DE LA FENÊTRE VISUELLE PARFAITE ===
+        # On recadre le graphique à l'intersection des zones valides de tous les angles.
+        # Si une mesure s'arrête à 300Hz, le sonogramme ne descendra pas plus bas !
+        plot_f_min = max(angle_f_mins) if angle_f_mins else 100.0
+        plot_f_max = min(angle_f_maxs) if angle_f_maxs else 20000.0
+        
+        # On limite tout de même visuellement pour ne pas montrer l'infra-grave inutile
+        if plot_f_min < 100.0: plot_f_min = 100.0
+        if plot_f_max > 20000.0: plot_f_max = 20000.0
+
         angles_raw = []
         spl_raw = []
         for angle in sorted(valid_data.keys(), reverse=True):
@@ -1042,9 +1141,13 @@ class CrossoverOptimizer:
         angles_raw = np.array(angles_raw)
         spl_matrix = np.array(spl_raw)
 
+        spl_matrix = np.nan_to_num(spl_matrix, nan=(self.target_spl - 40))
+
         spline = RectBivariateSpline(angles_raw, self.freqs, spl_matrix, kx=2, ky=3)
         angles_hd = np.linspace(angles_raw[0], angles_raw[-1], 500)
-        freqs_hd = np.geomspace(100, 20000, 1000)
+        
+        # === RECADRAGE DU RENDU HAUTE-DÉFINITION ===
+        freqs_hd = np.geomspace(plot_f_min, plot_f_max, 1000)
         spl_hd = spline(angles_hd, freqs_hd)
 
         vituix_colors = [
@@ -1063,9 +1166,16 @@ class CrossoverOptimizer:
         ax.contour(X, Y, spl_hd, levels=levels_3db, colors='black', linewidths=0.5, alpha=0.7, antialiased=True)
 
         ax.set_xscale('log')
-        ax.set_xlim(100, 20000)
+        
+        # === RECADRAGE DE L'AXE X ===
+        ax.set_xlim(plot_f_min, plot_f_max)
         ax.set_ylim(angles_raw[0], angles_raw[-1])
-        ax.set_xticks([100, 200, 500, 1000, 2000, 5000, 10000, 20000])
+        
+        # Masquage des repères (ticks) qui seraient désormais en dehors de l'image
+        ticks = [100, 200, 500, 1000, 2000, 5000, 10000, 20000]
+        valid_ticks = [t for t in ticks if plot_f_min <= t <= plot_f_max]
+        ax.set_xticks(valid_ticks)
+        
         def format_freq(x, pos):
             if x == 100: return '100Hz'
             elif x >= 1000: return f'{int(x/1000)}k'

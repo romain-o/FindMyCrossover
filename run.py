@@ -5,7 +5,7 @@ from src.vituix_exporter import VituixAdapter
 from src.latex_gen import LatexReportGenerator 
 import argparse
 import os
-
+import json
 
 def get_driver_paths(data_dir, driver_name, category):
     """Reconstruit le chemin vers le FRD (0deg) et le ZMA depuis le nom."""
@@ -43,10 +43,6 @@ if __name__ == "__main__":
     parser.add_argument("--my", type=float, default=-0.050, help="Midrange Y offset")
     parser.add_argument("--mz", type=float, default=0.0, help="Midrange Z offset")
     
-    # --- Poids de la fitness (JSON) ---
-    parser.add_argument("--weights", type=str, default="",
-                        help='JSON des poids fitness (ex: \'{"n_comps": 10, "crossover": 4.0}\')')
-    
     args = parser.parse_args()
 
     start_time = time.time()
@@ -64,18 +60,13 @@ if __name__ == "__main__":
         target_fc = args.fc[0]               # float  → 2-voies (0.0 = auto)
     else:
         target_fc = tuple(args.fc[:2])       # tuple  → 3-voies (fc_bas, fc_haut)
-        
-    weights = dict(DEFAULT_WEIGHTS)
-    if args.weights:
-        try:
-            custom_w = json.loads(args.weights)
-            # n_comps doit rester un entier
-            if 'n_comps' in custom_w:
-                custom_w['n_comps'] = int(custom_w['n_comps'])
-            weights.update(custom_w)
-            print(f"[+] Poids personnalisés appliqués : {custom_w}")
-        except json.JSONDecodeError as e:
-            print(f"[-] Erreur parsing --weights JSON : {e}. Poids par défaut utilisés.")
+    
+    try:
+        with open("config.json", "r", encoding="utf-8") as f:
+            app_config = json.load(f)
+    except FileNotFoundError:
+        print("[!] Fichier config.json introuvable, utilisation des paramètres par défaut.")
+        app_config = {}
 
     w_frd, w_zma = get_driver_paths(args.data_dir, args.woofer, 'W')
     t_frd, t_zma = get_driver_paths(args.data_dir, args.tweeter, 'T')
@@ -101,7 +92,7 @@ if __name__ == "__main__":
     
     logo_abs_path = "C:/Geekosphere/FindMyCrossover/utils/logo.png"
     # Lancement de l'optimiseur (En passant le checkpoint file)
-    opt = CrossoverOptimizer(config, target_fc=args.fc, weights=weights)
+    opt = CrossoverOptimizer(config, target_fc=args.fc, app_config=app_config)
     best = opt.run(generations=args.gen, pop_size=args.pop, checkpoint_path=checkpoint_file)
 
     # ==========================================
@@ -138,7 +129,7 @@ if __name__ == "__main__":
         "Tweeter": args.tweeter,
         "Midrange":     args.midrange if three_way else None,
         "target_fc":    list(target_fc) if isinstance(target_fc, tuple) else target_fc,
-        "weights":      weights,
+        "app_config":   app_config,
         "wx": args.wx, 
         "wy": args.wy, 
         "wz": args.wz

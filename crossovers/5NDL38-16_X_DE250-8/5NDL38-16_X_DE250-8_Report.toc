@@ -1,8 +1,0 @@
-\babel@toc {english}{}\relax 
-\contentsline {chapter}{\numberline {1}Acoustic Simulations}{2}{chapter.1}%
-\contentsline {section}{\numberline {1.1}On-Axis SPL Response}{2}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Impedance Response}{3}{section.1.2}%
-\contentsline {chapter}{\numberline {2}Bill of Materials (BOM)}{4}{chapter.2}%
-\contentsline {chapter}{\numberline {3}Crossover Design}{5}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Electrical Schematic}{5}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Baffle Schematic}{6}{section.3.2}%

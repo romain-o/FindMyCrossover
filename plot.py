@@ -11,7 +11,7 @@ def get_driver_paths(data_dir, driver_name, category):
     """Reconstruit le chemin vers le FRD et le ZMA."""
     if category == 'W':
         cat_folder = "Woofers"
-    elif category == 'M':  # NOUVEAU : Support du Médium
+    elif category == 'M':
         cat_folder = "Midranges"
     else:
         cat_folder = "Tweeters"
@@ -35,18 +35,21 @@ def main():
         return
 
     # ==========================================
-    # 1. RÉCUPÉRATION DES HAUT-PARLEURS
+    # 1. RÉCUPÉRATION DES HAUT-PARLEURS & POSITIONS
     # ==========================================
     woofer_name, midrange_name, tweeter_name = None, None, None
-    wx, wy, wz = 0.0, -0.100, 0.0
-    mx, my, mz = 0.0, -0.050, 0.0
+    
+    # Listes de positions par défaut
+    positions_woofer = [(0.0, -0.100, 0.0)]
+    positions_mid = [(0.0, -0.050, 0.0)]
+    positions_twt = [(0.0, 0.0, 0.0)]
     
     # On lit le metadata.json créé par run.py
     if os.path.exists(metadata_file):
         with open(metadata_file, 'r', encoding='utf-8') as f:
             meta = json.load(f)
             
-            # Nettoyage du nom du woofer au cas où "2x " est dedans
+            # Noms des haut-parleurs
             woofer_name = meta.get("Woofer")
             if woofer_name and woofer_name.startswith("2x "):
                 woofer_name = woofer_name.replace("2x ", "")
@@ -54,13 +57,35 @@ def main():
             tweeter_name = meta.get("Tweeter")
             midrange_name = meta.get("Midrange")
             
-            wx = meta.get("wx", 0.0)
-            wy = meta.get("wy", -0.100)
-            wz = meta.get("wz", 0.0)
-            
-            mx = meta.get("mx", 0.0)
-            my = meta.get("my", -0.050)
-            mz = meta.get("mz", 0.0)
+            # --- NOUVELLE LOGIQUE DE LECTURE DES POSITIONS ---
+            if "positions" in meta:
+                pos_data = meta["positions"]
+                if pos_data.get("woofer"):
+                    positions_woofer = [tuple(p) for p in pos_data["woofer"]]
+                if pos_data.get("midrange"):
+                    positions_mid = [tuple(p) for p in pos_data["midrange"]]
+                if pos_data.get("tweeter"):
+                    positions_twt = [tuple(p) for p in pos_data["tweeter"]]
+            else:
+                # Fallback : Compatibilité avec vos anciennes sauvegardes (wx, wy, etc.)
+                wx = meta.get("wx", 0.0)
+                wy = meta.get("wy", -0.100)
+                wz = meta.get("wz", 0.0)
+                wx2 = meta.get("wx2", 0.0)
+                wy2 = meta.get("wy2", -0.200)
+                wz2 = meta.get("wz2", 0.0)
+                mx = meta.get("mx", 0.0)
+                my = meta.get("my", -0.050)
+                mz = meta.get("mz", 0.0)
+                tx = meta.get("tx", 0.0)
+                ty = meta.get("ty", 0.0)
+                tz = meta.get("tz", 0.0)
+                
+                positions_woofer = [(wx, wy, wz)]
+                if meta.get("woofer_count", 1) == 2 or ("2x_" in args.name):
+                    positions_woofer.append((wx2, wy2, wz2))
+                positions_mid = [(mx, my, mz)]
+                positions_twt = [(tx, ty, tz)]
             
     # Fallback si le metadata.json a été supprimé (on devine via le nom du dossier)
     if not woofer_name or not tweeter_name:
@@ -76,8 +101,7 @@ def main():
             print("[-] Impossible d'identifier les haut-parleurs. Vérifiez le nom ou metadata.json.")
             return
 
-    # Détection automatique du nombre de woofers
-    w_count = 2 if "2x_" in args.name else 1
+    w_count = len(positions_woofer)
 
     print(f"\n[+] Chargement du projet : {args.name}")
     print(f"    - Woofer  : {w_count}x {woofer_name}")
@@ -88,17 +112,16 @@ def main():
     w_frd, w_zma = get_driver_paths(args.data_dir, woofer_name, 'W')
     t_frd, t_zma = get_driver_paths(args.data_dir, tweeter_name, 'T')
 
-    # Configuration des voies avec la géométrie récupérée
+    # Configuration des voies avec les listes de tuples extraites
     config = [
-        WayConfig("Woofer", w_frd, w_zma, count=w_count, z_offset=wz, y_offset=wy, x_offset=wx)
+        WayConfig("Woofer", w_frd, w_zma, positions=positions_woofer)
     ]
     
-    # Ajout du médium s'il existe
     if midrange_name:
         m_frd, m_zma = get_driver_paths(args.data_dir, midrange_name, 'M')
-        config.append(WayConfig("Midrange", m_frd, m_zma, z_offset=mz, y_offset=my, x_offset=mx))
+        config.append(WayConfig("Midrange", m_frd, m_zma, positions=positions_mid))
         
-    config.append(WayConfig("Tweeter", t_frd, t_zma, z_offset=0, y_offset=0, x_offset=0))
+    config.append(WayConfig("Tweeter", t_frd, t_zma, positions=positions_twt))
 
     # ==========================================
     # 2. RECONSTRUCTION DE L'ENVIRONNEMENT
@@ -110,15 +133,6 @@ def main():
         
     tree = Node.from_dict(data["tree"])
     wiring = data.get("wiring", {}) 
-
-    # --- NOUVEAU : SNAPPING AU CATALOGUE AVANT LE PLOT ---
-    # print("[+] Application des valeurs du catalogue (Snapping)...")
-    # catalog = CatalogManager()
-    # for comp in tree.get_all_nodes():
-    #     if isinstance(comp, ComponentNode):
-    #         ctype = catalog.get_comp_type(comp)
-    #         # Force la valeur du noeud à la valeur réelle du catalogue
-    #         comp.value = catalog.snap_to_catalog(comp.value, ctype)
     
     # Liaison des DriverNodes "virtuels" aux vraies courbes de l'Optimizer
     for n in tree.get_all_nodes():
@@ -166,7 +180,6 @@ def main():
     exporter = VituixAdapter(filename=os.path.join(out_dir, f"{args.name}_VituixCAD.vxp"), target_spl=opt.target_spl)
     exporter.export(best_ind=individual, ways_configs=config)
        
-
     print(f"[+] ✅ Terminé ! Tous les graphiques du dossier '{args.name}' ont été rafraîchis aux valeurs réelles.")
 
 if __name__ == "__main__":

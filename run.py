@@ -39,10 +39,17 @@ if __name__ == "__main__":
     parser.add_argument("--wy", type=float, default=-0.100, help="Woofer Y offset (haut/bas en mètres)")
     parser.add_argument("--wz", type=float, default=0.0, help="Woofer Z offset (profondeur en mètres)")
     
+    parser.add_argument("--wx2", type=float, default=0.0, help="Second Woofer X offset (pour 2 woofers, sinon ignoré)")
+    parser.add_argument("--wy2", type=float, default=0.100, help="Second Woofer Y offset (pour 2 woofers, sinon ignoré)")
+    parser.add_argument("--wz2", type=float, default=0.0, help="Second Woofer Z offset (pour 2 woofers, sinon ignoré)")
+    
     parser.add_argument("--mx", type=float, default=0.0, help="Midrange X offset")
     parser.add_argument("--my", type=float, default=-0.050, help="Midrange Y offset")
     parser.add_argument("--mz", type=float, default=0.0, help="Midrange Z offset")
     
+    parser.add_argument("--tx", type=float, default=0.0, help="Tweeter X offset")
+    parser.add_argument("--ty", type=float, default=0.0, help="Tweeter Y offset")
+    parser.add_argument("--tz", type=float, default=0.0, help="Tweeter Z offset")
     args = parser.parse_args()
 
     start_time = time.time()
@@ -71,11 +78,16 @@ if __name__ == "__main__":
     w_frd, w_zma = get_driver_paths(args.data_dir, args.woofer, 'W')
     t_frd, t_zma = get_driver_paths(args.data_dir, args.tweeter, 'T')
 
-    config = [WayConfig("Woofer", w_frd, w_zma, x_offset=args.wx, y_offset=args.wy, z_offset=args.wz)]
+    positions_woofer = [(args.wx, args.wy, args.wz)]
+    if args.woofer_count == 2:
+        positions_woofer.append((args.wx2, args.wy2, args.wz2))
+
+    config = [WayConfig("Woofer", w_frd, w_zma, positions=positions_woofer)]
+
     if three_way:
         m_frd, m_zma = get_driver_paths(args.data_dir, args.midrange, 'M')
-        config.append(WayConfig("Midrange", m_frd, m_zma, x_offset=args.mx, y_offset=args.my, z_offset=args.mz))
-    config.append(WayConfig("Tweeter", t_frd, t_zma, y_offset=0.0))
+        config.append(WayConfig("Midrange", m_frd, m_zma, positions=[(args.mx, args.my, args.mz)]))
+    config.append(WayConfig("Tweeter", t_frd, t_zma, positions=[(args.tx, args.ty, args.tz)]))
 
     # Construction des chemins de sauvegarde
     checkpoint_file = os.path.join(args.out_dir, "checkpoint_evolution.json")
@@ -130,9 +142,11 @@ if __name__ == "__main__":
         "Midrange":     args.midrange if three_way else None,
         "target_fc":    list(target_fc) if isinstance(target_fc, tuple) else target_fc,
         "app_config":   app_config,
-        "wx": args.wx, 
-        "wy": args.wy, 
-        "wz": args.wz
+        "positions": {
+            "woofer": positions_woofer,
+            "midrange": [(args.mx, args.my, args.mz)] if three_way else None,
+            "tweeter": [(args.tx, args.ty, args.tz)]
+        }
     }
             
     with open(metadata_file, 'w', encoding='utf-8') as f:

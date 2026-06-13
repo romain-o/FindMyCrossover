@@ -1,4 +1,5 @@
 import os
+import copy
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
@@ -46,9 +47,9 @@ class VituixCloneGenerator:
             ET.SubElement(d_node, "ImpedanceFile").text = cfg['z']
             ET.SubElement(d_node, "ImpedanceScale").text = "1"
             
-            ET.SubElement(d_node, "X").text = str(cfg.get('x_offset', 0.0) * 1000) # Convert m to mm
-            ET.SubElement(d_node, "Y").text = str(cfg.get('y_offset', 0.0) * 1000) # Convert m to mm
-            ET.SubElement(d_node, "Z").text = str(cfg.get('z_offset', 0.0) * 1000) # Convert m to mm
+            ET.SubElement(d_node, "X").text = str(cfg.get('x_offset', 0.0)) 
+            ET.SubElement(d_node, "Y").text = str(cfg.get('y_offset', 0.0)) 
+            ET.SubElement(d_node, "Z").text = str(cfg.get('z_offset', 0.0))
             ET.SubElement(d_node, "R").text = "0"
             ET.SubElement(d_node, "T").text = "0"
             
@@ -170,6 +171,7 @@ class VituixAdapter:
         self.generator = VituixCloneGenerator(filename, target_spl)
         self.netlist = []
         self.id_counters = {'R': 1, 'C': 1, 'L': 1, 'D': 1}
+        self.woofer_count = 0
         
     def _get_id(self, prefix):
         current_id = f"{prefix}{self.id_counters[prefix]}"
@@ -209,7 +211,7 @@ class VituixAdapter:
             'Value_Main': comp.value
         })
 
-    def _build_circuit(self, node, x_in, y_in, direction, ways_configs, polarities):
+    def _build_circuit(self, node, x_in, y_in, direction, ways_configs):
         """
         direction = 'H' (Série) -> Avance de gauche à droite.
         direction = 'V' (Shunt/Masse) -> Tombe de haut en bas.
@@ -226,8 +228,8 @@ class VituixAdapter:
                 return x_out, y_out, y_out + 1
 
         elif isinstance(node, SeriesNode):
-            x_mid, y_mid, max_L = self._build_circuit(node.left, x_in, y_in, direction, ways_configs, polarities)
-            x_out, y_out, max_R = self._build_circuit(node.right, x_mid, y_mid, direction, ways_configs, polarities)
+            x_mid, y_mid, max_L = self._build_circuit(node.left, x_in, y_in, direction, ways_configs)
+            x_out, y_out, max_R = self._build_circuit(node.right, x_mid, y_mid, direction, ways_configs)
             return x_out, y_out, max(max_L, max_R)
 
         elif isinstance(node, ShuntNode):
@@ -235,7 +237,7 @@ class VituixAdapter:
             self._add_trace(x_in, y_in, x_tap, y_in)
 
             # La dérivation plonge vers la MASSE en VERTICAL ('V')
-            xb, yb, max_S = self._build_circuit(node.component, x_tap, y_in, 'V', ways_configs, polarities)
+            xb, yb, max_S = self._build_circuit(node.component, x_tap, y_in, 'V', ways_configs)
             self._add_ground(xb, yb)
 
             # La ligne en série continue
@@ -255,13 +257,13 @@ class VituixAdapter:
 
                 # Chemin 1 (Haut)
                 self._add_trace(x_drop, y_in, x_start, y_in)
-                x_L, y_L, max_L = self._build_circuit(node.left, x_start, y_in, 'H', ways_configs, polarities)
+                x_L, y_L, max_L = self._build_circuit(node.left, x_start, y_in, 'H', ways_configs)
 
                 # Chemin 2 (Bas)
                 y_start_R = max_L + 6
                 self._add_trace(x_drop, y_in, x_drop, y_start_R)
                 self._add_trace(x_drop, y_start_R, x_start, y_start_R)
-                x_R, y_R, max_R = self._build_circuit(node.right, x_start, y_start_R, 'H', ways_configs, polarities)
+                x_R, y_R, max_R = self._build_circuit(node.right, x_start, y_start_R, 'H', ways_configs)
 
                 return max(x_L, x_R), y_in, max_R
 
@@ -274,13 +276,13 @@ class VituixAdapter:
                 self._add_trace(x_in, y_in, x_tap, y_in)
 
                 # La branche à la masse (tombe à la verticale depuis x_tap)
-                xb, yb, max_shunt = self._build_circuit(shunt_node, x_tap, y_in, 'V', ways_configs, polarities)
+                xb, yb, max_shunt = self._build_circuit(shunt_node, x_tap, y_in, 'V', ways_configs)
                 self._add_ground(xb, yb)
 
                 # La branche principale s'écarte de la descente (sécurité)
                 x_start_main = x_tap + 2
                 self._add_trace(x_tap, y_in, x_start_main, y_in)
-                x_main, y_main, max_main = self._build_circuit(main_node, x_start_main, y_in, 'H', ways_configs, polarities)
+                x_main, y_main, max_main = self._build_circuit(main_node, x_start_main, y_in, 'H', ways_configs)
 
                 return x_main, y_main, max(max_main, max_shunt + 1)
 
@@ -292,12 +294,12 @@ class VituixAdapter:
                     self._add_trace(x_in, y_in, x_drop, y_in)
 
                     self._add_trace(x_drop, y_in, x_start, y_in)
-                    x_L, y_L, max_L = self._build_circuit(node.left, x_start, y_in, 'H', ways_configs, polarities)
+                    x_L, y_L, max_L = self._build_circuit(node.left, x_start, y_in, 'H', ways_configs)
                     
                     y_start_R = y_in + 6
                     self._add_trace(x_drop, y_in, x_drop, y_start_R)
                     self._add_trace(x_drop, y_start_R, x_start, y_start_R)
-                    x_R, y_R, max_R = self._build_circuit(node.right, x_start, y_start_R, 'H', ways_configs, polarities)
+                    x_R, y_R, max_R = self._build_circuit(node.right, x_start, y_start_R, 'H', ways_configs)
 
                     x_join_drop = max(x_L, x_R) + 2
                     x_join_end = x_join_drop + 2
@@ -316,8 +318,8 @@ class VituixAdapter:
                     self._add_trace(x_in, y_split, x_L_start, y_split)
                     self._add_trace(x_in, y_split, x_R_start, y_split)
 
-                    x_L, y_L, max_L = self._build_circuit(node.left, x_L_start, y_split, 'V', ways_configs, polarities)
-                    x_R, y_R, max_R = self._build_circuit(node.right, x_R_start, y_split, 'V', ways_configs, polarities)
+                    x_L, y_L, max_L = self._build_circuit(node.left, x_L_start, y_split, 'V', ways_configs)
+                    x_R, y_R, max_R = self._build_circuit(node.right, x_R_start, y_split, 'V', ways_configs)
 
                     y_join = max(y_L, y_R) + 2
                     self._add_trace(x_L, y_L, x_L, y_join)
@@ -330,34 +332,97 @@ class VituixAdapter:
                     return x_in, y_end, max(max_L, max_R)
 
         elif isinstance(node, DriverNode):
-            # Le Haut-Parleur VituixCAD
-            model_name = node.label
-            x_off, y_off, z_off = 0.0, 0.0, 0.0
-            for idx, w in enumerate(ways_configs):
-                if w.label == node.label:
-                    model_name = getattr(w.driver, 'model_name', model_name)
-                    # 2. Récupération des offsets réels configurés dans Python
-                    x_off = getattr(w, 'x_offset', 0.0)
-                    y_off = getattr(w, 'y_offset', 0.0)
-                    z_off = getattr(w, 'z_offset', 0.0)
-                    break
-            
+            way = next((w for w in ways_configs if w.label == node.label), None)
+            count = getattr(way, 'count', 1) if way else 1
+            # On lit si l'IA a choisi de les câbler en série ou en parallèle
+            w_type = getattr(self, 'wiring_dict', {}).get(node.label, 'parallel')
 
-            cx, cy = x_in + 1, y_in + 3
-            y_bot = y_in + 6
-            self.netlist.append({
-                'Type': 'Driver', 'Component': self._get_id('D'),
-                'Layout': {'CenX': str(cx), 'CenY': str(cy), 'Rotated': 'False', 'Wires': [(x_in, y_in), (x_in, y_bot)]},
-                'Value_Main': 0, 'Model': model_name,
-                'x_offset': x_off * 1000,
-                'y_offset': y_off * 1000,
-                'z_offset': z_off * 1000
-            })
+            if not hasattr(self, '_driver_counts'):
+                self._driver_counts = {}
 
-            # Masse obligatoire fermant la boucle du Driver
-            self._add_ground(x_in, y_bot)
+            if count <= 1:
+                # --- LOGIQUE CLASSIQUE (1 SEUL HP) ---
+                model_name = getattr(way.driver, 'model_name', node.label) if way else node.label
+                current_idx = self._driver_counts.get(node.label, 0)
+                pos = way.positions[current_idx] if way and current_idx < len(way.positions) else (0,0,0)
+                self._driver_counts[node.label] = current_idx + 1
 
-            return x_in + 6, y_bot, y_bot + 2
+                cx, cy = x_in + 1, y_in + 3
+                y_bot = y_in + 6
+                
+                self.netlist.append({
+                    'Type': 'Driver', 'Component': self._get_id('D'),
+                    'Layout': {'CenX': str(cx), 'CenY': str(cy), 'Rotated': 'False', 'Wires': [(x_in, y_in), (x_in, y_bot)]},
+                    'Value_Main': 0, 'Model': model_name,
+                    'x_offset': pos[0] * 1000,
+                    'y_offset': pos[1] * 1000,
+                    'z_offset': pos[2] * 1000
+                })
+                self._add_ground(x_in, y_bot)
+                return x_in + 6, y_bot, y_bot + 2
+
+            elif w_type == 'parallel':
+                # --- DESSIN EN PARALLÈLE (En forme de Peigne) ---
+                x_split = x_in + 2
+                self._add_trace(x_in, y_in, x_split, y_in)
+                
+                max_y = y_in
+                for i in range(count):
+                    y_branch = y_in + (i * 8) # Décale chaque HP vers le bas
+                    if i > 0:
+                        self._add_trace(x_split, y_in, x_split, y_branch) # Fil vertical de descente
+                    
+                    x_drv_in = x_split + 2
+                    self._add_trace(x_split, y_branch, x_drv_in, y_branch) # Branche horizontale vers le HP
+
+                    model_name = getattr(way.driver, 'model_name', node.label) if way else node.label
+                    current_idx = self._driver_counts.get(node.label, 0)
+                    pos = way.positions[current_idx] if way and current_idx < len(way.positions) else (0,0,0)
+                    self._driver_counts[node.label] = current_idx + 1
+
+                    cx, cy = x_drv_in + 1, y_branch + 3
+                    y_bot = y_branch + 6
+                    
+                    self.netlist.append({
+                        'Type': 'Driver', 'Component': self._get_id('D'),
+                        'Layout': {'CenX': str(cx), 'CenY': str(cy), 'Rotated': 'False', 'Wires': [(x_drv_in, y_branch), (x_drv_in, y_bot)]},
+                        'Value_Main': 0, 'Model': model_name,
+                        'x_offset': pos[0] * 1000,
+                        'y_offset': pos[1] * 1000,
+                        'z_offset': pos[2] * 1000
+                    })
+                    self._add_ground(x_drv_in, y_bot)
+                    max_y = max(max_y, y_bot)
+                
+                return x_split + 6, y_in, max_y + 2
+
+            elif w_type == 'series':
+                # --- DESSIN EN SÉRIE (En cascade de haut en bas) ---
+                curr_y = y_in
+                for i in range(count):
+                    model_name = getattr(way.driver, 'model_name', node.label) if way else node.label
+                    current_idx = self._driver_counts.get(node.label, 0)
+                    pos = way.positions[current_idx] if way and current_idx < len(way.positions) else (0,0,0)
+                    self._driver_counts[node.label] = current_idx + 1
+
+                    cx, cy = x_in + 1, curr_y + 3
+                    y_bot = curr_y + 6
+                    
+                    self.netlist.append({
+                        'Type': 'Driver', 'Component': self._get_id('D'),
+                        'Layout': {'CenX': str(cx), 'CenY': str(cy), 'Rotated': 'False', 'Wires': [(x_in, curr_y), (x_in, y_bot)]},
+                        'Value_Main': 0, 'Model': model_name,
+                        'x_offset': pos[0] * 1000,
+                        'y_offset': pos[1] * 1000,
+                        'z_offset': pos[2] * 1000
+                    })
+                    
+                    # On place la masse uniquement sous le TOUT DERNIER haut-parleur !
+                    if i == count - 1:
+                        self._add_ground(x_in, y_bot)
+                    curr_y = y_bot # Le bas du HP actuel devient l'entrée du prochain
+                
+                return x_in + 6, y_in, curr_y + 2
 
     def export(self, best_ind, ways_configs):
         # 1. Montage des modèles
@@ -375,14 +440,15 @@ class VituixAdapter:
                     if os.path.exists(off_axis_path):
                         frd_dict[angle] = os.path.abspath(off_axis_path)
             # ------------------------------------------------------------------
-            drivers_config.append({
-                'name': way.driver.model_name if hasattr(way.driver, 'model_name') else way.label,
-                'frd_dict': frd_dict,
-                'z': os.path.abspath(way.zma_path) if way.zma_path else "",
-                'x_offset': way.x_offset * 1000,
-                'y_offset': way.y_offset * 1000,
-                'z_offset': way.z_offset * 1000
-            })
+            for pos in way.positions:
+                drivers_config.append({
+                    'name': way.driver.model_name if hasattr(way.driver, 'model_name') else way.label,
+                    'frd_dict': frd_dict,
+                    'z': os.path.abspath(way.zma_path) if way.zma_path else "",
+                    'x_offset': pos[0] * 1000,
+                    'y_offset': pos[1] * 1000,
+                    'z_offset': pos[2] * 1000
+                })
         self.generator.add_drivers(drivers_config)
         
         # 2. Source Générateur Audio avec sa masse (pôle négatif)
@@ -393,9 +459,13 @@ class VituixAdapter:
         })
         self._add_ground(3, 12)
 
-        # 3. Lancement du Moteur de Dessin
-        polarities = best_ind.get('best_polarities', [])
-        self._build_circuit(best_ind['tree'], x_in=3, y_in=6, direction='H', ways_configs=ways_configs, polarities=polarities)
+       
+        # NOUVEAU : On sauvegarde le câblage pour y accéder lors du dessin
+        self.wiring_dict = best_ind.get('wiring', {})
+        self._driver_counts = {}
+        
+        # On passe l'arbre normal, sans le modifier !
+        self._build_circuit(best_ind['tree'], x_in=3, y_in=6, direction='H', ways_configs=ways_configs)
         
         # 4. Compilation finale
         self.generator.generate_schematic(self.netlist)

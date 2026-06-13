@@ -64,16 +64,16 @@ WEIGHTS = {
 }
 class WayConfig:
     """Configuration d'une voie acoustique (Grave, Médium, Aigu, etc.)"""
-    # NOUVEAU : Ajout de l'argument 'count'
-    def __init__(self, label, frd_path, zma_path, order=4, z_offset=0.0, y_offset=0.0, x_offset=0.0, count=1):
+    def __init__(self, label, frd_path, zma_path, order=4, positions=None):
         self.label = label
         self.frd_path = frd_path
         self.zma_path = zma_path
         self.order = order
-        self.z_offset = z_offset
-        self.y_offset = y_offset 
-        self.x_offset = x_offset
-        self.count = count # <-- Nombre de drivers pour cette voie
+        
+        if positions is not None:
+            self.positions = positions
+            self.count = len(positions)
+            
         self.driver = DriverNode(label, frd_path, zma_path)
 
 class CrossoverOptimizer:
@@ -93,11 +93,10 @@ class CrossoverOptimizer:
         self.target_fc = target_fc
 
         # --- Démarrage en mode "Ultra-Rapide" (Exploration) ---
-        self._set_resolution(1000)
+        self._set_resolution(400)
 
     def _prepare_driver(self, way):
         d = way.driver
-        # 1. Sauvegarde définitive des données brutes (Indispensable pour changer de résolution)
         if not hasattr(d, 'H_raw'):
             d.H_raw = d.H_acoustic.copy()
             d.Z_raw = d.Z_complex.copy()
@@ -105,17 +104,28 @@ class CrossoverOptimizer:
         raw_name = os.path.basename(way.frd_path).split('.')[0].split('@')[0]
         d.model_name = raw_name.replace('_0deg', '')
         
-        # 2. Interpolation basée STRICTEMENT sur le raw
         mag_db = 20 * np.log10(np.abs(d.H_raw) + 1e-10)
         ph_unwrapped = np.unwrap(np.angle(d.H_raw))
         
         mag_interp = np.interp(self.freqs, d.frd_freqs, mag_db)
         ph_interp = np.interp(self.freqs, d.frd_freqs, ph_unwrapped)
-        d.H_acoustic = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
+        H_single = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
         
-        delay_s = np.linalg.norm([way.x_offset, way.y_offset, way.z_offset + 2]) / 343.0
-        phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
-        d.H_acoustic *= phase_delay
+        # --- NOUVEAU : Somme acoustique avec gestion du délai spatial ---
+        H_total = np.zeros_like(self.freqs, dtype=complex)
+        
+        for pos in way.positions:
+            x, y, z = pos
+            # Calcul de la distance au micro (placé à 2m sur l'axe Z)
+            dist_to_mic = np.sqrt(x**2 + y**2 + (2.0 - z)**2)
+            path_diff = dist_to_mic - 2.0
+            delay_s = path_diff / 343.0
+            
+            phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
+            H_total += H_single * phase_delay
+
+        d.H_acoustic = H_total
+        # ----------------------------------------------------------------
 
         z_mag = np.abs(d.Z_raw)
         z_ph = np.unwrap(np.angle(d.Z_raw))
@@ -137,12 +147,12 @@ class CrossoverOptimizer:
         # Recalcul des constantes pour la fonction fitness
         self._cache_1e12 = 1e-12
         self._mask_power = self.freqs < 1000.0
-        self.V_amp_test = 28.28 * np.where(self.freqs < 500.0, 1.0, 500.0 / self.freqs).astype(complex)
+        self.V_amp_test = 28.28 * np.ones_like(self.freqs).astype(complex)  # Tension de test pour le calcul de puissance (28.28V RMS = 100W sur 8Ω)
 
         # Configuration des masques
         if len(self.ways) == 2:
             self.mask_ref = [
-                (self.freqs > 200) & (self.freqs < 1000),
+                (self.freqs > 100) & (self.freqs < 2000),
                 (self.freqs > 4000) & (self.freqs < 14000)
             ]
         elif len(self.ways) == 3:
@@ -154,12 +164,12 @@ class CrossoverOptimizer:
 
         self.apply_wiring({w.label: 'parallel' for w in self.ways if getattr(w, 'count', 1) > 1})
         min_raw_avg = np.inf 
-        for j in range(len(self.ways) - 1):
+        for j in range(len(self.ways)):
             raw_mag = np.abs(self.ways[j].driver.H_acoustic)
             raw_avg = np.mean(20 * np.log10(raw_mag[self.mask_ref[j]] + 1e-12)) if np.any(self.mask_ref[j]) else 85.0
             if raw_avg <= min_raw_avg: min_raw_avg = raw_avg
                 
-        self.target_spl = min_raw_avg
+        self.target_spl = min_raw_avg - self.spl_offset
         self.apply_wiring({})
 
         max_raw_spl = np.zeros_like(self.freqs)
@@ -188,13 +198,17 @@ class CrossoverOptimizer:
             count = getattr(way, 'count', 1)
             if count > 1:
                 w_type = wiring_dict.get(way.label, 'parallel')
+                d.current_wiring = w_type # Sauvegarde pour le rendu Off-Axis
                 if w_type == 'series':
                     d.Z_complex = d.Z_base * count
-                    d.H_acoustic = d.H_base * 1.0  # La sensibilité en tension (2.83V) reste identique
+                    # La tension (et l'acoustique) est divisée par le nombre de HP
+                    d.H_acoustic = d.H_base / count 
                 else: # parallel
                     d.Z_complex = d.Z_base / count
-                    d.H_acoustic = d.H_base * count # +6dB par doublement à tension constante
+                    # En parallèle, H_base contient déjà la somme exacte
+                    d.H_acoustic = d.H_base * 1.0 
             else:
+                d.current_wiring = 'direct'
                 if hasattr(d, 'Z_base'):
                     d.Z_complex = d.Z_base
                     d.H_acoustic = d.H_base
@@ -248,8 +262,7 @@ class CrossoverOptimizer:
                 p_sum_test += p_real
                 
             spl_sum_test = 20 * np.log10(np.abs(p_sum_test) + 1e-12)
-            dynamic_spl = self.target_spl - self.spl_offset
-            diff = spl_sum_test - dynamic_spl
+            diff = spl_sum_test - self.target_spl
             
             comps_track = {
                 'MSE_SPL': 0.0,
@@ -448,35 +461,16 @@ class CrossoverOptimizer:
 
 
             # ==========================================
-            # ÉVALUATION THERMIQUE ULTRA-RAPIDE (Sans récursion)
+            # ÉVALUATION THERMIQUE (Via propagation des impédances)
             # ==========================================
-            max_res_power = 0.0
-            tot_res_power = np.zeros_like(self.freqs)
-            tot_drv_power = np.zeros_like(self.freqs)
-            all_nodes = root.get_all_nodes()
+            # Utilisation de la méthode exacte pour calculer la chute de tension (V_drop) aux bornes
+            max_res_power, tot_res_power, tot_drv_power = self._get_power_dissipation_stats(root, self.V_amp_test)
             
-            # On utilise le transfert électrique (node._V) calculé lors de l'évaluation acoustique
-            for c in all_nodes: # 'all_nodes' est déjà dispo via root.get_all_nodes()
-                t = type(c)
-                if t is Resistor:
-                    # Tension Réelle = Fonction de Transfert * Signal de Test de l'Ampli
-                    v_real = c._V * self.V_amp_test
-                    p_array = (np.abs(v_real)**2) / float(c.value)
-                    
-                    max_p = np.max(p_array)
-                    if max_p > max_res_power: max_res_power = max_p
-                    tot_res_power += p_array
-                    
-                elif t is DriverNode:
-                    way = next(w for w in self.ways if w.label == c.label)
-                    Z = way.driver.Z_complex if hasattr(way.driver, 'Z_complex') else np.full_like(self.freqs, 8.0)
-                    
-                    v_real = c._V * self.V_amp_test
-                    tot_drv_power += (np.abs(v_real)**2) * np.real(1.0 / (Z + 1e-15))
+            all_nodes = root.get_all_nodes() # On garde ça pour le comptage des composants juste en dessous
             
             # Application des pénalités exactement comme avant
-            if max_res_power > 20.0:
-                comps_track['Thermal_Penalty'] += ((max_res_power - 20.0) ** 2) * self.weights['thermal']
+            if max_res_power > 17.0:
+                comps_track['Thermal_Penalty'] += ((max_res_power - 15.0) ** 2) * self.weights['thermal']
                 
             if np.any(self._mask_power):
                 res_waste_ratio = tot_res_power[self._mask_power] / (tot_drv_power[self._mask_power] + self._cache_1e12)
@@ -751,15 +745,15 @@ class CrossoverOptimizer:
                 
                 if gen < int(generations * 0.4):      
                     max_opt_iter = 5
-                    target_res = 1000
+                    target_res = 400
                     snap_to_standard = False
                 elif gen < int(generations * 0.8):    
                     max_opt_iter = 12
-                    target_res = 1000
+                    target_res = 400
                     snap_to_standard = False
                 else:                                 
                     max_opt_iter = 20
-                    target_res = 1000
+                    target_res = 400
                     snap_to_standard = True
                     
                 if gen == int(generations * 0.8):
@@ -1028,30 +1022,29 @@ class CrossoverOptimizer:
             mag_db = frd_data[:, 1]
             ph_unwrapped = np.unwrap(np.deg2rad(frd_data[:, 2]))
             
-            # CORRECTION : On utilise -200 dB (silence absolu) aux extrémités !
-            # Cela permet aux autres haut-parleurs de continuer à jouer normalement.
             mag_interp = np.interp(self.freqs, frd_freqs, mag_db, left=-200, right=-200)
             ph_interp = np.interp(self.freqs, frd_freqs, ph_unwrapped, left=0, right=0)
-            H_acoustic = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
+            H_single = (10 ** (mag_interp / 20)) * np.exp(1j * ph_interp)
             
-            x_mm = getattr(way, 'x_offset', 0.0)
-            y_mm = getattr(way, 'y_offset', 0.0)
-            z_mm = getattr(way, 'z_offset', 0.0)
-            listen_dist_mm = 2000.0
+            H_total = np.zeros_like(self.freqs, dtype=complex)
             
-            dist_to_mic_mm = np.sqrt(x_mm**2 + y_mm**2 + (listen_dist_mm - z_mm)**2)
-            path_diff_m = (dist_to_mic_mm - listen_dist_mm) / 1000.0
-            delay_s = path_diff_m / 343.0
+            for pos in way.positions:
+                x_m, y_m, z_m = pos
+                # Micro toujours à 2m de l'origine
+                dist_to_mic_m = np.sqrt(x_m**2 + y_m**2 + (2.0 - z_m)**2)
+                path_diff_m = dist_to_mic_m - 2.0
+                delay_s = path_diff_m / 343.0
+                
+                phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
+                H_total += H_single * phase_delay
             
-            phase_delay = np.exp(-1j * 2 * np.pi * self.freqs * delay_s)
-            H_acoustic *= phase_delay
-            
+            # Ajustement si montage en série
             count = getattr(way, 'count', 1)
             w_type = getattr(way.driver, 'current_wiring', 'parallel')
-            if count > 1 and w_type == 'parallel':
-                H_acoustic *= count
+            if count > 1 and w_type == 'series':
+                H_total /= count
                 
-            return H_acoustic
+            return H_total
         except Exception as e:
             return None
         
@@ -1147,7 +1140,7 @@ class CrossoverOptimizer:
         angles_hd = np.linspace(angles_raw[0], angles_raw[-1], 500)
         
         # === RECADRAGE DU RENDU HAUTE-DÉFINITION ===
-        freqs_hd = np.geomspace(plot_f_min, plot_f_max, 1000)
+        freqs_hd = np.geomspace(plot_f_min, plot_f_max, 400)
         spl_hd = spline(angles_hd, freqs_hd)
 
         vituix_colors = [
@@ -1429,65 +1422,54 @@ class CrossoverOptimizer:
         print(f"📝 Tableau LaTeX sauvegardé dans : {latex_filename}\n")
         
     def plot_geometry(self, filename="geometry.png"):
-        """Génère un plan 2D de la façade (baffle) avec les distances entre axes des haut-parleurs."""
         import matplotlib.pyplot as plt
         import numpy as np
 
-        # Création d'une figure verticale typique d'une enceinte
         fig, ax = plt.subplots(figsize=(6, 8))
 
         points = []
         for way in self.ways:
-            # Conversion des mètres vers centimètres pour un affichage plus lisible
-            x = getattr(way, 'x_offset', 0.0) * 100  
-            y = getattr(way, 'y_offset', 0.0) * 100  
-            z = getattr(way, 'z_offset', 0.0) * 100  
-            
-            # Gestion de l'affichage (ex: "2x Woofer" si configuré)
-            count = getattr(way, 'count', 1)
-            count_str = f"{count}x " if count > 1 else ""
-            label_text = f"{way.label}\n{count_str}{way.driver.model_name}"
-            
-            points.append({
-                'label': label_text, 
-                'x': x, 'y': y, 'z': z
-            })
+            for i, pos in enumerate(way.positions):
+                x = pos[0] * 100  
+                y = pos[1] * 100  
+                z = pos[2] * 100  
+                
+                count = getattr(way, 'count', 1)
+                label_text = f"{way.label}"
+                # Si plusieurs HP sur cette voie, on ajoute #1, #2...
+                if count > 1:
+                    label_text += f" #{i+1}"
+                label_text += f"\n{way.driver.model_name}"
+                
+                points.append({
+                    'label': label_text, 
+                    'x': x, 'y': y, 'z': z
+                })
 
-        # Tri des haut-parleurs du plus haut au plus bas (axe Y décroissant)
         points.sort(key=lambda p: p['y'], reverse=True)
 
-        # 1. Tracé des Haut-Parleurs (Points et Labels)
         for p in points:
-            # Cercle représentant l'encombrement du haut-parleur (transparent pour voir au travers)
             ax.scatter(p['x'], p['y'], s=1200, facecolors='none', edgecolors='black', linewidth=2, zorder=3)
-            # Marqueur central représentant l'axe exact
             ax.scatter(p['x'], p['y'], s=30, color='black', zorder=4)
-            
-            # Étiquette descriptive (placée à droite du point)
             ax.text(p['x'] + 2.5, p['y'], 
                     f"{p['label']}\nZ offset : {p['z']:.1f} cm",
                     va='center', ha='left', fontsize=10, 
                     bbox=dict(boxstyle="round,pad=0.4", fc="#f8f9fa", ec="#ced4da", alpha=0.9), zorder=5)
 
-        # 2. Tracé des flèches et des distances (Cotes)
         for i in range(len(points) - 1):
             p1 = points[i]
             p2 = points[i+1]
 
-            # Calcul de la distance 2D (sur la façade) et 3D (avec la profondeur)
             dist_2d = np.sqrt((p1['x'] - p2['x'])**2 + (p1['y'] - p2['y'])**2)
             dist_3d = np.sqrt((p1['x'] - p2['x'])**2 + (p1['y'] - p2['y'])**2 + (p1['z'] - p2['z'])**2)
 
-            # Dessin de la flèche de cotation (shrink à 0 pour relier les centres exacts)
             ax.annotate('', xy=(p2['x'], p2['y']), xytext=(p1['x'], p1['y']),
                         arrowprops=dict(arrowstyle='<->', color='#e63946', lw=2, shrinkA=0, shrinkB=0), zorder=2)
 
-            # Positionnement du texte de distance (au milieu, placé à gauche)
             mid_x = (p1['x'] + p2['x']) / 2
             mid_y = (p1['y'] + p2['y']) / 2
 
             dist_text = f"{dist_2d:.1f} cm"
-            # Affichage de la distance 3D seulement si elle diffère significativement de la 2D
             if abs(dist_3d - dist_2d) > 0.1:
                 dist_text += f"\n(3D: {dist_3d:.1f} cm)"
 
@@ -1498,21 +1480,16 @@ class CrossoverOptimizer:
         ax.set_title("Baffle Geometry", fontsize=14, fontweight='bold', pad=20)
         ax.set_xlabel("X axis - cm")
         ax.set_ylabel("Y axis - cm")
-
-        # CRUCIAL : Force les axes à avoir la même échelle réelle (aspect proportionnel)
         ax.set_aspect('equal', 'datalim')
         ax.grid(True, linestyle='--', alpha=0.4)
-        ax.axvline(0, color='gray', linestyle='-.', alpha=0.3, zorder=1) # Ligne de centre
+        ax.axvline(0, color='gray', linestyle='-.', alpha=0.3, zorder=1) 
 
-        # Marges adaptatives pour ne pas couper le texte sur les côtés
         all_x = [p['x'] for p in points]
         all_y = [p['y'] for p in points]
         
         width_x = max(all_x) - min(all_x)
-        if width_x < 10:
-            x_min, x_max = min(all_x) - 15, max(all_x) + 20
-        else:
-            x_min, x_max = min(all_x) - 15, max(all_x) + 25
+        if width_x < 10: x_min, x_max = min(all_x) - 15, max(all_x) + 20
+        else: x_min, x_max = min(all_x) - 15, max(all_x) + 25
             
         y_pad = max(10, (max(all_y) - min(all_y)) * 0.15 if all_y else 10)
         ax.set_xlim(x_min, x_max)

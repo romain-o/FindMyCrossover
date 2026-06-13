@@ -138,7 +138,8 @@ class FindMyCrossoverApp(ctk.CTk):
         self.w_menu = ctk.CTkComboBox(w_row, variable=self.woofer_var, values=self.all_woofers, command=self.update_project_name)
         self.w_menu.pack(side="left", fill="x", expand=True, padx=(0, 5))
         
-        self.w_qty_menu = ctk.CTkComboBox(w_row, variable=self.w_qty_var, values=["1", "2"], width=60, command=self.update_project_name)
+        # Dans build_ui, remplacez la ligne du w_qty_menu par :
+        self.w_qty_menu = ctk.CTkComboBox(w_row, variable=self.w_qty_var, values=["1", "2"], width=60, command=self._on_qty_change)
         self.w_qty_menu.pack(side="right")
 
         # --- MEDIUM ---
@@ -161,46 +162,24 @@ class FindMyCrossoverApp(ctk.CTk):
         self.tweeter_var.trace_add("write", self.filter_tweeters)
 
         # ==========================================
-        # POSITION PHYSIQUE WOOFER
+        # SECTION POSITIONS PHYSIQUES (ONGLETS)
         # ==========================================
-        ctk.CTkLabel(left_frame, text="Position Woofer (mètres)", font=ctk.CTkFont(weight="bold")).pack(pady=(8, 0))
+        ctk.CTkLabel(left_frame, text="Positions des Haut-Parleurs (m)", font=ctk.CTkFont(weight="bold")).pack(pady=(10, 0))
         
-        geom_frame = ctk.CTkFrame(left_frame, fg_color="transparent")
-        geom_frame.pack(padx=20, pady=(0, 2), fill="x")
-        
-        col_x = ctk.CTkFrame(geom_frame, fg_color="transparent")
-        col_x.pack(side="left", expand=True, fill="x", padx=(0, 5))
-        ctk.CTkLabel(col_x, text="X (Horizontal)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
-        self.wx_entry = ctk.CTkEntry(col_x, height=25)
-        self.wx_entry.insert(0, "0.0")
-        self.wx_entry.pack(fill="x")
+        self.pos_tabs = ctk.CTkTabview(left_frame, height=140)
+        self.pos_tabs.pack(padx=20, pady=(0, 5), fill="x")
 
-        col_y = ctk.CTkFrame(geom_frame, fg_color="transparent")
-        col_y.pack(side="left", expand=True, fill="x", padx=(0, 5))
-        ctk.CTkLabel(col_y, text="Y (Vertical)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
-        self.wy_entry = ctk.CTkEntry(col_y, height=25)
-        self.wy_entry.insert(0, "-0.100") 
-        self.wy_entry.pack(fill="x")
-
-        col_z = ctk.CTkFrame(geom_frame, fg_color="transparent")
-        col_z.pack(side="left", expand=True, fill="x")
-        ctk.CTkLabel(col_z, text="Z (Profondeur)", text_color="gray", font=ctk.CTkFont(size=11)).pack(anchor="w")
-        self.wz_entry = ctk.CTkEntry(col_z, height=25)
-        self.wz_entry.insert(0, "0.0")
-        self.wz_entry.pack(fill="x")
-
-        # ==========================================
-        # POSITION PHYSIQUE MEDIUM (Cachée par défaut)
-        # ==========================================
-        self.mid_geom_frame = ctk.CTkFrame(left_frame, fg_color="transparent")
+        # Configuration des onglets permanents
+        self.pos_tabs.add("W1")
+        self.pos_tabs.add("Tweeter")
         
-        ctk.CTkLabel(self.mid_geom_frame, text="Position Médium (mètres)", font=ctk.CTkFont(weight="bold")).pack(pady=(5, 0))
-        m_grid = ctk.CTkFrame(self.mid_geom_frame, fg_color="transparent")
-        m_grid.pack(fill="x")
+        # On crée les champs pour chaque onglet
+        self.w1_entries = self._create_pos_tab_content("W1", "0.0", "-0.150", "0.0")
+        self.t_entries  = self._create_pos_tab_content("Tweeter", "0.0", "0.0", "0.0")
         
-        self.mx_entry = self._create_geo_field(m_grid, "X", "0.0")
-        self.my_entry = self._create_geo_field(m_grid, "Y", "-0.050")
-        self.mz_entry = self._create_geo_field(m_grid, "Z", "0.0")
+        # Onglets conditionnels (seront gérés par les fonctions de changement)
+        self.w2_entries = None
+        self.mid_entries = None
 
         # --- NOM DU PROJET ---
         # CORRECTION : On assigne le label à self.name_label pour s'en servir de point de repère
@@ -262,6 +241,36 @@ class FindMyCrossoverApp(ctk.CTk):
         # --- BOUTON RUN ---
         self.run_btn = ctk.CTkButton(self, text="🚀 LANCER L'OPTIMISATION", height=40, font=ctk.CTkFont(weight="bold"), command=self.start_optimization)
         self.run_btn.pack(pady=(5, 15), padx=40, fill="x")
+
+    def _create_pos_tab_content(self, tab_name, dx, dy, dz):
+        """Crée la grille X, Y, Z à l'intérieur d'un onglet spécifique."""
+        parent = self.pos_tabs.tab(tab_name)
+        grid = ctk.CTkFrame(parent, fg_color="transparent")
+        grid.pack(expand=True, fill="both", padx=5, pady=5)
+        
+        entries = {}
+        for i, (axis, default) in enumerate([("X", dx), ("Y", dy), ("Z", dz)]):
+            col = ctk.CTkFrame(grid, fg_color="transparent")
+            col.pack(side="left", expand=True, fill="x", padx=2)
+            ctk.CTkLabel(col, text=axis, text_color="gray", font=ctk.CTkFont(size=10)).pack()
+            entry = ctk.CTkEntry(col, height=25)
+            entry.insert(0, default)
+            entry.pack(fill="x")
+            entries[axis.lower()] = entry
+            
+        return entries
+    
+    def _on_qty_change(self, *_):
+        qty = self.w_qty_var.get()
+        if qty == "2":
+            if "W2" not in self.pos_tabs._tab_dict:
+                self.pos_tabs.add("W2")
+                self.w2_entries = self._create_pos_tab_content("W2", "0.0", "0.150", "0.0")
+        else:
+            if "W2" in self.pos_tabs._tab_dict:
+                self.pos_tabs.delete("W2")
+                self.w2_entries = None
+        self.update_project_name()
 
     # --- MÉTHODES DE FILTRAGE DYNAMIQUE ---
     def filter_woofers(self, *args):
@@ -325,14 +334,20 @@ class FindMyCrossoverApp(ctk.CTk):
     def _on_midrange_change(self, *_):
         val = self.midrange_var.get().strip()
         if val and val != "(Aucun)":
+            # Gestion des fréquences (code existant)
             self.fc1_label.configure(text="Fréq. coupure Woofer-Médium (Hz) :")
             self.fc2_frame.pack(padx=14, fill="x", pady=(0, 4), before=self.gen_label)
-            # CORRECTION : On se place bien au-dessus du label "Nom du Projet" !
-            self.mid_geom_frame.pack(padx=20, fill="x", before=self.name_label)
+            
+            # Gestion de l'onglet
+            if "Mid" not in self.pos_tabs._tab_dict:
+                self.pos_tabs.add("Mid")
+                self.mid_entries = self._create_pos_tab_content("Mid", "0.0", "-0.050", "0.0")
         else:
             self.fc1_label.configure(text="Fréq. coupure (Hz) :")
             self.fc2_frame.pack_forget()
-            self.mid_geom_frame.pack_forget()
+            if "Mid" in self.pos_tabs._tab_dict:
+                self.pos_tabs.delete("Mid")
+                self.mid_entries = None
         self.update_project_name()
 
     def _toggle_fc_state(self):
@@ -463,12 +478,6 @@ class FindMyCrossoverApp(ctk.CTk):
         name = self.name_entry.get()
         gen = self.gen_entry.get()
         pop = self.pop_entry.get()
-        wx = self.wx_entry.get()
-        wy = self.wy_entry.get()
-        wz = self.wz_entry.get()
-        mx = self.mx_entry.get() 
-        my = self.my_entry.get()
-        mz = self.mz_entry.get() 
             
         # --- MODIFICATION ICI ---
         if self.auto_fc_var.get():
@@ -493,11 +502,10 @@ class FindMyCrossoverApp(ctk.CTk):
         threading.Thread(target=self._run_process, args=(w, w_qty,m , t, 
                                                          name, gen, pop, 
                                                          fc1, fc2, 
-                                                         wx, wy, wz, mx, my, mz,
                                                          ), 
                          daemon=True).start()
 
-    def _run_process(self, w, w_qty, m, t, name, gen, pop, fc1, fc2, wx, wy, wz, mx, my, mz):
+    def _run_process(self, w, w_qty, m, t, name, gen, pop, fc1, fc2):
         """Exécute run.py en interceptant ce qu'il affiche."""
         out_dir = os.path.join("crossovers", name)
         
@@ -509,6 +517,25 @@ class FindMyCrossoverApp(ctk.CTk):
                 fc_args += [fc2]
         # --------------------------------------------------------------
         
+        pos_args = [
+            "--wx", self.w1_entries['x'].get(), "--wy", self.w1_entries['y'].get(), "--wz", self.w1_entries['z'].get(),
+            "--tx", self.t_entries['x'].get(), "--ty", self.t_entries['y'].get(), "--tz", self.t_entries['z'].get()
+        ]
+        if self.w2_entries:
+            pos_args += [
+                "--wx2", self.w2_entries['x'].get(), 
+                "--wy2", self.w2_entries['y'].get(), 
+                "--wz2", self.w2_entries['z'].get()
+            ]
+            
+        # Ajout conditionnel du Médium
+        if self.mid_entries:
+            pos_args += [
+                "--mx", self.mid_entries['x'].get(), 
+                "--my", self.mid_entries['y'].get(), 
+                "--mz", self.mid_entries['z'].get()
+            ]
+        
         cmd = [
             "python", "run.py",
             "--woofer", w,
@@ -518,12 +545,7 @@ class FindMyCrossoverApp(ctk.CTk):
             "--out_dir", out_dir,
             "--gen", gen,
             "--pop", pop,
-            "--wx", wx,
-            "--wy", wy,
-            "--wz", wz,
-            "--mx", mx,
-            "--my", my,
-            "--mz", mz,
+            *pos_args,
             *fc_args, 
         ]
         if m:

@@ -1,0 +1,50 @@
+{
+    "Woofer": "RS180-4",
+    "Tweeter": "DE250-8",
+    "Midrange": null,
+    "target_fc": null,
+    "app_config": {
+        "weights": {
+            "crossover": 3.2549,
+            "fc_err": 10,
+            "impedance": 40,
+            "tweeter_low": 48.4022,
+            "woofer_high": 10,
+            "woofer_attenuation": 218.2858,
+            "thermal": 10,
+            "components": 0.3,
+            "resistors": 0,
+            "mse_sum": 1.0,
+            "n_comps": 9,
+            "midrange_low": 25.0,
+            "midrange_high": 25.0,
+            "midrange_participation": 60.0,
+            "midrange_attenuation": 200
+        },
+        "spl_settings": {
+            "target_offset_db": 1
+        },
+        "optimization_range": {
+            "mode": "auto",
+            "manual_min_hz": 100,
+            "manual_max_hz": 20000
+        }
+    },
+    "positions": {
+        "woofer": [
+            [
+                0.0,
+                -0.15,
+                0.0
+            ]
+        ],
+        "midrange": null,
+        "tweeter": [
+            [
+                0.0,
+                0.0,
+                0.0
+            ]
+        ]
+    }
+}

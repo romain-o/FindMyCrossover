@@ -1,0 +1,20 @@
+{
+    "weights": {
+        "mse_sum": 1.0,
+        "crossover": 3.25,
+        "overshoot": 10.0,
+        "impedance": 142.9,
+        "high_low_leak": 48.0,
+        "low_high_leak": 10.0,
+        "components": 0.15,
+        "n_comps_free": 8,
+        "resistors": 0.3,
+        "thermal": 20.0
+    },
+    "spl_settings": {
+        "target_offset_db": 0.0
+    },
+    "complexity": {
+        "max_comp_per_branch": 5
+    }
+}
